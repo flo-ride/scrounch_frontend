@@ -15,6 +15,7 @@
           yarn
           git
           prettierd
+          nodePackages.volar
         ];
 
         shellHook = ''
