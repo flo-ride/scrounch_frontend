@@ -13,6 +13,7 @@ export default {
             headers: {
                 Authorization: options.token ? `Bearer ${options.token}` : "",
             },
+            withCredentials: true,
         });
         $axios.interceptors.request.use(
             (config) => {
@@ -22,14 +23,6 @@ export default {
             },
             (error) => {
                 return Promise.reject(error);
-            },
-        );
-        $axios.interceptors.response.use(
-            (response) => {
-                return response.data;
-            },
-            (error) => {
-                throw error;
             },
         );
 
