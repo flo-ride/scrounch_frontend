@@ -1,0 +1,39 @@
+<template>
+    <v-container>
+        <v-alert
+            type="error"
+            prominent
+            border="top"
+            colored-border
+            elevation="2"
+            class="ma-4"
+            title="Application indisponible"
+            text=" Nous rencontrons des problèmes techniques. Veuillez réessayer plus tard."
+        >
+            <v-icon large left>mdi-alert-circle-outline</v-icon>
+        </v-alert>
+    </v-container>
+</template>
+
+<script lang="ts">
+export default {
+    methods: {
+        isBackendUp() {
+            this.$axios
+                .get("/status")
+                .then((res: any) => {
+                    if (res.status != 200 || res.data != "UP") {
+                        this.$router.push("/unavailable");
+                    }
+                    this.$router.push("/");
+                })
+                .catch((_err: any) => {
+                    this.$router.push("/unavailable");
+                });
+        },
+    },
+    mounted() {
+        this.isBackendUp();
+    },
+};
+</script>
