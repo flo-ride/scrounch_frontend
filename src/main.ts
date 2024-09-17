@@ -35,4 +35,6 @@ app.use(axios, {
     baseUrl: __BACKEND_URL__,
 });
 
+app.config.globalProperties.$backendUrl = __BACKEND_URL__;
+
 app.mount("#app");
