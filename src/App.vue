@@ -80,12 +80,14 @@ export default {
                         this.userStore.name = res.data.name;
                         this.userStore.email = res.data.email;
                         this.userStore.id = res.data.id;
+                        this.userStore.is_admin = res.data.is_admin;
                     } else {
                         this.userStore.connected = false;
                         this.userStore.username = undefined;
                         this.userStore.name = undefined;
                         this.userStore.email = undefined;
                         this.userStore.id = undefined;
+                        this.userStore.is_admin = undefined;
                     }
                 })
                 .catch((err) => {

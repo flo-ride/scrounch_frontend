@@ -8,6 +8,7 @@ export const useUserStore = defineStore("user", {
             username: undefined as string | undefined,
             email: undefined as string | undefined,
             name: undefined as string | undefined,
+            is_admin: undefined as boolean | undefined,
         };
     },
 });
