@@ -8,19 +8,9 @@
 </template>
 
 <script lang="ts">
-import type { AxiosInstance } from "axios";
 import { useUserStore } from "@/stores/user";
 import type { User } from "@/types/User";
-import type { Router } from "vue-router";
 import MainToolbarVue from "@/components/MainToolbar.vue";
-
-declare module "@vue/runtime-core" {
-    interface ComponentCustomProperties {
-        $axios: AxiosInstance;
-        $backendUrl: string;
-        $router: Router;
-    }
-}
 
 export default {
     data() {

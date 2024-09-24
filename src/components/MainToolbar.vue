@@ -23,6 +23,7 @@
             </div>
         </template>
         <template v-slot:append>
+            <v-btn icon="fa-solid fa-language" @click="toggleLanguage"> </v-btn>
             <v-btn
                 :icon="themeName == `dark` ? `fa-solid fa-sun` : `fa-solid fa-moon`"
                 @click="toggleTheme"
@@ -46,18 +47,11 @@
 </template>
 
 <script lang="ts">
+// @ts-ignore
 import { useUserStore } from "@/stores/user";
 import { useTheme } from "vuetify";
 import { defineComponent } from "vue";
-
-import type { AxiosInstance } from "axios";
-
-declare module "@vue/runtime-core" {
-    interface ComponentCustomProperties {
-        $axios: AxiosInstance;
-        $backendUrl: string;
-    }
-}
+import { useI18n } from "vue-i18n";
 
 export default defineComponent({
     data() {
@@ -68,11 +62,24 @@ export default defineComponent({
     methods: {
         async login() {
             this.loginLoading = true;
+            // @ts-ignore
             let res = await this.$axios.get("/me");
             if (res.status != 200) {
+                // @ts-ignore
                 window.location.href = `${this.$backendUrl}/login`;
             }
             this.loginLoading = false;
+        },
+
+        toggleLanguage() {
+            // @ts-ignore
+            this.$i18n.locale = this.$i18n.locale === "fr" ? "en" : "fr";
+        },
+        toggleTheme() {
+            // @ts-ignore
+            this.$vuetify.theme.global.name = this.$vuetify.theme.global.current.dark
+                ? "light"
+                : "dark";
         },
     },
     computed: {
@@ -85,19 +92,19 @@ export default defineComponent({
                 .toUpperCase();
         },
         themeName(): string {
-            return this.theme.global.name.value;
+            // @ts-ignore
+            return this.$vuetify.theme.global.name;
         },
     },
     setup() {
         const theme = useTheme();
-
-        const toggleTheme = () => {
-            theme.global.name.value = theme.global.current.value.dark ? "light" : "dark";
-        };
+        const { t } = useI18n({
+            inheritLocale: true,
+        });
 
         return {
+            t,
             theme,
-            toggleTheme,
         };
     },
 });

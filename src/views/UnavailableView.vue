@@ -7,8 +7,8 @@
             colored-border
             elevation="2"
             class="ma-4"
-            title="Application indisponible"
-            text=" Nous rencontrons des problèmes techniques. Veuillez réessayer plus tard."
+            :title="$t('unavailable.title')"
+            :text="$t('unavailable.text')"
         >
             <v-icon large left>mdi-alert-circle-outline</v-icon>
         </v-alert>
