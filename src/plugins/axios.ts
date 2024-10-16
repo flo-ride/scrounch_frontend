@@ -12,13 +12,12 @@ export default {
             baseURL: options.baseUrl,
             headers: {
                 Authorization: options.token ? `Bearer ${options.token}` : "",
+                "Content-Type": "application/json",
             },
             withCredentials: true,
         });
         $axios.interceptors.request.use(
             (config) => {
-                config.headers["Content-Type"] = "application/json";
-
                 return config;
             },
             (error) => {
