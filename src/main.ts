@@ -9,6 +9,7 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { createVueI18nAdapter } from "vuetify/locale/adapters/vue-i18n";
+import { VNumberInput } from "vuetify/labs/components";
 
 // I18n
 import { createI18n, useI18n } from "vue-i18n";
@@ -28,6 +29,9 @@ const messages = {
         ...en,
         $vuetify: {
             ...en,
+            input: {
+                clear: "Clear",
+            },
             loading: "Loading content...",
             dataIterator: {
                 rowsPerPageText: "Items per page:",
@@ -39,6 +43,9 @@ const messages = {
         ...fr,
         $vuetify: {
             ...fr,
+            input: {
+                clear: "Effacer",
+            },
             loading: "Chargement du contenu...",
             dataIterator: {
                 rowsPerPageText: "Éléments par pages:",
@@ -57,7 +64,10 @@ const i18n = createI18n({
 });
 
 const vuetify = createVuetify({
-    components,
+    components: {
+        components,
+        VNumberInput,
+    },
     directives,
     theme: { defaultTheme: "dark" },
     icons: {
