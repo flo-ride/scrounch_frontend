@@ -1,9 +1,13 @@
 <template>
     <v-app>
-        <div v-if="serverIsUp">
-            <MainToolbarVue />
-        </div>
-        <RouterView />
+        <header>
+            <div v-if="serverIsUp">
+                <MainToolbarVue />
+            </div>
+        </header>
+        <v-main>
+            <RouterView />
+        </v-main>
     </v-app>
 </template>
 
