@@ -92,14 +92,17 @@ declare module "@vue/runtime-core" {
     }
 }
 
+// @ts-ignore
+let api_url = window.env.BACKEND_URL || "http://localhost:3000";
+
 app.use(i18n);
 app.use(vuetify);
 app.use(createPinia());
 app.use(router);
 app.use(axios, {
-    baseUrl: __BACKEND_URL__,
+    baseUrl: api_url,
 });
 
-app.config.globalProperties.$backendUrl = __BACKEND_URL__;
+app.config.globalProperties.$backendUrl = api_url;
 
 app.mount("#app");

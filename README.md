@@ -1,4 +1,5 @@
 # Scrounch Frontend
+
 > By Florian 'FloRide' Reimat
 
 # About
@@ -8,7 +9,13 @@
 Key features include:
 
 ## Usage
+
+> [!WARNING]
+> Vite env loading is done at build time, so to remediate this the env file is public/env.js (do not store secret information here).
+> This doesn't apply for the Docker image who use the env.sh script for loading env variable
+
 ### Manual
+
 ```sh
 # Dependencies (Optional)
 nix develop
