@@ -145,6 +145,7 @@ export default {
         CreateDialog,
     },
     mounted() {
+        // @ts-ignore
         this.productStore.fetch_all_products(this.$axios);
     },
 };
