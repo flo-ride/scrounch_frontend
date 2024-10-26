@@ -13,6 +13,7 @@
 
 <script lang="ts">
 import { useUserStore } from "@/stores/user";
+import { useProductStore } from "@/stores/product";
 import type { User } from "@/types/User";
 import MainToolbarVue from "@/components/MainToolbar.vue";
 
@@ -24,6 +25,7 @@ export default {
     },
     computed: {
         userStore: () => useUserStore(),
+        productStore: () => useProductStore(),
     },
     methods: {
         isBackendUp() {
@@ -71,6 +73,7 @@ export default {
     mounted() {
         this.isBackendUp();
         this.isLoggedIn();
+        this.productStore.fetch_all_products(this.$axios);
     },
 };
 </script>
