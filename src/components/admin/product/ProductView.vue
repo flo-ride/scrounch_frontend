@@ -14,6 +14,8 @@
             <v-col cols="6" offset="3">
                 <CreateDialog v-model="createDialog" />
             </v-col>
+            <v-col cols="3"> </v-col>
+
             <v-col
                 v-if="type == 'list'"
                 v-for="product in productStore.products"
@@ -21,10 +23,12 @@
                 cols="12"
                 sm="6"
                 md="4"
+                lg="2"
             >
                 <v-card
                     :color="product.disabled ? 'error' : undefined"
                     :variant="product.disabled ? 'outlined' : undefined"
+                    @click="updateProduct(product)"
                 >
                     <v-card-title>{{ product.name }} ({{ product.price }}€)</v-card-title>
                     <v-card-subtitle>id: {{ product.id }}</v-card-subtitle>
@@ -68,6 +72,7 @@
             </v-col>
             <v-col v-if="type == 'grid'">
                 <v-data-table
+                    :headers="headers"
                     v-model:search="search"
                     :items="productStore.products"
                     item-value="id"
@@ -111,17 +116,27 @@
                     <template v-slot:item.creation_time="{ item }">
                         <span>{{ item.creation_time.toLocaleString("fr-FR") }}</span>
                     </template>
+
+                    <template v-slot:item.actions="{ item }">
+                        <v-btn icon="fa-solid fa-pen-to-square" @click="updateProduct(item)">
+                        </v-btn>
+                    </template>
                 </v-data-table>
             </v-col>
         </v-row>
     </div>
+    <EditDialog v-model="edit" :product="editProduct" />
 </template>
 
 <script lang="ts">
 // @ts-ignore
 import CreateDialog from "@/components/admin/product/CreateDialog.vue";
 // @ts-ignore
+import EditDialog from "@/components/admin/product/EditDialog.vue";
+// @ts-ignore
 import { useProductStore } from "@/stores/product";
+// @ts-ignore
+import type { Product } from "@/types/Product";
 
 export default {
     data() {
@@ -129,6 +144,60 @@ export default {
             createDialog: false,
             search: "",
             type: "list",
+            edit: false,
+            editProduct: undefined as undefined | Object,
+            headers: [
+                {
+                    title: "Id",
+                    sortable: true,
+                    key: "id",
+                },
+                {
+                    title: "Product Name",
+                    sortable: true,
+                    key: "name",
+                },
+                {
+                    title: "Image",
+                    key: "image",
+                    sortable: false,
+                },
+                {
+                    title: "Price (€)",
+                    key: "price",
+                    sortable: true,
+                },
+                {
+                    title: "Quantity",
+                    key: "quantity",
+                    sortable: true,
+                },
+                {
+                    title: "Max Quantity per Order",
+                    key: "max_quantity_per_command",
+                    sortable: true,
+                },
+                {
+                    title: "Sma Code",
+                    key: "sma_code",
+                    sortable: true,
+                },
+                {
+                    title: "Creation Time",
+                    key: "creation_time",
+                    sortable: true,
+                },
+                {
+                    title: "Disable",
+                    key: "disabled",
+                    sortable: false,
+                },
+                {
+                    title: "Actions",
+                    key: "actions",
+                    sortable: false,
+                },
+            ],
         };
     },
     computed: {
@@ -140,9 +209,14 @@ export default {
             let backendUrl = window.env.BACKEND_URL;
             return `${backendUrl}/download/${imageName}?type=product`;
         },
+        updateProduct(product: Product) {
+            this.edit = true;
+            this.editProduct = product;
+        },
     },
     components: {
         CreateDialog,
+        EditDialog,
     },
     mounted() {
         // @ts-ignore

@@ -14,6 +14,17 @@
                 "quantity": "Quantité disponible",
                 "max": "Max par commande"
             },
+            "edit": {
+                "title": "Modifier un produit",
+                "image": "Image",
+                "name": "Nom du Produit",
+                "price": "Prix",
+                "quantity": "Quantité disponible",
+                "sma": "SMA Code",
+                "max": "Max par commande",
+                "disabled": "Désactivé"
+            },
+
             "quantity": "Quantité disponible",
             "maxPerCommand": "Quantité maximale par Commande",
             "sma": "Codes Sales (SMA)",
@@ -48,6 +59,7 @@
         "import": "Importer",
         "notSpecified": "Non spécifié",
         "disable": "Désactivé",
-        "enable": "Activé"
+        "enable": "Activé",
+        "save": "Sauvegardé"
     }
 }
