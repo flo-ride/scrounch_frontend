@@ -56,13 +56,16 @@
                 <div class="d-flex justify-center align-center">TODO</div>
             </v-tabs-window-item>
 
-            <v-tabs-window-item value="import"> </v-tabs-window-item>
+            <v-tabs-window-item value="import">
+                <ImportView />
+            </v-tabs-window-item>
         </v-tabs-window>
     </div>
 </template>
 
 <script lang="ts">
 import ProductView from "@/components/admin/product/ProductView.vue";
+import ImportView from "@/components/admin/import/ImportView.vue";
 import { useUserStore } from "@/stores/user";
 
 export default {
@@ -76,6 +79,7 @@ export default {
     },
     components: {
         ProductView,
+        ImportView,
     },
     mounted() {
         if (this.userStore.is_admin != true) {
