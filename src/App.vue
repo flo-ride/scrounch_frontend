@@ -20,8 +20,10 @@ export default {
     data() {
         return {
             serverIsUp: true,
-            userStore: useUserStore(),
         };
+    },
+    computed: {
+        userStore: () => useUserStore(),
     },
     methods: {
         isBackendUp() {

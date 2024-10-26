@@ -1,28 +1,31 @@
 <template>
     <v-app-bar>
         <template v-slot:prepend>
-            <div v-if="theme.global.name.value == 'dark'">
-                <v-img aspect-ratio="1/1" width="80" cover src="@/assets/logo-white.svg">
-                    <template v-slot:placeholder>
-                        <v-skeleton-loader
-                            class="d-flex align-center justify-center fill-height"
-                            type="list-item-avatar"
-                        ></v-skeleton-loader>
-                    </template>
-                </v-img>
-            </div>
-            <div v-else>
-                <v-img aspect-ratio="1/1" width="80" cover src="@/assets/logo.svg">
-                    <template v-slot:placeholder>
-                        <v-skeleton-loader
-                            class="d-flex align-center justify-center fill-height"
-                            type="list-item-avatar"
-                        ></v-skeleton-loader>
-                    </template>
-                </v-img>
-            </div>
+            <RouterLink to="/">
+                <div v-if="theme.global.name.value == 'dark'">
+                    <v-img aspect-ratio="1/1" width="80" cover src="@/assets/logo-white.svg">
+                        <template v-slot:placeholder>
+                            <v-skeleton-loader
+                                class="d-flex align-center justify-center fill-height"
+                                type="list-item-avatar"
+                            ></v-skeleton-loader>
+                        </template>
+                    </v-img>
+                </div>
+                <div v-else>
+                    <v-img aspect-ratio="1/1" width="80" cover src="@/assets/logo.svg">
+                        <template v-slot:placeholder>
+                            <v-skeleton-loader
+                                class="d-flex align-center justify-center fill-height"
+                                type="list-item-avatar"
+                            ></v-skeleton-loader>
+                        </template>
+                    </v-img>
+                </div>
+            </RouterLink>
         </template>
         <template v-slot:append>
+            <v-btn v-if="userStore.is_admin" @click="$router.push('/admin')"> Admin </v-btn>
             <v-btn icon="fa-solid fa-language" @click="toggleLanguage"> </v-btn>
             <v-btn
                 :icon="themeName == `dark` ? `fa-solid fa-sun` : `fa-solid fa-moon`"
