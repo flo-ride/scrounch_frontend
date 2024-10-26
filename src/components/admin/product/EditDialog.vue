@@ -234,7 +234,7 @@ export default {
                                 disabled: this.productDisabled,
                                 sma_code: this.productSma,
                             })
-                            .then((_res) => {
+                            .then((_res: AxiosResponse<any, any>) => {
                                 this.show = false;
                                 this.productStore.fetch_all_products(axios);
                                 // @ts-ignore
@@ -264,7 +264,7 @@ export default {
                         disabled: this.productDisabled,
                         sma_code: this.productSma,
                     })
-                    .then((_res) => {
+                    .then((_res: AxiosResponse<any, any>) => {
                         this.show = false;
                         this.productStore.fetch_all_products(axios);
                         // @ts-ignore
