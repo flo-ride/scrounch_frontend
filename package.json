@@ -16,6 +16,7 @@
     },
     "dependencies": {
         "@types/axios": "^0.14.0",
+        "@types/uuid": "^10.0.0",
         "axios": "^1.7.7",
         "pinia": "^2.1.7",
         "vite-plugin-vuetify": "^2.0.4",
