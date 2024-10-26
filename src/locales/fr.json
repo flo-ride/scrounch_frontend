@@ -2,5 +2,52 @@
     "unavailable": {
         "title": "Application indisponible",
         "text": "Nous rencontrons des problèmes techniques. Veuillez réessayer plus tard."
+    },
+    "admin": {
+        "product": {
+            "toolbarTitle": "Produits",
+            "add": {
+                "title": "Crée un produit",
+                "image": "Image",
+                "name": "Nom du Produit",
+                "price": "Prix",
+                "quantity": "Quantité disponible",
+                "max": "Max par commande"
+            },
+            "quantity": "Quantité disponible",
+            "maxPerCommand": "Quantité maximale par Commande",
+            "sma": "Codes Sales (SMA)",
+            "creationDate": "Date de création"
+        },
+        "user": {
+            "toolbarTitle": "Utilisateurs"
+        },
+        "delivery": {
+            "toolbarTitle": "Livraisons"
+        },
+        "order": {
+            "toolbarTitle": "Commandes"
+        },
+        "location": {
+            "toolbarTitle": "Lieux"
+        },
+        "announcement": {
+            "toolbarTitle": "Annonces"
+        },
+        "import": {
+            "toolbarTitle": "Imports",
+            "smaButton": "Importer SMA Sales",
+            "overwriteName": "Écraser le Nom",
+            "overwritePrice": "Écraser le Prix"
+        }
+    },
+    "common": {
+        "add": "Ajouter",
+        "cancel": "Annuler",
+        "none": "Aucun",
+        "import": "Importer",
+        "notSpecified": "Non spécifié",
+        "disable": "Désactivé",
+        "enable": "Activé"
     }
 }

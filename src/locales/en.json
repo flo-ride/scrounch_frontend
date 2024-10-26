@@ -2,5 +2,52 @@
     "unavailable": {
         "title": "Application is Unavailable",
         "text": "We are experiencing technical difficulties. Please try again later."
+    },
+    "admin": {
+        "product": {
+            "toolbarTitle": "Products",
+            "add": {
+                "title": "Add a product",
+                "image": "Image",
+                "name": "Name of Product",
+                "price": "Price",
+                "quantity": "Quantity available",
+                "max": "Max per orders"
+            },
+            "quantity": "Quantity available",
+            "maxPerCommand": "Max quantity per Command",
+            "sma": "Sales code (SMA)",
+            "creationDate": "Creation Date"
+        },
+        "user": {
+            "toolbarTitle": "Users"
+        },
+        "delivery": {
+            "toolbarTitle": "Deliveries"
+        },
+        "order": {
+            "toolbarTitle": "Orders"
+        },
+        "location": {
+            "toolbarTitle": "Location"
+        },
+        "announcement": {
+            "toolbarTitle": "Announcements"
+        },
+        "import": {
+            "toolbarTitle": "Imports",
+            "smaButton": "Import SMA Sales",
+            "overwriteName": "Overwrite Name",
+            "overwritePrice": "Overwrite Price"
+        }
+    },
+    "common": {
+        "add": "Add",
+        "cancel": "Cancel",
+        "none": "None",
+        "import": "Import",
+        "notSpecified": "Not Specified",
+        "disable": "Disable",
+        "enable": "Enable"
     }
 }

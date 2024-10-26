@@ -32,11 +32,22 @@ const messages = {
             input: {
                 clear: "Clear",
             },
+            open: "Open",
             loading: "Loading content...",
             dataIterator: {
                 rowsPerPageText: "Items per page:",
                 pageText: "{0}-{1} of {2}",
             },
+            dataFooter: {
+                itemsPerPageText: "Items per Page",
+                pageText: "Page {0}",
+                itemsPerPageAll: "All",
+                firstPage: "Fist page",
+                lastPage: "Last page",
+                nextPage: "Next page",
+                prevPage: "Previous page",
+            },
+            noDataText: "No Data",
         },
     },
     fr: {
@@ -46,11 +57,22 @@ const messages = {
             input: {
                 clear: "Effacer",
             },
+            open: "Ouvrir",
             loading: "Chargement du contenu...",
             dataIterator: {
                 rowsPerPageText: "Éléments par pages:",
                 pageText: "{0}-{1} sur {2}",
             },
+            dataFooter: {
+                itemsPerPageText: "Items par Page",
+                pageText: "Page {0}",
+                itemsPerPageAll: "Tout",
+                firstPage: "Premiere page",
+                lastPage: "Derniere page",
+                nextPage: "Page suivante",
+                prevPage: "Page précedente",
+            },
+            noDataText: "Pas de données",
         },
     },
 };
