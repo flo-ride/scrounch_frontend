@@ -37,7 +37,7 @@
             </v-tabs-window-item>
 
             <v-tabs-window-item value="user">
-                <div class="d-flex justify-center align-center">TODO</div>
+                <UserView />
             </v-tabs-window-item>
 
             <v-tabs-window-item value="delivery">
@@ -66,6 +66,7 @@
 <script lang="ts">
 import ProductView from "@/components/admin/product/ProductView.vue";
 import ImportView from "@/components/admin/import/ImportView.vue";
+import UserView from "@/components/admin/user/UserView.vue";
 import { useUserStore } from "@/stores/user";
 
 export default {
@@ -80,6 +81,7 @@ export default {
     components: {
         ProductView,
         ImportView,
+        UserView,
     },
     mounted() {
         if (this.userStore.is_admin != true) {
