@@ -24,6 +24,11 @@ const router = createRouter({
             name: "unavailable",
             component: () => import("../views/UnavailableView.vue"),
         },
+        {
+            path: "/ban",
+            name: "ban",
+            component: () => import("../views/BanView.vue"),
+        },
     ],
 });
 

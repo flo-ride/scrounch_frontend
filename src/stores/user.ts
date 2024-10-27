@@ -10,6 +10,7 @@ export const useUserStore = defineStore("user", {
             email: undefined as string | undefined,
             name: undefined as string | undefined,
             is_admin: undefined as boolean | undefined,
+            is_banned: undefined as boolean | undefined,
         };
     },
 });

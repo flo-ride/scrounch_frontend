@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <header>
-            <div v-if="serverIsUp">
+            <div v-if="serverIsUp && userStore.is_banned != true">
                 <MainToolbarVue />
             </div>
         </header>
@@ -53,6 +53,11 @@ export default {
                         this.userStore.email = res.data.email;
                         this.userStore.id = res.data.id;
                         this.userStore.is_admin = res.data.is_admin;
+                        this.userStore.is_banned = res.data.is_banned;
+
+                        if (this.userStore.is_banned) {
+                            this.$router.push("/ban");
+                        }
                     } else {
                         this.userStore.connected = false;
                         this.userStore.username = undefined;
