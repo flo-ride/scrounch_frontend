@@ -9,8 +9,6 @@ export type Product = {
 
     price: number;
 
-    quantity?: number;
-
     max_quantity_per_command?: number;
 
     creation_time: Date;

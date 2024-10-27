@@ -17,7 +17,6 @@
                 "image": "Image",
                 "name": "Name of Product",
                 "price": "Price",
-                "quantity": "Quantity available",
                 "max": "Max per orders"
             },
             "edit": {
@@ -25,12 +24,10 @@
                 "image": "Image",
                 "name": "Name of Product",
                 "price": "Price",
-                "quantity": "Quantity available",
                 "sma": "SMA Code",
                 "max": "Max per orders",
                 "disabled": "Disable"
             },
-            "quantity": "Quantity available",
             "maxPerCommand": "Max quantity per Command",
             "sma": "Sales code (SMA)",
             "creationDate": "Creation Date"

@@ -25,7 +25,6 @@ export const useProductStore = defineStore("product", {
                             id: x.id,
                             name: x.name,
                             price: x.price,
-                            quantity: x.quantity,
                             max_quantity_per_command: x.max_quantity_per_command,
                             creation_time: x.creation_time,
                             sma_code: x.sma_code,

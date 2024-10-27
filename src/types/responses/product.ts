@@ -9,8 +9,6 @@ export type ProductResponse = {
 
     price: number;
 
-    quantity?: number;
-
     max_quantity_per_command?: number;
 
     creation_time: Date;
@@ -28,8 +26,6 @@ export type EditedProductResponse = {
     name?: string;
 
     price?: number;
-
-    quantity?: number;
 
     max_quantity_per_command?: number;
 

@@ -17,7 +17,6 @@
                 "image": "Image",
                 "name": "Nom du Produit",
                 "price": "Prix",
-                "quantity": "Quantité disponible",
                 "max": "Max par commande"
             },
             "edit": {
@@ -25,13 +24,11 @@
                 "image": "Image",
                 "name": "Nom du Produit",
                 "price": "Prix",
-                "quantity": "Quantité disponible",
                 "sma": "SMA Code",
                 "max": "Max par commande",
                 "disabled": "Désactivé"
             },
 
-            "quantity": "Quantité disponible",
             "maxPerCommand": "Quantité maximale par Commande",
             "sma": "Codes Sales (SMA)",
             "creationDate": "Date de création"

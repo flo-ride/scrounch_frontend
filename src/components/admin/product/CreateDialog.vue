@@ -57,18 +57,6 @@
                             required
                         ></v-number-input>
 
-                        <p>{{ $t("admin.product.add.quantity") }}</p>
-                        <v-number-input
-                            v-model="productQuantity"
-                            controlVariant="split"
-                            :min="0"
-                            :max="9999"
-                            :step="1"
-                            :hideInput="false"
-                            :inset="false"
-                            required
-                        ></v-number-input>
-
                         <p :class="productMax != 0 ? '' : 'text-disabled'">
                             {{ $t("admin.product.add.max") }}{{ productMax != 0 ? ": " : ""
                             }}{{ displayProductMax }}
@@ -130,7 +118,6 @@ export default {
             productImage: undefined as File | undefined,
             productName: "" as string,
             productPrice: 0 as number,
-            productQuantity: 0 as number,
             productMax: 0 as number,
             tickLabels: {
                 0: "None",
@@ -191,7 +178,6 @@ export default {
                             image: filename,
                             name: this.productName,
                             price: this.productPrice,
-                            quantity: this.productQuantity,
                             max_quantity_per_command: this.productMax,
                         })
                         .then((_res: AxiosResponse<string, any>) => {

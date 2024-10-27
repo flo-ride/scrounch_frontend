@@ -43,9 +43,6 @@
                                 <v-skeleton-loader :elevation="24" type="card"></v-skeleton-loader>
                             </template>
                         </v-img>
-                        <p v-if="product.quantity">
-                            {{ $t("admin.product.quantity") }}: {{ product.quantity }}
-                        </p>
                         <p v-if="product.max_quantity_per_command">
                             {{ $t("admin.product.maxPerCommand") }}:
                             {{ product.max_quantity_per_command }}
@@ -85,10 +82,6 @@
 
                     <template v-slot:item.price="{ item }">
                         <span>{{ item.price.toFixed(2) }} €</span>
-                    </template>
-
-                    <template v-slot:item.quantity="{ item }">
-                        <span>{{ item.quantity ?? $t("common.notSpecified") }}</span>
                     </template>
 
                     <template v-slot:item.max_quantity_per_command="{ item }">
@@ -165,11 +158,6 @@ export default {
                 {
                     title: "Price (€)",
                     key: "price",
-                    sortable: true,
-                },
-                {
-                    title: "Quantity",
-                    key: "quantity",
                     sortable: true,
                 },
                 {

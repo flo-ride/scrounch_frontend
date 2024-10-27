@@ -49,18 +49,6 @@
                             required
                         ></v-number-input>
 
-                        <p>{{ $t("admin.product.edit.quantity") }}</p>
-                        <v-number-input
-                            v-model="productQuantity"
-                            controlVariant="split"
-                            :min="0"
-                            :max="9999"
-                            :step="1"
-                            :hideInput="false"
-                            :inset="false"
-                            required
-                        ></v-number-input>
-
                         <p :class="productMax != 0 ? '' : 'text-disabled'">
                             {{ $t("admin.product.edit.max") }}{{ productMax != 0 ? ": " : ""
                             }}{{ displayProductMax }}
@@ -130,7 +118,6 @@ export default {
             default: () => ({
                 name: "",
                 price: 0,
-                quantity: 0,
                 max_quantity_per_command: 0,
                 image: undefined,
             }),
@@ -147,7 +134,6 @@ export default {
         productName: "" as string,
         productSma: "" as string | undefined,
         productPrice: 0 as number,
-        productQuantity: undefined as number | undefined,
         productMax: undefined as number | undefined,
         productDisabled: false,
         tickLabels: {
@@ -194,7 +180,6 @@ export default {
                 this.productId = newProduct.id;
                 this.productName = newProduct.name;
                 this.productPrice = newProduct.price;
-                this.productQuantity = newProduct.quantity;
                 this.productMax = newProduct.max_quantity_per_command;
                 this.productSma = newProduct.sma_code;
                 this.productDisabled = newProduct.disabled;
@@ -229,7 +214,6 @@ export default {
                                 image: filename,
                                 name: this.productName,
                                 price: this.productPrice,
-                                quantity: this.productQuantity,
                                 max_quantity_per_command: this.productMax,
                                 disabled: this.productDisabled,
                                 sma_code: this.productSma,
@@ -259,7 +243,6 @@ export default {
                     .put(`/product/${this.productId}`, {
                         name: this.productName,
                         price: this.productPrice,
-                        quantity: this.productQuantity,
                         max_quantity_per_command: this.productMax,
                         disabled: this.productDisabled,
                         sma_code: this.productSma,
