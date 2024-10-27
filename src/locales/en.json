@@ -33,7 +33,8 @@
             "toolbarTitle": "Users",
             "edit": {
                 "title": "Edit a User",
-                "isAdmin": "User is an Admin ?"
+                "isAdmin": "User is an Admin ?",
+                "isBanned": "User is Banned ?"
             }
         },
         "delivery": {

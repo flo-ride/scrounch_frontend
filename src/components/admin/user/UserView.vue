@@ -29,7 +29,15 @@
                         <span>{{ timeSinceLastConnection(item.last_access_time.toString()) }}</span>
                     </template>
 
-                    <template v-slot:item.is_admin="{ item }">
+                    <template v-slot:item.role="{ item }">
+                        <v-chip
+                            v-if="item.is_banned"
+                            color="error"
+                            text="BANNED"
+                            class="text-uppercase"
+                            size="small"
+                            label
+                        ></v-chip>
                         <v-chip
                             v-if="item.is_admin"
                             color="success"
@@ -102,7 +110,7 @@ export default {
                 },
                 {
                     title: "Role",
-                    key: "is_admin",
+                    key: "role",
                     sortable: true,
                 },
                 {

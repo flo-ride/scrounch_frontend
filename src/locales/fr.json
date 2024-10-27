@@ -34,7 +34,8 @@
             "toolbarTitle": "Utilisateurs",
             "edit": {
                 "title": "Modifier un Utilisateur",
-                "isAdmin": "L'Utilisateur est t'il un Administrateur ?"
+                "isAdmin": "L'Utilisateur est t'il un Administrateur ?",
+                "isBanned": "L'Utilisateur est t'il Banni ?"
             }
         },
         "delivery": {

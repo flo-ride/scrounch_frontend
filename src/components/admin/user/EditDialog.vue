@@ -20,6 +20,12 @@
                             :label="$t('admin.user.edit.isAdmin')"
                             required
                         ></v-switch>
+
+                        <v-switch
+                            v-model="userIsBanned"
+                            :label="$t('admin.user.edit.isBanned')"
+                            required
+                        ></v-switch>
                     </v-card-text>
 
                     <v-card-actions class="d-flex justify-end">
@@ -73,6 +79,7 @@ export default {
         loading: false,
         userId: "" as string,
         userIsAdmin: false,
+        userIsBanned: false,
     }),
     computed: {
         show: {
@@ -91,6 +98,7 @@ export default {
                 console.log(newUser);
                 this.userId = newUser.id;
                 this.userIsAdmin = newUser.is_admin;
+                this.userIsBanned = newUser.is_banned;
             },
         },
     },
@@ -104,6 +112,7 @@ export default {
             axios
                 .put(`/user/${this.userId}`, {
                     is_admin: this.userIsAdmin,
+                    is_banned: this.userIsBanned,
                 })
                 .then((_res: AxiosResponse<any, any>) => {
                     this.show = false;
