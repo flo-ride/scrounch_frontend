@@ -3,6 +3,12 @@
         "title": "Application is Unavailable",
         "text": "We are experiencing technical difficulties. Please try again later."
     },
+    "toolbar": {
+        "logout": "Logout",
+        "admin": "Administration",
+        "previous": "Previous Order",
+        "account": "My Account"
+    },
     "admin": {
         "product": {
             "toolbarTitle": "Products",

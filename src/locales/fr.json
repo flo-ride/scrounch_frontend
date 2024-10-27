@@ -3,6 +3,12 @@
         "title": "Application indisponible",
         "text": "Nous rencontrons des problèmes techniques. Veuillez réessayer plus tard."
     },
+    "toolbar": {
+        "logout": "Se Déconnecter",
+        "admin": "Administration",
+        "previous": "Commandes Précédentes",
+        "account": "Mon Compte"
+    },
     "admin": {
         "product": {
             "toolbarTitle": "Produits",
