@@ -81,6 +81,7 @@ export default {
         userIsAdmin: false,
         userIsBanned: false,
     }),
+    emits: ["update:modelValue", "isDone"],
     computed: {
         show: {
             get(): boolean {
@@ -116,6 +117,7 @@ export default {
                 })
                 .then((_res: AxiosResponse<any, any>) => {
                     this.show = false;
+                    this.$emit("isDone");
                 })
                 .catch((err: any) => {
                     this.error = true;

@@ -1,16 +1,6 @@
 <template>
     <div>
         <v-row>
-            <v-col cols="12">
-                <v-text-field
-                    v-model="search"
-                    label="Search"
-                    prepend-inner-icon="mdi-magnify"
-                    variant="outlined"
-                    hide-details
-                    single-line
-                ></v-text-field>
-            </v-col>
             <v-col>
                 <v-data-table-server
                     :headers="headers"
@@ -55,7 +45,7 @@
             </v-col>
         </v-row>
     </div>
-    <EditDialog v-model="edit" :user="editUser" />
+    <EditDialog v-model="edit" :user="editUser" @is-done="refresh" />
 </template>
 
 <script lang="ts">
@@ -159,6 +149,9 @@ export default {
         updateUser(user: User) {
             this.edit = true;
             this.editUser = user;
+        },
+        refresh() {
+            this.search = String(Date.now());
         },
     },
     components: {
