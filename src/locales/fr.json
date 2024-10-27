@@ -31,7 +31,11 @@
             "creationDate": "Date de création"
         },
         "user": {
-            "toolbarTitle": "Utilisateurs"
+            "toolbarTitle": "Utilisateurs",
+            "edit": {
+                "title": "Modifier un Utilisateur",
+                "isAdmin": "L'Utilisateur est t'il un Administrateur ?"
+            }
         },
         "delivery": {
             "toolbarTitle": "Livraisons"

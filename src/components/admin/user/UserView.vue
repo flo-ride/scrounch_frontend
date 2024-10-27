@@ -41,15 +41,18 @@
                     </template>
 
                     <template v-slot:item.actions="{ item }">
-                        <v-btn icon="fa-solid fa-pen-to-square"> </v-btn>
+                        <v-btn icon="fa-solid fa-pen-to-square" @click="updateUser(item)"> </v-btn>
                     </template>
                 </v-data-table-server>
             </v-col>
         </v-row>
     </div>
+    <EditDialog v-model="edit" :user="editUser" />
 </template>
 
 <script lang="ts">
+// @ts-ignore
+import EditDialog from "@/components/admin/user/EditDialog.vue";
 // @ts-ignore
 import type { User } from "@/types/User";
 // @ts-ignore
@@ -60,6 +63,8 @@ export default {
     data() {
         return {
             loading: false,
+            edit: false,
+            editUser: undefined as undefined | Object,
             serverItems: [] as User[],
             totalItems: 0,
             itemsPerPage: 20,
@@ -100,6 +105,11 @@ export default {
                     key: "is_admin",
                     sortable: true,
                 },
+                {
+                    title: "Actions",
+                    key: "actions",
+                    sortable: false,
+                },
             ],
         };
     },
@@ -138,8 +148,14 @@ export default {
 
             return creationTime.toLocaleString("fr-FR");
         },
+        updateUser(user: User) {
+            this.edit = true;
+            this.editUser = user;
+        },
     },
-    components: {},
+    components: {
+        EditDialog,
+    },
     mounted() {},
 };
 </script>

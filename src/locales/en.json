@@ -30,7 +30,11 @@
             "creationDate": "Creation Date"
         },
         "user": {
-            "toolbarTitle": "Users"
+            "toolbarTitle": "Users",
+            "edit": {
+                "title": "Edit a User",
+                "isAdmin": "User is an Admin ?"
+            }
         },
         "delivery": {
             "toolbarTitle": "Deliveries"
