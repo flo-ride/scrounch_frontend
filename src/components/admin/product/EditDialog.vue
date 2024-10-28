@@ -1,133 +1,79 @@
 <template>
-    <v-dialog v-model="show">
-        <template v-slot:default="{ isActive }">
-            <v-card class="mx-auto pa-5" min-width="500">
-                <v-card-title class="d-flex justify-space-between align-center">
-                    <div class="text-h5 text-medium-emphasis ps-2">
-                        {{ $t("admin.product.edit.title") }}
-                    </div>
-                    <v-btn
-                        icon="fa-solid fa-xmark"
-                        variant="text"
-                        @click="isActive.value = false"
-                    ></v-btn>
-                </v-card-title>
+    <EditDialogForm
+        v-model="show"
+        :title="$t('admin.product.edit.title')"
+        icon="fa-solid fa-circle-plus"
+        ref="dialogRef"
+        :loading="loading"
+        @submit="updateItem"
+    >
+        <template #form-content>
+            <v-file-input
+                v-model="productImage"
+                :label="$t('admin.product.edit.image')"
+                accept="image/*"
+                :rules="imageRules"
+                prepend-icon=""
+            ></v-file-input>
 
-                <v-form v-model="valid" fast-fail ref="form">
-                    <v-card-text>
-                        <v-file-input
-                            v-model="productImage"
-                            :label="$t('admin.product.edit.image')"
-                            accept="image/*"
-                            :rules="imageRules"
-                            prepend-icon=""
-                        ></v-file-input>
+            <v-text-field
+                v-model="productName"
+                :label="$t('admin.product.edit.name')"
+                :rules="nameRules"
+                :counter="32"
+                required
+            ></v-text-field>
 
-                        <v-text-field
-                            v-model="productName"
-                            :label="$t('admin.product.edit.name')"
-                            :rules="nameRules"
-                            :counter="32"
-                            required
-                        ></v-text-field>
+            <v-text-field v-model="productSma" :label="$t('admin.product.edit.sma')"></v-text-field>
 
-                        <v-text-field
-                            v-model="productSma"
-                            :label="$t('admin.product.edit.sma')"
-                        ></v-text-field>
+            <p>{{ $t("admin.product.edit.price") }}</p>
+            <v-number-input
+                v-model="productPrice"
+                controlVariant="split"
+                :min="0.0"
+                :max="100.0"
+                :step="0.01"
+                suffix="€"
+                :hideInput="false"
+                :inset="false"
+                required
+            ></v-number-input>
 
-                        <p>{{ $t("admin.product.edit.price") }}</p>
-                        <v-number-input
-                            v-model="productPrice"
-                            controlVariant="split"
-                            :min="0.0"
-                            :max="100.0"
-                            :step="0.01"
-                            suffix="€"
-                            :hideInput="false"
-                            :inset="false"
-                            required
-                        ></v-number-input>
+            <p :class="productMax != 0 ? '' : 'text-disabled'">
+                {{ $t("admin.product.edit.max") }}{{ productMax != 0 ? ": " : ""
+                }}{{ displayProductMax }}
+            </p>
+            <v-slider
+                v-model="productMax"
+                type="number"
+                show-ticks="always"
+                :ticks="tickLabels"
+                step="1"
+                :max="10"
+                :min="0"
+                required
+            ></v-slider>
 
-                        <p :class="productMax != 0 ? '' : 'text-disabled'">
-                            {{ $t("admin.product.edit.max") }}{{ productMax != 0 ? ": " : ""
-                            }}{{ displayProductMax }}
-                        </p>
-                        <v-slider
-                            v-model="productMax"
-                            type="number"
-                            show-ticks="always"
-                            :ticks="tickLabels"
-                            step="1"
-                            :max="10"
-                            :min="0"
-                            required
-                        ></v-slider>
-
-                        <p :class="productMax != 0 ? '' : 'text-disabled'">{{}}</p>
-                        <v-switch
-                            v-model="productDisabled"
-                            :label="$t('admin.product.edit.disabled')"
-                            required
-                        ></v-switch>
-                    </v-card-text>
-
-                    <v-card-actions class="d-flex justify-end">
-                        <v-btn
-                            variant="flat"
-                            rounded="xl"
-                            :text="$t('common.cancel')"
-                            @click="isActive.value = false"
-                        ></v-btn>
-                        <v-btn
-                            :disabled="!valid || loading"
-                            variant="flat"
-                            rounded="xl"
-                            prepend-icon="fa-solid fa-check"
-                            :text="$t('common.save')"
-                            :color="valid ? 'primary' : 'none'"
-                            @click="updateProduct"
-                        >
-                        </v-btn>
-                    </v-card-actions>
-                </v-form>
-            </v-card>
+            <v-switch
+                v-model="productDisabled"
+                :label="$t('admin.product.edit.disabled')"
+                required
+            ></v-switch>
         </template>
-    </v-dialog>
-    <AlertError v-model="error" :title="errorTitle" :message="errorMessage" />
+    </EditDialogForm>
 </template>
 
 <script lang="ts">
+// @ts-ignore
+import EditDialogForm from "@/components/admin/EditDialogForm.vue";
 // @ts-ignore
 import type { FileUploadResult } from "@/types/Upload";
 import type { AxiosResponse } from "axios";
 // @ts-ignore
 import { useProductStore } from "@/stores/product";
 
-// @ts-ignore
-import AlertError from "@/components/AlertError.vue";
-
 export default {
-    props: {
-        modelValue: {
-            type: Boolean,
-        },
-        product: {
-            type: Object,
-            required: true,
-            default: () => ({
-                name: "",
-                price: 0,
-                max_quantity_per_command: 0,
-                image: undefined,
-            }),
-        },
-    },
     data: () => ({
-        valid: false,
-        error: false,
-        errorMessage: undefined as string | undefined,
-        errorTitle: undefined as string | undefined,
         loading: false,
         productId: "" as string,
         productImage: undefined as File | undefined,
@@ -158,6 +104,7 @@ export default {
                     : value.length <= 32 || "Name must not be longer than 32 characters",
         ],
     }),
+    emits: ["isDone", "update:modelValue"],
     computed: {
         show: {
             get(): boolean {
@@ -173,23 +120,37 @@ export default {
         },
         productStore: () => useProductStore(),
     },
+    props: {
+        modelValue: {
+            type: Boolean,
+        },
+        item: {
+            type: Object,
+            required: true,
+            default: () => ({
+                name: "",
+                price: 0,
+                max_quantity_per_command: 0,
+                image: undefined,
+            }),
+        },
+    },
     watch: {
-        product: {
+        item: {
             immediate: true,
-            handler(newProduct) {
-                this.productId = newProduct.id;
-                this.productName = newProduct.name;
-                this.productPrice = newProduct.price;
-                this.productMax = newProduct.max_quantity_per_command;
-                this.productSma = newProduct.sma_code;
-                this.productDisabled = newProduct.disabled;
+            handler(item) {
+                this.productId = item.id;
+                this.productName = item.name;
+                this.productPrice = item.price;
+                this.productMax = item.max_quantity_per_command;
+                this.productSma = item.sma_code;
+                this.productDisabled = item.disabled;
                 this.productImage = undefined; // Clear image input for edit mode
             },
         },
     },
     methods: {
-        async updateProduct() {
-            if (this.valid === false) return;
+        async updateItem() {
             this.loading = true;
 
             // @ts-ignore
@@ -225,7 +186,8 @@ export default {
                                 this.$refs.form.reset();
                             })
                             .catch((err: any) => {
-                                this.error = true;
+                                // @ts-ignore
+                                this.$refs.dialogRef.openError({});
                                 console.error(err);
                             })
                             .finally(() => {
@@ -234,8 +196,8 @@ export default {
                     })
                     .catch((err: any) => {
                         console.error(err);
-                        this.error = true;
-                        this.errorMessage = "Sorry but we cannot upload this image";
+                        // @ts-ignore
+                        this.$refs.dialogRef.openError({});
                         this.loading = false;
                     });
             } else {
@@ -254,7 +216,8 @@ export default {
                         this.$refs.form.reset();
                     })
                     .catch((err: any) => {
-                        this.error = true;
+                        // @ts-ignore
+                        this.$refs.dialogRef.openError({});
                         console.error(err);
                     })
                     .finally(() => {
@@ -264,7 +227,7 @@ export default {
         },
     },
     components: {
-        AlertError,
+        EditDialogForm,
     },
 };
 </script>

@@ -44,8 +44,7 @@ import { defineComponent } from "vue";
 import AlertError from "@/components/AlertError.vue";
 // @ts-ignore
 import type { SMAImportResponse } from "@/types/import/SMAImportResponse";
-// @ts-ignore
-import { AxiosResponse } from "axios";
+import type { AxiosResponse } from "axios";
 
 export default defineComponent({
     methods: {

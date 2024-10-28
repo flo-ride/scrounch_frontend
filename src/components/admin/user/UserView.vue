@@ -45,7 +45,7 @@
             </v-col>
         </v-row>
     </div>
-    <EditDialog v-model="edit" :user="editUser" @is-done="refresh" />
+    <EditDialog v-model="edit" :item="editUser" @is-done="refresh" />
 </template>
 
 <script lang="ts">

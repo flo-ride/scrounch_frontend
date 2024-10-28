@@ -118,7 +118,7 @@
             </v-col>
         </v-row>
     </div>
-    <EditDialog v-model="edit" :product="editProduct" />
+    <EditDialog v-model="edit" :item="editProduct" />
 </template>
 
 <script lang="ts">
