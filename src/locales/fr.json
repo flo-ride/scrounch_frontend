@@ -50,7 +50,7 @@
         "location": {
             "toolbarTitle": "Lieux",
             "add": {
-                "title": "Crée une lieux",
+                "title": "Crée un lieux",
                 "name": "Nom du Lieux",
                 "category": "Catégories"
             },
