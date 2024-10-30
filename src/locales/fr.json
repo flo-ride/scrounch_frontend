@@ -78,6 +78,9 @@
             "smaButton": "Importer SMA Sales",
             "overwriteName": "Écraser le Nom",
             "overwritePrice": "Écraser le Prix"
+        },
+        "log": {
+            "toolbarTitle": "Logs"
         }
     },
     "common": {

@@ -2,7 +2,7 @@
     <div>
         <v-row>
             <v-col cols="6" offset="3">
-                <CreateDialog v-model="CreateDialog" @is-done="refresh" />
+                <CreateDialog v-model="createItem" @is-done="refresh" />
             </v-col>
             <v-col cols="3"> </v-col>
             <v-col>
@@ -42,8 +42,8 @@
             </v-col>
         </v-row>
     </div>
-    <EditDialog v-model="edit" :item="selected" @is-done="refresh" />
-    <DeleteDialog v-model="delete" :item="selected" @is-done="refresh" />
+    <EditDialog v-model="editItem" :item="selected" @is-done="refresh" />
+    <DeleteDialog v-model="deleteItem" :item="selected" @is-done="refresh" />
 </template>
 
 <script lang="ts">
@@ -62,10 +62,10 @@ import type { AxiosResponse } from "axios";
 export default {
     data() {
         return {
-            CreateDialog: false,
+            createItem: false,
             loading: false,
-            edit: false,
-            delete: false,
+            editItem: false,
+            deleteItem: false,
             selected: undefined as undefined | Object,
             serverItems: [] as Location[],
             totalItems: 0,
@@ -124,11 +124,11 @@ export default {
             return creationTime.toLocaleString("fr-FR");
         },
         updateLocation(location: Location) {
-            this.edit = true;
+            this.editItem = true;
             this.selected = location;
         },
         deleteLocation(location: Location) {
-            this.delete = true;
+            this.deleteItem = true;
             this.selected = location;
         },
         refresh() {

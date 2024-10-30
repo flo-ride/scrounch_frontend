@@ -29,6 +29,10 @@
                 <v-icon icon="fa-solid fa-file-import"></v-icon>
                 {{ $t("admin.import.toolbarTitle") }}
             </v-tab>
+            <v-tab value="log">
+                <v-icon icon="fa-solid fa-book"></v-icon>
+                {{ $t("admin.log.toolbarTitle") }}
+            </v-tab>
         </v-tabs>
         <v-divider></v-divider>
         <v-tabs-window v-model="select" class="pa-2">
@@ -58,6 +62,10 @@
 
             <v-tabs-window-item value="import">
                 <ImportView />
+            </v-tabs-window-item>
+
+            <v-tabs-window-item value="log">
+                <div class="d-flex justify-center align-center">TODO</div>
             </v-tabs-window-item>
         </v-tabs-window>
     </div>

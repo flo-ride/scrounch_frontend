@@ -77,6 +77,9 @@
             "smaButton": "Import SMA Sales",
             "overwriteName": "Overwrite Name",
             "overwritePrice": "Overwrite Price"
+        },
+        "log": {
+            "toolbarTitle": "Logs"
         }
     },
     "common": {
