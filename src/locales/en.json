@@ -47,7 +47,27 @@
             "toolbarTitle": "Orders"
         },
         "location": {
-            "toolbarTitle": "Location"
+            "toolbarTitle": "Location",
+            "add": {
+                "title": "Add new Location",
+                "name": "Location's name",
+                "category": "Category"
+            },
+            "edit": {
+                "title": "Edit Location",
+                "name": "Location's name",
+                "disabled": "Disable",
+                "category": "Category"
+            },
+            "delete": {
+                "title": "Delete Location"
+            },
+            "enum": {
+                "category": {
+                    "dispenser": "Dispenser",
+                    "room": "Room"
+                }
+            }
         },
         "announcement": {
             "toolbarTitle": "Announcements"
@@ -67,6 +87,7 @@
         "notSpecified": "Not Specified",
         "disable": "Disable",
         "enable": "Enable",
-        "save": "Save"
+        "save": "Save",
+        "delete": "Delete"
     }
 }

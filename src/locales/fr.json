@@ -48,7 +48,27 @@
             "toolbarTitle": "Commandes"
         },
         "location": {
-            "toolbarTitle": "Lieux"
+            "toolbarTitle": "Lieux",
+            "add": {
+                "title": "Crée une lieux",
+                "name": "Nom du Lieux",
+                "category": "Catégories"
+            },
+            "edit": {
+                "title": "Modifier un lieux",
+                "name": "Nom du Lieux",
+                "disabled": "Désactivé",
+                "category": "Catégories"
+            },
+            "delete": {
+                "title": "Supprimer un lieux"
+            },
+            "enum": {
+                "category": {
+                    "dispenser": "Distributeur",
+                    "room": "Salle"
+                }
+            }
         },
         "announcement": {
             "toolbarTitle": "Annonces"
@@ -68,6 +88,7 @@
         "notSpecified": "Non spécifié",
         "disable": "Désactivé",
         "enable": "Activé",
-        "save": "Sauvegardé"
+        "save": "Sauvegardé",
+        "delete": "Supprimer"
     }
 }

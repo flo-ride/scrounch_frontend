@@ -49,7 +49,7 @@
             </v-tabs-window-item>
 
             <v-tabs-window-item value="location">
-                <div class="d-flex justify-center align-center">TODO</div>
+                <LocationView />
             </v-tabs-window-item>
 
             <v-tabs-window-item value="announcement">
@@ -67,6 +67,7 @@
 import ProductView from "@/components/admin/product/ProductView.vue";
 import ImportView from "@/components/admin/import/ImportView.vue";
 import UserView from "@/components/admin/user/UserView.vue";
+import LocationView from "@/components/admin/location/LocationView.vue";
 import { useUserStore } from "@/stores/user";
 
 export default {
@@ -82,6 +83,7 @@ export default {
         ProductView,
         ImportView,
         UserView,
+        LocationView,
     },
     mounted() {
         if (this.userStore.is_admin != true) {
