@@ -12,7 +12,7 @@ export type UserResponse = {
 };
 
 export type UserListResponse = {
-    products: UserResponse[];
+    users: UserResponse[];
 
     current_page: number;
 

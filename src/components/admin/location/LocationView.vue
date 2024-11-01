@@ -56,7 +56,7 @@ import DeleteDialog from "@/components/admin/location/DeleteDialog.vue";
 // @ts-ignore
 import type { Location } from "@/types/Location";
 // @ts-ignore
-import type { LocationListResponse } from "@/types/request/location";
+import type { LocationListResponse } from "@/types/responses/location";
 import type { AxiosResponse } from "axios";
 
 export default {

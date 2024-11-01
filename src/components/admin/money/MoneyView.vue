@@ -1,6 +1,10 @@
 <template>
     <div>
         <v-row>
+            <v-col cols="6" offset="3">
+                <CreateDialog v-model="createItem" @is-done="refresh" />
+            </v-col>
+            <v-col cols="3"> </v-col>
             <v-col>
                 <v-data-table-server
                     :headers="headers"
@@ -15,55 +19,56 @@
                         <span>{{ timeSinceCreation(item.creation_time.toString()) }}</span>
                     </template>
 
-                    <template v-slot:item.last_access_time="{ item }">
-                        <span>{{ timeSinceLastConnection(item.last_access_time.toString()) }}</span>
+                    <template v-slot:item.disabled="{ item }">
+                        <v-chip
+                            :color="item.disabled == true ? 'red' : 'green'"
+                            :text="
+                                item.disabled == true ? $t('common.disable') : $t('common.enable')
+                            "
+                            class="text-uppercase"
+                            size="small"
+                            label
+                        ></v-chip>
                     </template>
 
-                    <template v-slot:item.role="{ item }">
-                        <v-chip
-                            v-if="item.is_banned"
-                            color="error"
-                            text="BANNED"
-                            class="text-uppercase"
-                            size="small"
-                            label
-                        ></v-chip>
-                        <v-chip
-                            v-if="item.is_admin"
-                            color="success"
-                            text="ADMIN"
-                            class="text-uppercase"
-                            size="small"
-                            label
-                        ></v-chip>
+                    <template v-slot:item.conversion="{ item }">
+                        {{ item.amount_in_euro }}€ -> {{ item.amount_in_epicoin }}
                     </template>
 
                     <template v-slot:item.actions="{ item }">
-                        <v-btn icon="fa-solid fa-pen-to-square" @click="updateUser(item)"> </v-btn>
+                        <v-btn icon="fa-solid fa-pen-to-square" @click="updateRefill(item)"></v-btn>
+                        <v-btn icon="fa-solid fa-trash" @click="deleteRefill(item)"></v-btn>
                     </template>
                 </v-data-table-server>
             </v-col>
         </v-row>
     </div>
-    <EditDialog v-model="edit" :item="editUser" @is-done="refresh" />
+    <EditDialog v-model="editItem" :item="selected" @is-done="refresh" />
+    <DeleteDialog v-model="deleteItem" :item="selected" @is-done="refresh" />
 </template>
 
 <script lang="ts">
 // @ts-ignore
-import EditDialog from "@/components/admin/user/EditDialog.vue";
+import CreateDialog from "@/components/admin/money/CreateDialog.vue";
 // @ts-ignore
-import type { User } from "@/types/User";
+import EditDialog from "@/components/admin/money/EditDialog.vue";
 // @ts-ignore
-import type { UserListResponse } from "@/types/responses/user";
+import DeleteDialog from "@/components/admin/money/DeleteDialog.vue";
+// @ts-ignore
+import type { Refill } from "@/types/Refill";
+// @ts-ignore
+import type { RefillListResponse } from "@/types/responses/refill";
 import type { AxiosResponse } from "axios";
 
 export default {
     data() {
         return {
+            createItem: false,
             loading: false,
-            edit: false,
-            editUser: undefined as undefined | Object,
-            serverItems: [] as User[],
+            editItem: false,
+            deleteItem: false,
+            selected: undefined as undefined | Object,
+            serverItems: [] as Refill[],
             totalItems: 0,
             itemsPerPage: 20,
             search: "",
@@ -79,14 +84,9 @@ export default {
                     key: "name",
                 },
                 {
-                    title: "Email",
+                    title: "Conversion",
+                    key: "conversion",
                     sortable: true,
-                    key: "email",
-                },
-                {
-                    title: "Username",
-                    sortable: true,
-                    key: "username",
                 },
                 {
                     title: "Creation Time",
@@ -94,14 +94,9 @@ export default {
                     sortable: true,
                 },
                 {
-                    title: "Last Access",
-                    key: "last_access_time",
-                    sortable: true,
-                },
-                {
-                    title: "Role",
-                    key: "role",
-                    sortable: true,
+                    title: "Disable",
+                    key: "disabled",
+                    sortable: false,
                 },
                 {
                     title: "Actions",
@@ -117,45 +112,34 @@ export default {
             // @ts-ignore
             let axios = this.$axios;
             axios
-                .get<UserListResponse>(`/user?page=${page - 1}&per_page=${itemsPerPage}`)
-                .then((res: AxiosResponse<UserListResponse, any>) => {
-                    this.serverItems = res.data.users;
+                .get<RefillListResponse>(`/refill?page=${page - 1}&per_page=${itemsPerPage}`)
+                .then((res: AxiosResponse<RefillListResponse, any>) => {
+                    this.serverItems = res.data.refills;
                     this.totalItems = res.data.total_page * itemsPerPage;
                     this.loading = false;
                 });
-        },
-        timeSinceLastConnection(lastConnectionString: string): string {
-            const lastConnection = new Date(lastConnectionString);
-            const now = new Date();
-            const differenceMs = now.getTime() - lastConnection.getTime();
-
-            const minutes = Math.floor(differenceMs / (1000 * 60));
-            const hours = Math.floor(differenceMs / (1000 * 60 * 60));
-            const days = Math.floor(hours / 24);
-
-            if (days > 0) {
-                return `${days} jour${days > 1 ? "s" : ""}`;
-            } else if (hours > 0) {
-                return `${hours} heure${hours > 1 ? "s" : ""}`;
-            } else {
-                return `${minutes} minute${minutes > 1 ? "s" : ""}`;
-            }
         },
         timeSinceCreation(creationTimeString: string) {
             const creationTime = new Date(creationTimeString);
 
             return creationTime.toLocaleString("fr-FR");
         },
-        updateUser(user: User) {
-            this.edit = true;
-            this.editUser = user;
+        updateRefill(refill: Refill) {
+            this.editItem = true;
+            this.selected = refill;
+        },
+        deleteRefill(refill: Refill) {
+            this.deleteItem = true;
+            this.selected = refill;
         },
         refresh() {
             this.search = String(Date.now());
         },
     },
     components: {
+        CreateDialog,
         EditDialog,
+        DeleteDialog,
     },
     mounted() {},
 };

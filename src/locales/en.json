@@ -46,6 +46,25 @@
         "order": {
             "toolbarTitle": "Orders"
         },
+        "money": {
+            "toolbarTitle": "Money",
+            "add": {
+                "title": "Add a Refill",
+                "name": "Name of Refill",
+                "euro": "Price in Euro",
+                "epicoin": "Price in Epicoin"
+            },
+            "edit": {
+                "title": "Edit a Refill",
+                "name": "Name of Refill",
+                "euro": "Price in Euro",
+                "epicoin": "Price in Epicoin",
+                "disabled": "Disable"
+            },
+            "delete": {
+                "title": "Delete a Refill"
+            }
+        },
         "location": {
             "toolbarTitle": "Location",
             "add": {

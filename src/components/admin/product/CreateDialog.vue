@@ -29,7 +29,7 @@
             <v-number-input
                 v-model="productPrice"
                 controlVariant="split"
-                :min="0.0"
+                :min="0.1"
                 :max="100.0"
                 :step="0.01"
                 suffix="€"
