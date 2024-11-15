@@ -124,3 +124,5 @@ TEST-results.xml
 
 ## Project
 .env
+src/api/.*
+src/api/*.sh
