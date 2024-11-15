@@ -9,13 +9,13 @@
     >
         <template #form-content>
             <v-switch
-                v-model="userIsAdmin"
+                v-model="user.isAdmin"
                 :label="$t('admin.user.edit.isAdmin')"
                 required
             ></v-switch>
 
             <v-switch
-                v-model="userIsBanned"
+                v-model="user.isBanned"
                 :label="$t('admin.user.edit.isBanned')"
                 required
             ></v-switch>
@@ -24,16 +24,13 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import EditDialogForm from "@/components/admin/EditDialogForm.vue";
-import type { AxiosResponse } from "axios";
+import { User } from "@/types/User";
 
 export default {
     data: () => ({
         loading: false,
-        userId: "" as string,
-        userIsAdmin: false,
-        userIsBanned: false,
+        user: User.default() as User,
         nameRules: [
             (value: string) =>
                 !value
@@ -57,18 +54,16 @@ export default {
             type: Boolean,
         },
         item: {
-            type: Object,
+            type: User,
             required: true,
-            default: () => ({}),
+            default: () => User.default(),
         },
     },
     watch: {
         item: {
             immediate: true,
             handler(item) {
-                this.userId = item.id;
-                this.userIsAdmin = item.is_admin;
-                this.userIsBanned = item.is_banned;
+                this.user = item.clone();
             },
         },
     },
@@ -76,15 +71,9 @@ export default {
         async updateItem() {
             this.loading = true;
 
-            // @ts-ignore
-            let axios = this.$axios;
-
-            axios
-                .put(`/user/${this.userId}`, {
-                    is_admin: this.userIsAdmin,
-                    is_banned: this.userIsBanned,
-                })
-                .then((_res: AxiosResponse<any, any>) => {
+            this.$userApi
+                .editUser(this.user.id, this.user.toEditRequest())
+                .then((_res) => {
                     this.show = false;
                     this.$emit("isDone");
                 })

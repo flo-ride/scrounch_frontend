@@ -19,15 +19,15 @@
 export default {
     methods: {
         isBackendUp() {
-            this.$axios
-                .get("/status")
-                .then((res: any) => {
+            this.$miscApi
+                .getStatus()
+                .then((res) => {
                     if (res.status != 200 || res.data != "UP") {
                         this.$router.push("/unavailable");
                     }
                     this.$router.push("/");
                 })
-                .catch((_err: any) => {
+                .catch((_err) => {
                     this.$router.push("/unavailable");
                 });
         },

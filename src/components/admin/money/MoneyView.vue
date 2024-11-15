@@ -15,8 +15,8 @@
                     @update:options="loadItems"
                     item-value="id"
                 >
-                    <template v-slot:item.creation_time="{ item }">
-                        <span>{{ timeSinceCreation(item.creation_time.toString()) }}</span>
+                    <template v-slot:item.createdAt="{ item }">
+                        <span>{{ timeSinceCreation(item.createdAt.toString()) }}</span>
                     </template>
 
                     <template v-slot:item.disabled="{ item }">
@@ -32,7 +32,7 @@
                     </template>
 
                     <template v-slot:item.conversion="{ item }">
-                        {{ item.amount_in_euro }}€ -> {{ item.amount_in_epicoin }}
+                        {{ item.price }}€ -> {{ item.credit }}
                     </template>
 
                     <template v-slot:item.actions="{ item }">
@@ -48,17 +48,10 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import CreateDialog from "@/components/admin/money/CreateDialog.vue";
-// @ts-ignore
 import EditDialog from "@/components/admin/money/EditDialog.vue";
-// @ts-ignore
 import DeleteDialog from "@/components/admin/money/DeleteDialog.vue";
-// @ts-ignore
-import type { Refill } from "@/types/Refill";
-// @ts-ignore
-import type { RefillListResponse } from "@/types/responses/refill";
-import type { AxiosResponse } from "axios";
+import { Refill } from "@/types/Refill";
 
 export default {
     data() {
@@ -67,7 +60,7 @@ export default {
             loading: false,
             editItem: false,
             deleteItem: false,
-            selected: undefined as undefined | Object,
+            selected: undefined as undefined | Refill,
             serverItems: [] as Refill[],
             totalItems: 0,
             itemsPerPage: 20,
@@ -90,7 +83,7 @@ export default {
                 },
                 {
                     title: "Creation Time",
-                    key: "creation_time",
+                    key: "createdAt",
                     sortable: true,
                 },
                 {
@@ -109,15 +102,11 @@ export default {
     methods: {
         loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
             this.loading = true;
-            // @ts-ignore
-            let axios = this.$axios;
-            axios
-                .get<RefillListResponse>(`/refill?page=${page - 1}&per_page=${itemsPerPage}`)
-                .then((res: AxiosResponse<RefillListResponse, any>) => {
-                    this.serverItems = res.data.refills;
-                    this.totalItems = res.data.total_page * itemsPerPage;
-                    this.loading = false;
-                });
+            this.$refillApi.getAllRefills(page - 1, itemsPerPage).then((res) => {
+                this.serverItems = res.data.refills.map((x) => Refill.fromResponse(x));
+                this.totalItems = res.data.total_page * itemsPerPage;
+                this.loading = false;
+            });
         },
         timeSinceCreation(creationTimeString: string) {
             const creationTime = new Date(creationTimeString);

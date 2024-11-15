@@ -1,3 +1,4 @@
+import { LocationApi, MiscApi, ProductApi, RefillApi, UserApi } from "@/api";
 import axios from "axios";
 import type { App } from "vue";
 
@@ -9,22 +10,26 @@ interface AxiosOptions {
 export default {
     install: (app: App, options: AxiosOptions) => {
         const $axios = axios.create({
-            baseURL: options.baseUrl,
             headers: {
                 Authorization: options.token ? `Bearer ${options.token}` : "",
                 "Content-Type": "application/json",
             },
             withCredentials: true,
         });
-        $axios.interceptors.request.use(
-            (config) => {
-                return config;
-            },
-            (error) => {
-                return Promise.reject(error);
-            },
-        );
 
-        app.config.globalProperties.$axios = $axios;
+        app.config.globalProperties.$miscApi = new MiscApi(undefined, options.baseUrl, $axios);
+        app.config.globalProperties.$userApi = new UserApi(undefined, options.baseUrl, $axios);
+        app.config.globalProperties.$refillApi = new RefillApi(undefined, options.baseUrl, $axios);
+        app.config.globalProperties.$productApi = new ProductApi(
+            undefined,
+            options.baseUrl,
+            $axios,
+        );
+        app.config.globalProperties.$locationApi = new LocationApi(
+            undefined,
+            options.baseUrl,
+            $axios,
+        );
+        // app.config.globalProperties.$axios = $axios;
     },
 };

@@ -38,7 +38,6 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import AlertError from "@/components/AlertError.vue";
 
 export default {

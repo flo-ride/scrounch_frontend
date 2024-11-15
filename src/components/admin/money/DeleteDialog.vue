@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import DeleteDialogForm from "@/components/admin/DeleteDialogForm.vue";
+import { Refill } from "@/types/Refill";
 
 export default {
     data: () => ({
@@ -35,11 +35,9 @@ export default {
             type: Boolean,
         },
         item: {
-            type: Object,
+            type: Refill,
             required: true,
-            default: () => ({
-                name: "",
-            }),
+            default: () => Refill.default(),
         },
     },
     watch: {
@@ -54,10 +52,7 @@ export default {
         async updateItem() {
             this.loading = true;
             try {
-                // @ts-ignore
-                let axios = this.$axios;
-                await axios.delete(`/refill/${this.refillId}`);
-                // @ts-ignore
+                await this.$refillApi.deleteRefill(this.refillId);
                 this.show = false;
                 this.$emit("isDone");
             } catch (err) {

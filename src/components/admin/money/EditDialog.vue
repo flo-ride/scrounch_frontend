@@ -9,7 +9,7 @@
     >
         <template #form-content>
             <v-text-field
-                v-model="refillName"
+                v-model="refill.name"
                 :label="$t('admin.money.edit.name')"
                 :rules="nameRules"
                 :counter="32"
@@ -18,7 +18,7 @@
 
             <p>{{ $t("admin.money.edit.euro") }}</p>
             <v-number-input
-                v-model="refillInEuro"
+                v-model="refill.price"
                 controlVariant="split"
                 :min="0.1"
                 :max="100.0"
@@ -31,7 +31,7 @@
 
             <p>{{ $t("admin.money.edit.epicoin") }}</p>
             <v-number-input
-                v-model="refillInEpicoin"
+                v-model="refill.credit"
                 controlVariant="split"
                 :min="1"
                 :max="100"
@@ -42,7 +42,7 @@
             ></v-number-input>
 
             <v-switch
-                v-model="refillDisabled"
+                v-model="refill.disabled"
                 :label="$t('admin.money.edit.disabled')"
                 required
             ></v-switch>
@@ -51,17 +51,13 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import EditDialogForm from "@/components/admin/EditDialogForm.vue";
+import { Refill } from "@/types/Refill";
 
 export default {
     data: () => ({
         loading: false,
-        refillId: "",
-        refillName: "",
-        refillInEuro: 0.0,
-        refillInEpicoin: 0,
-        refillDisabled: false,
+        refill: Refill.default() as Refill,
         nameRules: [
             (value: String) =>
                 value.length > 32 ? "Name must not be longer than 32 characters" : true,
@@ -83,22 +79,16 @@ export default {
             type: Boolean,
         },
         item: {
-            type: Object,
+            type: Refill,
             required: true,
-            default: () => ({
-                name: "",
-            }),
+            default: () => Refill.default(),
         },
     },
     watch: {
         item: {
             immediate: true,
             handler(item) {
-                this.refillId = item.id;
-                this.refillName = item.name;
-                this.refillInEuro = item.amount_in_euro;
-                this.refillInEpicoin = item.amount_in_epicoin;
-                this.refillDisabled = item.disabled;
+                this.refill = item.clone();
             },
         },
     },
@@ -106,15 +96,7 @@ export default {
         async updateItem() {
             this.loading = true;
             try {
-                // @ts-ignore
-                let axios = this.$axios;
-                await axios.put(`/refill/${this.refillId}`, {
-                    name: this.refillName,
-                    amount_in_euro: this.refillInEuro,
-                    amount_in_epicoin: this.refillInEpicoin,
-                    disabled: this.refillDisabled,
-                });
-                // @ts-ignore
+                await this.$refillApi.editRefill(this.refill.id, this.refill.toEditRequest());
                 this.show = false;
                 // @ts-ignore
                 this.$refs.dialogRef.clearForm();

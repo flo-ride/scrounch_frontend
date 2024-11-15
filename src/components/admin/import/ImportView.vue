@@ -5,7 +5,6 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import SMAImportDialog from "@/components/admin/import/SMAImportDialog.vue";
 
 export default {

@@ -9,7 +9,7 @@
     >
         <template #form-content>
             <v-text-field
-                v-model="locationName"
+                v-model="location.name"
                 :label="$t('admin.location.edit.name')"
                 :rules="nameRules"
                 :counter="32"
@@ -17,7 +17,7 @@
             ></v-text-field>
 
             <v-select
-                v-model="locationCategory"
+                v-model="location.category"
                 :label="$t('admin.location.edit.category')"
                 :items="locationCategoryItems"
                 item-title="name"
@@ -26,7 +26,7 @@
             ></v-select>
 
             <v-switch
-                v-model="locationDisabled"
+                v-model="location.disabled"
                 :label="$t('admin.location.edit.disabled')"
                 required
             ></v-switch>
@@ -35,20 +35,17 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import EditDialogForm from "@/components/admin/EditDialogForm.vue";
+import { Location, LocationCategory } from "@/types/Location";
 
 export default {
     data: () => ({
         loading: false,
-        locationId: "",
-        locationName: "",
-        locationCategory: undefined as string | undefined,
+        location: Location.default() as Location,
         locationCategoryItems: [
-            { name: "Dispenser", value: "dispenser" },
-            { name: "Room", value: "room" },
+            { name: "Dispenser", value: LocationCategory.Dispenser },
+            { name: "Room", value: LocationCategory.Room },
         ],
-        locationDisabled: false,
         nameRules: [
             (value: String) =>
                 !value
@@ -74,21 +71,16 @@ export default {
             type: Boolean,
         },
         item: {
-            type: Object,
+            type: Location,
             required: true,
-            default: () => ({
-                name: "",
-            }),
+            default: () => Location.default() as Location,
         },
     },
     watch: {
         item: {
             immediate: true,
             handler(item) {
-                this.locationId = item.id;
-                this.locationName = item.name;
-                this.locationCategory = item.category;
-                this.locationDisabled = item.disabled;
+                this.location = item.clone();
             },
         },
     },
@@ -96,14 +88,10 @@ export default {
         async updateItem() {
             this.loading = true;
             try {
-                // @ts-ignore
-                let axios = this.$axios;
-                await axios.put(`/location/${this.locationId}`, {
-                    name: this.locationName,
-                    category: this.locationCategory,
-                    disabled: this.locationDisabled,
-                });
-                // @ts-ignore
+                await this.$locationApi.editLocation(
+                    this.location.id,
+                    this.location.toEditRequest(),
+                );
                 this.show = false;
                 // @ts-ignore
                 this.$refs.dialogRef.clearForm();

@@ -12,13 +12,13 @@
         </v-tabs>
         <v-row>
             <v-col cols="6" offset="3">
-                <CreateDialog v-model="createDialog" />
+                <CreateDialog v-model="createItem" @is-done="refresh" />
             </v-col>
             <v-col cols="3"> </v-col>
 
             <v-col
                 v-if="type == 'list'"
-                v-for="product in productStore.products"
+                v-for="product in serverItems"
                 :key="product.id"
                 cols="12"
                 sm="6"
@@ -43,19 +43,22 @@
                                 <v-skeleton-loader :elevation="24" type="card"></v-skeleton-loader>
                             </template>
                         </v-img>
-                        <p v-if="product.max_quantity_per_command">
+                        <p v-if="product.maxQuantityPerCommand">
                             {{ $t("admin.product.maxPerCommand") }}:
-                            {{ product.max_quantity_per_command }}
+                            {{ product.maxQuantityPerCommand }}
                         </p>
-                        <p v-if="product.sma_code">
-                            {{ $t("admin.product.sma") }}: {{ product.sma_code }}
+                        <p v-if="product.smaCode">
+                            {{ $t("admin.product.sma") }}: {{ product.smaCode }}
                         </p>
                         <p>
                             {{ $t("admin.product.creationDate") }}:
-                            {{ product.creation_time.toLocaleString() }}
+                            {{ product.createdAt.toLocaleString() }}
                         </p>
                     </v-card-text>
                 </v-card>
+            </v-col>
+            <v-col cols="12" v-if="type == 'list'">
+                <v-pagination v-model="page" :length="totalPage" :total-visible="3"></v-pagination>
             </v-col>
             <v-col cols="12" v-if="type == 'grid'">
                 <v-text-field
@@ -68,10 +71,14 @@
                 ></v-text-field>
             </v-col>
             <v-col v-if="type == 'grid'">
-                <v-data-table
+                <v-data-table-server
                     :headers="headers"
                     v-model:search="search"
-                    :items="productStore.products"
+                    v-model:items-per-page="itemsPerPage"
+                    :page="page"
+                    :items="serverItems"
+                    :items-length="totalItems"
+                    @update:options="loadItems"
                     item-value="id"
                 >
                     <template v-slot:item.image="{ item }">
@@ -85,13 +92,11 @@
                     </template>
 
                     <template v-slot:item.max_quantity_per_command="{ item }">
-                        <span>{{
-                            item.max_quantity_per_command ?? $t("common.notSpecified")
-                        }}</span>
+                        <span>{{ item.maxQuantityPerCommand ?? $t("common.notSpecified") }}</span>
                     </template>
 
                     <template v-slot:item.sma_code="{ item }">
-                        <span>{{ item.sma_code ?? $t("common.none") }}</span>
+                        <span>{{ item.smaCode ?? $t("common.none") }}</span>
                     </template>
 
                     <template v-slot:item.disabled="{ item }">
@@ -106,39 +111,41 @@
                         ></v-chip>
                     </template>
 
-                    <template v-slot:item.creation_time="{ item }">
-                        <span>{{ item.creation_time.toLocaleString("fr-FR") }}</span>
+                    <template v-slot:item.created_at="{ item }">
+                        <span>{{ item.createdAt.toLocaleString("fr-FR") }}</span>
                     </template>
 
                     <template v-slot:item.actions="{ item }">
                         <v-btn icon="fa-solid fa-pen-to-square" @click="updateProduct(item)">
                         </v-btn>
                     </template>
-                </v-data-table>
+                </v-data-table-server>
             </v-col>
         </v-row>
     </div>
-    <EditDialog v-model="edit" :item="editProduct" />
+    <EditDialog v-model="editItem" :item="selected" @is-done="refresh" />
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import CreateDialog from "@/components/admin/product/CreateDialog.vue";
-// @ts-ignore
 import EditDialog from "@/components/admin/product/EditDialog.vue";
-// @ts-ignore
-import { useProductStore } from "@/stores/product";
-// @ts-ignore
-import type { Product } from "@/types/Product";
+import { Product } from "@/types/Product";
 
 export default {
     data() {
         return {
-            createDialog: false,
+            createItem: false,
+            loading: false,
+            editItem: false,
+            deleteItem: false,
+            selected: undefined as undefined | Product,
+            serverItems: [] as Product[],
+            page: 1,
+            totalPage: 1,
+            totalItems: 0,
+            itemsPerPage: 20,
             search: "",
-            type: "list",
-            edit: false,
-            editProduct: undefined as undefined | Object,
+            type: "grid",
             headers: [
                 {
                     title: "Id",
@@ -172,7 +179,7 @@ export default {
                 },
                 {
                     title: "Creation Time",
-                    key: "creation_time",
+                    key: "created_at",
                     sortable: true,
                 },
                 {
@@ -188,27 +195,39 @@ export default {
             ],
         };
     },
-    computed: {
-        productStore: () => useProductStore(),
+    computed: {},
+    watch: {
+        page(newPage, _oldPage) {
+            this.loadItems({ page: newPage, itemsPerPage: this.itemsPerPage });
+        },
     },
     methods: {
+        loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
+            this.loading = true;
+            this.$productApi.getAllProducts(page - 1, itemsPerPage).then((res) => {
+                this.serverItems = res.data.products.map((x) => Product.fromResponse(x));
+                this.totalItems = res.data.total_page * itemsPerPage;
+                this.totalPage = res.data.total_page;
+                this.loading = false;
+            });
+        },
         imageSrcUrl: (imageName: string | undefined) => {
             // @ts-ignore
             let backendUrl = window.env.BACKEND_URL;
             return `${backendUrl}/download/${imageName}?type=product`;
         },
         updateProduct(product: Product) {
-            this.edit = true;
-            this.editProduct = product;
+            this.editItem = true;
+            this.selected = product;
+        },
+        refresh() {
+            this.loadItems({ page: this.page, itemsPerPage: this.itemsPerPage });
         },
     },
     components: {
         CreateDialog,
         EditDialog,
     },
-    mounted() {
-        // @ts-ignore
-        this.productStore.fetch_all_products(this.$axios);
-    },
+    mounted() {},
 };
 </script>

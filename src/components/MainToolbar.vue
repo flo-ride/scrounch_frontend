@@ -56,7 +56,7 @@
                         <v-icon> fa-solid fa-file-invoice </v-icon>
                         {{ $t("toolbar.previous") }}
                     </v-list-item>
-                    <v-list-item v-if="userStore.is_admin" @click="$router.push('/admin')">
+                    <v-list-item v-if="userStore.user?.isAdmin" @click="$router.push('/admin')">
                         <v-icon> fa-solid fa-gear </v-icon>
                         {{ $t("toolbar.admin") }}
                     </v-list-item>
@@ -72,7 +72,6 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import { useUserStore } from "@/stores/user";
 import { useTheme } from "vuetify";
 import { defineComponent } from "vue";
@@ -87,19 +86,15 @@ export default defineComponent({
     methods: {
         async login() {
             this.loginLoading = true;
-            // @ts-ignore
-            let res = await this.$axios.get("/me");
+            let res = await this.$userApi.getMe();
             if (res.status != 200) {
-                // @ts-ignore
                 window.location.href = `${this.$backendUrl}/login`;
             }
             this.loginLoading = false;
         },
         async logout() {
-            // @ts-ignore
-            let res = await this.$axios.get("/me");
+            let res = await this.$userApi.getMe();
             if (res.status == 200) {
-                // @ts-ignore
                 window.location.href = `${this.$backendUrl}/logout`;
             }
         },
@@ -118,7 +113,7 @@ export default defineComponent({
     computed: {
         userStore: () => useUserStore(),
         nameInitials() {
-            return this.userStore.name
+            return this.userStore.user?.name
                 ?.split(" ")
                 .map((w: String) => w[0])
                 .join("")

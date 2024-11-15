@@ -5,7 +5,7 @@
                 {{ $t("admin.import.smaButton") }}
             </v-btn>
         </template>
-        <template v-slot:default="{ isActive }">
+        <template v-slot:default="">
             <v-card>
                 <v-card-title>
                     <span class="text-h6">
@@ -40,10 +40,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-// @ts-ignore
 import AlertError from "@/components/AlertError.vue";
-// @ts-ignore
-import type { SMAImportResponse } from "@/types/import/SMAImportResponse";
 import type { AxiosResponse } from "axios";
 
 export default defineComponent({
@@ -52,12 +49,9 @@ export default defineComponent({
             this.loading = true;
             this.disable = true;
 
-            // @ts-ignore
-            let axios = this.$axios;
-
-            axios
-                .post(`/sma?name=${this.overwriteName}&price=${this.overwritePrice}`)
-                .then((res: AxiosResponse<SMAImportResponse, any>) => {
+            this.$miscApi
+                .postUpdateFromSma(this.overwriteName, this.overwritePrice)
+                .then((_res: AxiosResponse<any, any>) => {
                     // TODO: ADD new dialog just for confirmation
                     this.show = false;
                 })

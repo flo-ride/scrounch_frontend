@@ -15,8 +15,19 @@
                     @update:options="loadItems"
                     item-value="id"
                 >
-                    <template v-slot:item.creation_time="{ item }">
-                        <span>{{ timeSinceCreation(item.creation_time.toString()) }}</span>
+                    <template v-slot:item.created_at="{ item }">
+                        <span>{{ timeSinceCreation(item.createdAt.toString()) }}</span>
+                    </template>
+
+                    <template v-slot:item.category="{ item }">
+                        <v-chip
+                            v-if="item.category != undefined"
+                            color="primary"
+                            :text="item.category?.toString()"
+                            class="text-uppercase"
+                            size="small"
+                            label
+                        ></v-chip>
                     </template>
 
                     <template v-slot:item.disabled="{ item }">
@@ -47,17 +58,10 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import CreateDialog from "@/components/admin/location/CreateDialog.vue";
-// @ts-ignore
 import EditDialog from "@/components/admin/location/EditDialog.vue";
-// @ts-ignore
 import DeleteDialog from "@/components/admin/location/DeleteDialog.vue";
-// @ts-ignore
-import type { Location } from "@/types/Location";
-// @ts-ignore
-import type { LocationListResponse } from "@/types/responses/location";
-import type { AxiosResponse } from "axios";
+import { Location } from "@/types/Location";
 
 export default {
     data() {
@@ -66,7 +70,7 @@ export default {
             loading: false,
             editItem: false,
             deleteItem: false,
-            selected: undefined as undefined | Object,
+            selected: undefined as undefined | Location,
             serverItems: [] as Location[],
             totalItems: 0,
             itemsPerPage: 20,
@@ -89,7 +93,7 @@ export default {
                 },
                 {
                     title: "Creation Time",
-                    key: "creation_time",
+                    key: "createdAt",
                     sortable: true,
                 },
                 {
@@ -108,15 +112,11 @@ export default {
     methods: {
         loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
             this.loading = true;
-            // @ts-ignore
-            let axios = this.$axios;
-            axios
-                .get<LocationListResponse>(`/location?page=${page - 1}&per_page=${itemsPerPage}`)
-                .then((res: AxiosResponse<LocationListResponse, any>) => {
-                    this.serverItems = res.data.locations;
-                    this.totalItems = res.data.total_page * itemsPerPage;
-                    this.loading = false;
-                });
+            this.$locationApi.getAllLocations(page - 1, itemsPerPage).then((res) => {
+                this.serverItems = res.data.locations.map((x) => Location.fromResponse(x));
+                this.totalItems = res.data.total_page * itemsPerPage;
+                this.loading = false;
+            });
         },
         timeSinceCreation(creationTimeString: string) {
             const creationTime = new Date(creationTimeString);

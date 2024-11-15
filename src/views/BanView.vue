@@ -48,7 +48,7 @@ export default {
         userStore: () => useUserStore(),
     },
     mounted() {
-        if (this.userStore.is_banned != true) {
+        if (this.userStore.user?.isBanned != true) {
             this.$router.push("/");
         }
     },

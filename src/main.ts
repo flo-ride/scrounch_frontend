@@ -14,15 +14,15 @@ import { VNumberInput } from "vuetify/labs/components";
 // I18n
 import { createI18n, useI18n } from "vue-i18n";
 
-import en from "./locales/en.json";
-import fr from "./locales/fr.json";
+import en from "@/locales/en.json";
+import fr from "@/locales/fr.json";
 
 import App from "./App.vue";
 import router from "./router";
 import axios from "./plugins/axios";
 
-import type { AxiosInstance } from "axios";
 import type { Router } from "vue-router";
+import { LocationApi, MiscApi, ProductApi, RefillApi, UserApi } from "./api";
 
 const messages = {
     en: {
@@ -108,7 +108,11 @@ const app = createApp(App);
 
 declare module "@vue/runtime-core" {
     interface ComponentCustomProperties {
-        $axios: AxiosInstance;
+        $miscApi: MiscApi;
+        $userApi: UserApi;
+        $locationApi: LocationApi;
+        $productApi: ProductApi;
+        $refillApi: RefillApi;
         $backendUrl: string;
         $router: Router;
     }

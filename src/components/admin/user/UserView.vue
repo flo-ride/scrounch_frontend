@@ -11,17 +11,17 @@
                     @update:options="loadItems"
                     item-value="id"
                 >
-                    <template v-slot:item.creation_time="{ item }">
-                        <span>{{ timeSinceCreation(item.creation_time.toString()) }}</span>
+                    <template v-slot:item.created_at="{ item }">
+                        <span>{{ timeSinceCreation(item.createdAt.toString()) }}</span>
                     </template>
 
-                    <template v-slot:item.last_access_time="{ item }">
-                        <span>{{ timeSinceLastConnection(item.last_access_time.toString()) }}</span>
+                    <template v-slot:item.last_access_at="{ item }">
+                        <span>{{ timeSinceLastConnection(item.lastAccessAt.toString()) }}</span>
                     </template>
 
                     <template v-slot:item.role="{ item }">
                         <v-chip
-                            v-if="item.is_banned"
+                            v-if="item.isBanned"
                             color="error"
                             text="BANNED"
                             class="text-uppercase"
@@ -29,7 +29,7 @@
                             label
                         ></v-chip>
                         <v-chip
-                            v-if="item.is_admin"
+                            v-if="item.isAdmin"
                             color="success"
                             text="ADMIN"
                             class="text-uppercase"
@@ -49,20 +49,15 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import EditDialog from "@/components/admin/user/EditDialog.vue";
-// @ts-ignore
-import type { User } from "@/types/User";
-// @ts-ignore
-import type { UserListResponse } from "@/types/responses/user";
-import type { AxiosResponse } from "axios";
+import { User } from "@/types/User";
 
 export default {
     data() {
         return {
             loading: false,
             edit: false,
-            editUser: undefined as undefined | Object,
+            editUser: undefined as undefined | User,
             serverItems: [] as User[],
             totalItems: 0,
             itemsPerPage: 20,
@@ -90,12 +85,12 @@ export default {
                 },
                 {
                     title: "Creation Time",
-                    key: "creation_time",
+                    key: "created_at",
                     sortable: true,
                 },
                 {
                     title: "Last Access",
-                    key: "last_access_time",
+                    key: "last_access_at",
                     sortable: true,
                 },
                 {
@@ -114,15 +109,11 @@ export default {
     methods: {
         loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
             this.loading = true;
-            // @ts-ignore
-            let axios = this.$axios;
-            axios
-                .get<UserListResponse>(`/user?page=${page - 1}&per_page=${itemsPerPage}`)
-                .then((res: AxiosResponse<UserListResponse, any>) => {
-                    this.serverItems = res.data.users;
-                    this.totalItems = res.data.total_page * itemsPerPage;
-                    this.loading = false;
-                });
+            this.$userApi.getAllUsers(page - 1, itemsPerPage).then((res) => {
+                this.serverItems = res.data.users.map((x) => User.fromResponse(x));
+                this.totalItems = res.data.total_page * itemsPerPage;
+                this.loading = false;
+            });
         },
         timeSinceLastConnection(lastConnectionString: string): string {
             const lastConnection = new Date(lastConnectionString);

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="userStore.is_admin == true">
+    <div v-if="userStore.user?.isAdmin == true">
         <v-tabs v-model="select" align-tabs="center" stacked>
             <v-tab value="product">
                 <v-icon icon="fa-solid fa-mug-hot"></v-icon>
@@ -104,7 +104,7 @@ export default {
         MoneyView,
     },
     mounted() {
-        if (this.userStore.is_admin != true) {
+        if (this.userStore.user?.isAdmin != true) {
             this.$router.push("/");
         }
     },

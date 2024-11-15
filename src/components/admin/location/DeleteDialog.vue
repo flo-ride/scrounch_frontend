@@ -11,8 +11,8 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import DeleteDialogForm from "@/components/admin/DeleteDialogForm.vue";
+import { Location } from "@/types/Location";
 
 export default {
     data: () => ({
@@ -35,11 +35,9 @@ export default {
             type: Boolean,
         },
         item: {
-            type: Object,
+            type: Location,
             required: true,
-            default: () => ({
-                name: "",
-            }),
+            default: () => Location.default() as Location,
         },
     },
     watch: {
@@ -54,10 +52,7 @@ export default {
         async updateItem() {
             this.loading = true;
             try {
-                // @ts-ignore
-                let axios = this.$axios;
-                await axios.delete(`/location/${this.locationId}`);
-                // @ts-ignore
+                await this.$locationApi.deleteLocation(this.locationId);
                 this.show = false;
                 this.$emit("isDone");
             } catch (err) {

@@ -17,18 +17,21 @@
             ></v-file-input>
 
             <v-text-field
-                v-model="productName"
+                v-model="product.name"
                 :label="$t('admin.product.edit.name')"
                 :rules="nameRules"
                 :counter="32"
                 required
             ></v-text-field>
 
-            <v-text-field v-model="productSma" :label="$t('admin.product.edit.sma')"></v-text-field>
+            <v-text-field
+                v-model="product.smaCode"
+                :label="$t('admin.product.edit.sma')"
+            ></v-text-field>
 
             <p>{{ $t("admin.product.edit.price") }}</p>
             <v-number-input
-                v-model="productPrice"
+                v-model="product.price"
                 controlVariant="split"
                 :min="0.0"
                 :max="100.0"
@@ -39,12 +42,12 @@
                 required
             ></v-number-input>
 
-            <p :class="productMax != 0 ? '' : 'text-disabled'">
-                {{ $t("admin.product.edit.max") }}{{ productMax != 0 ? ": " : ""
+            <p :class="product.maxQuantityPerCommand != 0 ? '' : 'text-disabled'">
+                {{ $t("admin.product.edit.max") }}{{ product.maxQuantityPerCommand != 0 ? ": " : ""
                 }}{{ displayProductMax }}
             </p>
             <v-slider
-                v-model="productMax"
+                v-model="product.maxQuantityPerCommand"
                 type="number"
                 show-ticks="always"
                 :ticks="tickLabels"
@@ -55,7 +58,7 @@
             ></v-slider>
 
             <v-switch
-                v-model="productDisabled"
+                v-model="product.disabled"
                 :label="$t('admin.product.edit.disabled')"
                 required
             ></v-switch>
@@ -64,24 +67,17 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
+import { FileType } from "@/api";
 import EditDialogForm from "@/components/admin/EditDialogForm.vue";
-// @ts-ignore
-import type { FileUploadResult } from "@/types/Upload";
+import { Currency, CurrencyValue } from "@/types/Currency";
+import { Product } from "@/types/Product";
 import type { AxiosResponse } from "axios";
-// @ts-ignore
-import { useProductStore } from "@/stores/product";
 
 export default {
     data: () => ({
         loading: false,
-        productId: "" as string,
+        product: Product.default() as Product,
         productImage: undefined as File | undefined,
-        productName: "" as string,
-        productSma: "" as string | undefined,
-        productPrice: 0 as number,
-        productMax: undefined as number | undefined,
-        productDisabled: false,
         tickLabels: {
             0: "None",
             2: "2",
@@ -92,8 +88,8 @@ export default {
         },
         imageRules: [
             (value: File[]) => {
-                if (value && value[0]?.size >= 32000000)
-                    return "Image size must be lower then 32 MB.";
+                if (value && value[0]?.size >= 64000000)
+                    return "Image size must be lower then 64 MB.";
                 return true;
             },
         ],
@@ -115,37 +111,27 @@ export default {
             },
         },
         displayProductMax(): string {
-            if (this.productMax == undefined) return "";
-            return this.productMax === 0 ? "" : this.productMax.toString();
+            if (this.product.maxQuantityPerCommand == undefined) return "";
+            return this.product.maxQuantityPerCommand === 0
+                ? ""
+                : this.product.maxQuantityPerCommand.toString();
         },
-        productStore: () => useProductStore(),
     },
     props: {
         modelValue: {
             type: Boolean,
         },
         item: {
-            type: Object,
+            type: Product,
             required: true,
-            default: () => ({
-                name: "",
-                price: 0,
-                max_quantity_per_command: 0,
-                image: undefined,
-            }),
+            default: () => Product.default(),
         },
     },
     watch: {
         item: {
             immediate: true,
             handler(item) {
-                this.productId = item.id;
-                this.productName = item.name;
-                this.productPrice = item.price;
-                this.productMax = item.max_quantity_per_command;
-                this.productSma = item.sma_code;
-                this.productDisabled = item.disabled;
-                this.productImage = undefined; // Clear image input for edit mode
+                this.product = item.clone();
             },
         },
     },
@@ -153,37 +139,19 @@ export default {
         async updateItem() {
             this.loading = true;
 
-            // @ts-ignore
-            let axios = this.$axios;
-
             if (this.productImage != undefined) {
-                let formData = new FormData();
-                if (this.productImage) formData.append("image", this.productImage);
-                axios
-                    .post<FileUploadResult>("/upload", formData, {
-                        params: {
-                            type: "product",
-                        },
-                        headers: {
-                            "Content-Type": "multipart/form-data",
-                        },
-                    })
-                    .then((res: AxiosResponse<FileUploadResult, any>) => {
+                this.$miscApi
+                    .postUploadFiles(FileType.Product, this.productImage)
+                    .then((res) => {
                         let filename = res.data[0][1];
-                        axios
-                            .put(`/product/${this.productId}`, {
-                                image: filename,
-                                name: this.productName,
-                                price: this.productPrice,
-                                max_quantity_per_command: this.productMax,
-                                disabled: this.productDisabled,
-                                sma_code: this.productSma,
-                            })
-                            .then((_res: AxiosResponse<any, any>) => {
+                        this.product.image = filename;
+
+                        this.$productApi
+                            .editProduct(this.product.id, this.product.toEditRequest())
+                            .then((_res) => {
                                 this.show = false;
-                                this.productStore.fetch_all_products(axios);
                                 // @ts-ignore
-                                this.$refs.form.reset();
+                                this.$emit("isDone");
                             })
                             .catch((err: any) => {
                                 // @ts-ignore
@@ -201,19 +169,11 @@ export default {
                         this.loading = false;
                     });
             } else {
-                axios
-                    .put(`/product/${this.productId}`, {
-                        name: this.productName,
-                        price: this.productPrice,
-                        max_quantity_per_command: this.productMax,
-                        disabled: this.productDisabled,
-                        sma_code: this.productSma,
-                    })
-                    .then((_res: AxiosResponse<any, any>) => {
+                this.$productApi
+                    .editProduct(this.product.id, this.product.toEditRequest())
+                    .then((_res) => {
                         this.show = false;
-                        this.productStore.fetch_all_products(axios);
-                        // @ts-ignore
-                        this.$refs.form.reset();
+                        this.$emit("isDone");
                     })
                     .catch((err: any) => {
                         // @ts-ignore

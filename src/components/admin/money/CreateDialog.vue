@@ -9,7 +9,7 @@
     >
         <template #form-content>
             <v-text-field
-                v-model="refillName"
+                v-model="refill.name"
                 :label="$t('admin.money.add.name')"
                 :rules="nameRules"
                 :counter="32"
@@ -17,7 +17,7 @@
 
             <p>{{ $t("admin.money.add.euro") }}</p>
             <v-number-input
-                v-model="refillInEuro"
+                v-model="refill.price"
                 controlVariant="split"
                 :min="0.1"
                 :max="100.0"
@@ -30,7 +30,7 @@
 
             <p>{{ $t("admin.money.add.epicoin") }}</p>
             <v-number-input
-                v-model="refillInEpicoin"
+                v-model="refill.credit"
                 controlVariant="split"
                 :min="1"
                 :max="100"
@@ -44,15 +44,13 @@
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import CreateDialogForm from "@/components/admin/CreateDialogForm.vue";
+import { Refill } from "@/types/Refill";
 
 export default {
     data: () => ({
         loading: false,
-        refillName: undefined as undefined | string,
-        refillInEuro: 0.0,
-        refillInEpicoin: 0,
+        refill: Refill.default() as Refill,
         nameRules: [
             (value: String) =>
                 value.length > 32 ? "Name must not be longer than 32 characters" : true,
@@ -76,20 +74,7 @@ export default {
         async createItem() {
             this.loading = true;
             try {
-                if (this.refillName != undefined) {
-                    if (this.refillName.length == 0) {
-                        this.refillName = undefined;
-                    }
-                }
-
-                // @ts-ignore
-                let axios = this.$axios;
-                await axios.post("/refill", {
-                    name: this.refillName,
-                    amount_in_euro: this.refillInEuro,
-                    amount_in_epicoin: this.refillInEpicoin,
-                });
-                // @ts-ignore
+                await this.$refillApi.postNewRefill(this.refill.toNewRequest());
                 this.show = false;
                 // @ts-ignore
                 this.$refs.dialogRef.clearForm();

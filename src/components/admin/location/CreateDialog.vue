@@ -9,7 +9,7 @@
     >
         <template #form-content>
             <v-text-field
-                v-model="locationName"
+                v-model="location.name"
                 :label="$t('admin.location.add.name')"
                 :rules="nameRules"
                 :counter="32"
@@ -17,29 +17,27 @@
             ></v-text-field>
 
             <v-select
-                v-model="locationCategory"
+                v-model="location.category"
                 :label="$t('admin.location.add.category')"
                 :items="locationCategoryItems"
                 item-title="name"
                 item-value="value"
-                required
             ></v-select>
         </template>
     </CreateDialogForm>
 </template>
 
 <script lang="ts">
-// @ts-ignore
 import CreateDialogForm from "@/components/admin/CreateDialogForm.vue";
+import { Location, LocationCategory } from "@/types/Location";
 
 export default {
     data: () => ({
         loading: false,
-        locationName: "",
-        locationCategory: undefined as string | undefined,
+        location: new Location("1", "", false, new Date(), undefined) as Location,
         locationCategoryItems: [
-            { name: "Dispenser", value: "dispenser" },
-            { name: "Room", value: "room" },
+            { name: "Dispenser", value: LocationCategory.Dispenser },
+            { name: "Room", value: LocationCategory.Room },
         ],
         nameRules: [
             (value: String) =>
@@ -68,13 +66,7 @@ export default {
         async createItem() {
             this.loading = true;
             try {
-                // @ts-ignore
-                let axios = this.$axios;
-                await axios.post("/location", {
-                    name: this.locationName,
-                    category: this.locationCategory,
-                });
-                // @ts-ignore
+                await this.$locationApi.postNewLocation(this.location.toNewRequest());
                 this.show = false;
                 // @ts-ignore
                 this.$refs.dialogRef.clearForm();
