@@ -16,6 +16,7 @@
           git
           prettierd
           nodePackages.volar
+          openapi-generator-cli
         ];
 
         shellHook = ''
