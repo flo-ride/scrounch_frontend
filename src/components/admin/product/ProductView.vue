@@ -116,19 +116,24 @@
                     </template>
 
                     <template v-slot:item.actions="{ item }">
-                        <v-btn icon="fa-solid fa-pen-to-square" @click="updateProduct(item)">
-                        </v-btn>
+                        <v-btn
+                            icon="fa-solid fa-pen-to-square"
+                            @click="updateProduct(item)"
+                        ></v-btn>
+                        <v-btn icon="fa-solid fa-trash" @click="deleteProduct(item)"></v-btn>
                     </template>
                 </v-data-table-server>
             </v-col>
         </v-row>
     </div>
     <EditDialog v-model="editItem" :item="selected" @is-done="refresh" />
+    <DeleteDialog v-model="deleteItem" :item="selected" @is-done="refresh" />
 </template>
 
 <script lang="ts">
 import CreateDialog from "@/components/admin/product/CreateDialog.vue";
 import EditDialog from "@/components/admin/product/EditDialog.vue";
+import DeleteDialog from "@/components/admin/product/DeleteDialog.vue";
 import { Product } from "@/types/Product";
 
 export default {
@@ -220,6 +225,10 @@ export default {
             this.editItem = true;
             this.selected = product;
         },
+        deleteProduct(product: Product) {
+            this.deleteItem = true;
+            this.selected = product;
+        },
         refresh() {
             this.loadItems({ page: this.page, itemsPerPage: this.itemsPerPage });
         },
@@ -227,6 +236,7 @@ export default {
     components: {
         CreateDialog,
         EditDialog,
+        DeleteDialog,
     },
     mounted() {},
 };

@@ -28,7 +28,9 @@
                 "max": "Max par commande",
                 "disabled": "Désactivé"
             },
-
+            "delete": {
+                "title": "Supprimé un produit"
+            },
             "maxPerCommand": "Quantité maximale par Commande",
             "sma": "Codes Sales (SMA)",
             "creationDate": "Date de création"
