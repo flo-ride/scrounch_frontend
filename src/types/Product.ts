@@ -15,6 +15,7 @@ export class Product {
     disabled: boolean;
     createdAt: Date;
     smaCode?: string;
+    inventreeCode?: string;
 
     constructor(
         id: string,
@@ -33,6 +34,7 @@ export class Product {
         disabled?: boolean | null,
         image?: string | null,
         smaCode?: string | null,
+        inventreeCode?: string | null,
     ) {
         this.id = id;
         this.name = name;
@@ -45,6 +47,7 @@ export class Product {
         this.disabled = disabled ?? false;
         this.purchasable = purchasable ?? true;
         this.smaCode = smaCode ?? undefined;
+        this.inventreeCode = smaCode ?? undefined;
         this.createdAt = createdAt;
     }
 
@@ -94,6 +97,7 @@ export class Product {
             this.disabled,
             this.image,
             this.smaCode,
+            this.inventreeCode,
         );
     }
 
@@ -116,6 +120,7 @@ export class Product {
             response.disabled ?? null,
             response.image ?? null,
             response.sma_code ?? null,
+            response.inventree_code ?? null,
         );
     }
 
@@ -135,6 +140,7 @@ export class Product {
             purchasable: this.purchasable,
             disabled: this.disabled ?? null,
             sma_code: this.smaCode ?? null,
+            inventree_code: this.inventreeCode ?? null,
         };
     }
 
@@ -152,6 +158,7 @@ export class Product {
             max_quantity_per_command: this.maxQuantityPerCommand ?? null,
             purchasable: this.purchasable,
             sma_code: this.smaCode ?? undefined,
+            inventree_code: this.inventreeCode ?? undefined,
         };
     }
 }
