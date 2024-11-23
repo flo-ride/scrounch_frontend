@@ -1,35 +1,49 @@
 import type { EditProductRequest, NewProductRequest, ProductResponse } from "@/api";
 import { Currency } from "@/types/Currency";
+import { Unit } from "@/types/Unit";
 
 export class Product {
     id: string;
     name: string;
-    price: number;
-    currency: Currency;
     image?: string;
+    display_order: number,
+    sell_price: number;
+    sell_price_currency: Currency;
     maxQuantityPerCommand?: number;
+    purchasable: boolean;
+    unit: Unit;
     disabled: boolean;
-    smaCode?: string;
     createdAt: Date;
+    smaCode?: string;
 
     constructor(
         id: string,
         name: string,
-        price: number,
-        currency: Currency,
+        display_order: number,
+
+        sell_price: number,
+        sell_price_currency: Currency,
+
+        unit: Unit,
+
         createdAt: Date,
-        image?: string | null,
+
         maxQuantityPerCommand?: number | null,
+        purchasable?: boolean | null,
         disabled?: boolean | null,
+        image?: string | null,
         smaCode?: string | null,
     ) {
         this.id = id;
         this.name = name;
-        this.price = price;
-        this.currency = currency;
+        this.display_order = display_order;
+        this.sell_price = sell_price;
+        this.sell_price_currency = sell_price_currency;
+        this.unit = unit;
         this.image = image ?? undefined;
         this.maxQuantityPerCommand = maxQuantityPerCommand ?? undefined;
         this.disabled = disabled ?? false;
+        this.purchasable = purchasable ?? true;
         this.smaCode = smaCode ?? undefined;
         this.createdAt = createdAt;
     }
@@ -42,12 +56,22 @@ export class Product {
         return new Product(
             "default-id",
             "Default Product",
+
             0,
+
+            0.0,
             Currency.default(),
+
+            Unit.default(),
+
             new Date(),
+
             null,
-            null,
+            true,
+
             false,
+
+            null,
             null,
         );
     }
@@ -60,12 +84,15 @@ export class Product {
         return new Product(
             this.id,
             this.name,
-            this.price,
-            this.currency.clone(), // Ensure CurrencyResponse is cloned
+            this.display_order,
+            this.sell_price,
+            this.sell_price_currency.clone(), // Ensure CurrencyResponse is cloned
+            this.unit.clone(),
             new Date(this.createdAt), // Clone the Date to avoid shared reference
-            this.image,
             this.maxQuantityPerCommand,
+            this.purchasable,
             this.disabled,
+            this.image,
             this.smaCode,
         );
     }
@@ -79,12 +106,15 @@ export class Product {
         return new Product(
             response.id,
             response.name,
-            response.price,
-            Currency.fromResponse(response.currency),
+            response.display_order,
+            response.sell_price,
+            Currency.fromResponse(response.sell_price_currency),
+            Unit.fromResponse(response.unit),
             new Date(response.created_at),
-            response.image ?? null,
             response.max_quantity_per_command ?? null,
+            response.purchasable ?? true,
             response.disabled ?? null,
+            response.image ?? null,
             response.sma_code ?? null,
         );
     }
@@ -96,10 +126,13 @@ export class Product {
     toEditRequest(): EditProductRequest {
         return {
             name: this.name ?? null,
-            price: this.price ?? null,
-            currency: this.currency.toRequest(),
+            sell_price: this.sell_price ?? null,
+            sell_price_currency: this.sell_price_currency.toRequest(),
+            display_order: this.display_order,
+            unit: this.unit.toRequest(),
             image: this.image ?? null,
             max_quantity_per_command: this.maxQuantityPerCommand ?? null,
+            purchasable: this.purchasable,
             disabled: this.disabled ?? null,
             sma_code: this.smaCode ?? null,
         };
@@ -112,10 +145,12 @@ export class Product {
     toNewRequest(): NewProductRequest {
         return {
             name: this.name,
-            price: this.price,
-            currency: this.currency.toRequest(),
+            sell_price: this.sell_price,
+            sell_price_currency: this.sell_price_currency.toRequest(),
+            unit: this.unit.toRequest(),
             image: this.image ?? null,
             max_quantity_per_command: this.maxQuantityPerCommand ?? null,
+            purchasable: this.purchasable,
             sma_code: this.smaCode ?? undefined,
         };
     }
