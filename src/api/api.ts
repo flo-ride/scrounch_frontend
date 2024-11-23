@@ -85,17 +85,17 @@ export interface EditLocationRequest {
  */
 export interface EditProductRequest {
     /**
-     * Optional price of the product, required to be positive if present.
-     * @type {CurrencyRequest}
-     * @memberof EditProductRequest
-     */
-    'currency'?: CurrencyRequest | null;
-    /**
      * Optional field to disable or enable the product.
      * @type {boolean}
      * @memberof EditProductRequest
      */
     'disabled'?: boolean | null;
+    /**
+     * Display Order of the product inside of lists, 0 is last + default
+     * @type {number}
+     * @memberof EditProductRequest
+     */
+    'display_order'?: number | null;
     /**
      * Optional image URL or path, which can also be set to `None`.
      * @type {string}
@@ -115,17 +115,35 @@ export interface EditProductRequest {
      */
     'name'?: string | null;
     /**
+     * If the product is purchasable or if it\'s just an ingredients
+     * @type {boolean}
+     * @memberof EditProductRequest
+     */
+    'purchasable'?: boolean | null;
+    /**
      * Optional price of the product, required to be positive if present.
      * @type {number}
      * @memberof EditProductRequest
      */
-    'price'?: number | null;
+    'sell_price'?: number | null;
+    /**
+     * Optional price of the product, required to be positive if present.
+     * @type {CurrencyRequest}
+     * @memberof EditProductRequest
+     */
+    'sell_price_currency'?: CurrencyRequest | null;
     /**
      * Optional SMA code for product identification, can be `None` if specified.
      * @type {string}
      * @memberof EditProductRequest
      */
     'sma_code'?: string | null;
+    /**
+     * Represent the unit type of Product, if it\'s a liquid -> Liter, etc..., the default is Unit
+     * @type {UnitRequest}
+     * @memberof EditProductRequest
+     */
+    'unit'?: UnitRequest | null;
 }
 
 
@@ -406,12 +424,6 @@ export interface NewLocationRequest {
  */
 export interface NewProductRequest {
     /**
-     * Currency of the product.
-     * @type {CurrencyRequest}
-     * @memberof NewProductRequest
-     */
-    'currency': CurrencyRequest;
-    /**
      * Optional image URL or path.
      * @type {string}
      * @memberof NewProductRequest
@@ -430,17 +442,35 @@ export interface NewProductRequest {
      */
     'name': string;
     /**
+     * If the product is purchasable or if it\'s just an ingredients
+     * @type {boolean}
+     * @memberof NewProductRequest
+     */
+    'purchasable'?: boolean | null;
+    /**
      * Price of the product, required and must be positive.
      * @type {number}
      * @memberof NewProductRequest
      */
-    'price': number;
+    'sell_price': number;
+    /**
+     * Currency of the product.
+     * @type {CurrencyRequest}
+     * @memberof NewProductRequest
+     */
+    'sell_price_currency': CurrencyRequest;
     /**
      * Optional SMA code for product identification.
      * @type {string}
      * @memberof NewProductRequest
      */
     'sma_code'?: string | null;
+    /**
+     * Represent the unit type of Product, if it\'s a liquid -> Liter, etc..., the default is Unit
+     * @type {UnitRequest}
+     * @memberof NewProductRequest
+     */
+    'unit'?: UnitRequest | null;
 }
 
 
@@ -521,17 +551,17 @@ export interface ProductResponse {
      */
     'created_at': string;
     /**
-     * Currency of the product price.
-     * @type {CurrencyResponse}
-     * @memberof ProductResponse
-     */
-    'currency': CurrencyResponse;
-    /**
      * Optional flag indicating if the product is disabled.
      * @type {boolean}
      * @memberof ProductResponse
      */
     'disabled'?: boolean | null;
+    /**
+     * Display Order of the product.
+     * @type {number}
+     * @memberof ProductResponse
+     */
+    'display_order': number;
     /**
      * Unique identifier for the product.
      * @type {string}
@@ -557,17 +587,35 @@ export interface ProductResponse {
      */
     'name': string;
     /**
+     * 
+     * @type {boolean}
+     * @memberof ProductResponse
+     */
+    'purchasable': boolean;
+    /**
      * Price of the product.
      * @type {number}
      * @memberof ProductResponse
      */
-    'price': number;
+    'sell_price': number;
+    /**
+     * Currency of the product price.
+     * @type {CurrencyResponse}
+     * @memberof ProductResponse
+     */
+    'sell_price_currency': CurrencyResponse;
     /**
      * Optional SMA code associated with the product.
      * @type {string}
      * @memberof ProductResponse
      */
     'sma_code'?: string | null;
+    /**
+     * 
+     * @type {UnitResponse}
+     * @memberof ProductResponse
+     */
+    'unit': UnitResponse;
 }
 
 
@@ -678,6 +726,38 @@ export interface SmaResponse {
      */
     'unchanged': Array<string>;
 }
+/**
+ * Represents the different type of Unit an Product or Else can have
+ * @export
+ * @enum {string}
+ */
+
+export const UnitRequest = {
+    Unit: 'unit',
+    Gram: 'gram',
+    Liter: 'liter',
+    Meter: 'meter'
+} as const;
+
+export type UnitRequest = typeof UnitRequest[keyof typeof UnitRequest];
+
+
+/**
+ * Represents the different type of Unit an Product or Else can have
+ * @export
+ * @enum {string}
+ */
+
+export const UnitResponse = {
+    Unit: 'unit',
+    Gram: 'gram',
+    Liter: 'liter',
+    Meter: 'meter'
+} as const;
+
+export type UnitResponse = typeof UnitResponse[keyof typeof UnitResponse];
+
+
 /**
  * Represents a response containing a list of users returned by the API.
  * @export
