@@ -30,7 +30,7 @@
                     :variant="product.disabled ? 'outlined' : undefined"
                     @click="updateProduct(product)"
                 >
-                    <v-card-title>{{ product.name }} ({{ product.price }}€)</v-card-title>
+                    <v-card-title>{{ product.name }} ({{ product.sellPrice }}€)</v-card-title>
                     <v-card-subtitle>id: {{ product.id }}</v-card-subtitle>
                     <v-card-text>
                         <v-img
@@ -88,7 +88,18 @@
                     </template>
 
                     <template v-slot:item.price="{ item }">
-                        <span>{{ item.price.toFixed(2) }} €</span>
+                        <span
+                            >{{ item.sellPrice.toFixed(2) }}
+                            {{ $t("common.currency.symbol." + item.sellPriceCurrency.type) }}</span
+                        >
+                    </template>
+
+                    <template v-slot:item.unit="{ item }">
+                        <span>
+                            {{ $t("common.unit." + item.unit.type) }} ({{
+                                $t("common.unit.symbol." + item.unit.type)
+                            }})
+                        </span>
                     </template>
 
                     <template v-slot:item.max_quantity_per_command="{ item }">
@@ -97,6 +108,16 @@
 
                     <template v-slot:item.sma_code="{ item }">
                         <span>{{ item.smaCode ?? $t("common.none") }}</span>
+                    </template>
+
+                    <template v-slot:item.params="{ item }">
+                        <v-chip
+                            :color="item.purchasable == false ? 'red' : 'green'"
+                            :text="item.purchasable == true ? 'Purchasable' : 'Non Purchasable'"
+                            class="text-uppercase"
+                            size="small"
+                            label
+                        ></v-chip>
                     </template>
 
                     <template v-slot:item.disabled="{ item }">
@@ -168,8 +189,13 @@ export default {
                     sortable: false,
                 },
                 {
-                    title: "Price (€)",
+                    title: "Price",
                     key: "price",
+                    sortable: true,
+                },
+                {
+                    title: "Unit",
+                    key: "unit",
                     sortable: true,
                 },
                 {
@@ -186,6 +212,11 @@ export default {
                     title: "Creation Time",
                     key: "created_at",
                     sortable: true,
+                },
+                {
+                    title: "Params",
+                    key: "params",
+                    sortable: false,
                 },
                 {
                     title: "Disable",

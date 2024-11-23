@@ -33,6 +33,7 @@ const messages = {
                 clear: "Clear",
             },
             open: "Open",
+            close: "Close",
             loading: "Loading content...",
             dataIterator: {
                 rowsPerPageText: "Items per page:",
@@ -58,6 +59,7 @@ const messages = {
                 clear: "Effacer",
             },
             open: "Ouvrir",
+            close: "Fermer",
             loading: "Chargement du contenu...",
             dataIterator: {
                 rowsPerPageText: "Éléments par pages:",
@@ -80,6 +82,7 @@ const messages = {
 const i18n = createI18n({
     globalInjection: true,
     legacy: false,
+    mode: "composition",
     locale: "fr",
     fallbackLocale: "en",
     messages,

@@ -26,7 +26,7 @@
 
             <p>{{ $t("admin.product.add.price") }}</p>
             <v-number-input
-                v-model="product.price"
+                v-model="product.sellPrice"
                 controlVariant="split"
                 :min="0.1"
                 :max="100.0"
@@ -36,6 +36,42 @@
                 :inset="false"
                 required
             ></v-number-input>
+
+            <v-select
+                v-model="product.sellPriceCurrency"
+                :label="$t('admin.product.add.price_currency')"
+                :items="sellPriceCurrencyItems"
+                required
+            >
+                <template v-slot:selection="data">
+                    {{ $t("common.currency." + data.item.value.type) }}
+                    ({{ $t("common.currency.symbol." + data.item.value.type) }})
+                </template>
+                <template v-slot:item="data">
+                    <v-list-item v-bind="data.props">
+                        {{ $t("common.currency." + data.item.value.type) }}
+                        ({{ $t("common.currency.symbol." + data.item.value.type) }})
+                    </v-list-item>
+                </template>
+            </v-select>
+
+            <v-select
+                v-model="product.unit"
+                :label="$t('admin.product.add.unit')"
+                :items="unitItems"
+                required
+            >
+                <template v-slot:selection="data">
+                    {{ $t("common.unit." + data.item.value.type) }}
+                    ({{ $t("common.unit.symbol." + data.item.value.type) }})
+                </template>
+                <template v-slot:item="data">
+                    <v-list-item v-bind="data.props">
+                        {{ $t("common.unit." + data.item.value.type) }}
+                        ({{ $t("common.unit.symbol." + data.item.value.type) }})
+                    </v-list-item>
+                </template>
+            </v-select>
 
             <p :class="product.maxQuantityPerCommand != 0 ? '' : 'text-disabled'">
                 {{ $t("admin.product.add.max") }}{{ product.maxQuantityPerCommand != 0 ? ": " : ""
@@ -51,6 +87,12 @@
                 :min="0"
                 required
             ></v-slider>
+
+            <v-switch
+                v-model="product.purchasable"
+                :label="$t('admin.product.edit.purchasable')"
+                required
+            ></v-switch>
         </template>
     </CreateDialogForm>
 </template>
@@ -58,7 +100,9 @@
 <script lang="ts">
 import { FileType } from "@/api";
 import CreateDialogForm from "@/components/admin/CreateDialogForm.vue";
+import { Currency, CurrencyValue } from "@/types/Currency";
 import { Product } from "@/types/Product";
+import { Unit, UnitValue } from "@/types/Unit";
 
 export default {
     data: () => ({
@@ -66,6 +110,16 @@ export default {
         productImage: undefined,
         product: Product.default() as Product,
         tickLabels: { 0: "None", 2: "2", 4: "4", 6: "6", 8: "8", 10: "10" },
+        sellPriceCurrencyItems: [
+            { title: "", value: new Currency(CurrencyValue.Euro) },
+            { title: "", value: new Currency(CurrencyValue.Epicoin) },
+        ],
+        unitItems: [
+            { title: "", value: new Unit(UnitValue.Unit) },
+            { title: "", value: new Unit(UnitValue.Liter) },
+            { title: "", value: new Unit(UnitValue.Gram) },
+            { title: "", value: new Unit(UnitValue.Meter) },
+        ],
         imageRules: [
             (value: File[]) =>
                 !value || !value.length

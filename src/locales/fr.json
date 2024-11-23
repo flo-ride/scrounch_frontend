@@ -17,16 +17,23 @@
                 "image": "Image",
                 "name": "Nom du Produit",
                 "price": "Prix",
-                "max": "Max par commande"
+                "price_currency": "Devise du Prix",
+                "unit": "Unité",
+                "max": "Max par commande",
+                "purchasable": "Achetable"
             },
             "edit": {
                 "title": "Modifier un produit",
                 "image": "Image",
                 "name": "Nom du Produit",
                 "price": "Prix",
-                "sma": "SMA Code",
+                "price_currency": "Devise du Prix",
+                "unit": "Unité",
                 "max": "Max par commande",
-                "disabled": "Désactivé"
+                "disabled": "Désactivé",
+                "purchasable": "Achetable",
+                "displayOrder": "Ordre d'affichage",
+                "sma": "SMA Code"
             },
             "delete": {
                 "title": "Supprimé un produit"
@@ -113,6 +120,26 @@
         "disable": "Désactivé",
         "enable": "Activé",
         "save": "Sauvegardé",
-        "delete": "Supprimé"
+        "delete": "Supprimé",
+        "unit": {
+            "meter": "Mètre",
+            "liter": "Litre",
+            "gram": "Gramme",
+            "unit": "Unité",
+            "symbol": {
+                "meter": "m",
+                "liter": "L",
+                "gram": "g",
+                "unit": "u"
+            }
+        },
+        "currency": {
+            "epicoin": "Epicoin",
+            "euro": "Euro",
+            "symbol": {
+                "epicoin": "🦆",
+                "euro": "€"
+            }
+        }
     }
 }

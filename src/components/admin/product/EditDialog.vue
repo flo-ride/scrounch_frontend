@@ -31,16 +31,51 @@
 
             <p>{{ $t("admin.product.edit.price") }}</p>
             <v-number-input
-                v-model="product.price"
+                v-model="product.sellPrice"
                 controlVariant="split"
                 :min="0.0"
-                :max="100.0"
+                :max="10000.0"
                 :step="0.01"
-                suffix="€"
                 :hideInput="false"
                 :inset="false"
                 required
             ></v-number-input>
+
+            <v-select
+                v-model="product.sellPriceCurrency"
+                :label="$t('admin.product.edit.price_currency')"
+                :items="sellPriceCurrencyItems"
+                required
+            >
+                <template v-slot:selection="data">
+                    {{ $t("common.currency." + data.item.value.type) }}
+                    ({{ $t("common.currency.symbol." + data.item.value.type) }})
+                </template>
+                <template v-slot:item="data">
+                    <v-list-item v-bind="data.props">
+                        {{ $t("common.currency." + data.item.value.type) }}
+                        ({{ $t("common.currency.symbol." + data.item.value.type) }})
+                    </v-list-item>
+                </template>
+            </v-select>
+
+            <v-select
+                v-model="product.unit"
+                :label="$t('admin.product.edit.unit')"
+                :items="unitItems"
+                required
+            >
+                <template v-slot:selection="data">
+                    {{ $t("common.unit." + data.item.value.type) }}
+                    ({{ $t("common.unit.symbol." + data.item.value.type) }})
+                </template>
+                <template v-slot:item="data">
+                    <v-list-item v-bind="data.props">
+                        {{ $t("common.unit." + data.item.value.type) }}
+                        ({{ $t("common.unit.symbol." + data.item.value.type) }})
+                    </v-list-item>
+                </template>
+            </v-select>
 
             <p :class="product.maxQuantityPerCommand != 0 ? '' : 'text-disabled'">
                 {{ $t("admin.product.edit.max") }}{{ product.maxQuantityPerCommand != 0 ? ": " : ""
@@ -58,10 +93,28 @@
             ></v-slider>
 
             <v-switch
+                v-model="product.purchasable"
+                :label="$t('admin.product.edit.purchasable')"
+                required
+            ></v-switch>
+
+            <v-switch
                 v-model="product.disabled"
                 :label="$t('admin.product.edit.disabled')"
                 required
             ></v-switch>
+
+            <p>{{ $t("admin.product.edit.displayOrder") }}</p>
+            <v-number-input
+                v-model="product.displayOrder"
+                controlVariant="split"
+                :min="0"
+                :max="999"
+                :step="1"
+                :hideInput="false"
+                :inset="false"
+                required
+            ></v-number-input>
         </template>
     </EditDialogForm>
 </template>
@@ -71,7 +124,7 @@ import { FileType } from "@/api";
 import EditDialogForm from "@/components/admin/EditDialogForm.vue";
 import { Currency, CurrencyValue } from "@/types/Currency";
 import { Product } from "@/types/Product";
-import type { AxiosResponse } from "axios";
+import { Unit, UnitValue } from "@/types/Unit";
 
 export default {
     data: () => ({
@@ -92,6 +145,16 @@ export default {
                     return "Image size must be lower then 64 MB.";
                 return true;
             },
+        ],
+        sellPriceCurrencyItems: [
+            { title: "", value: new Currency(CurrencyValue.Euro) },
+            { title: "", value: new Currency(CurrencyValue.Epicoin) },
+        ],
+        unitItems: [
+            { title: "", value: new Unit(UnitValue.Unit) },
+            { title: "", value: new Unit(UnitValue.Liter) },
+            { title: "", value: new Unit(UnitValue.Gram) },
+            { title: "", value: new Unit(UnitValue.Meter) },
         ],
         nameRules: [
             (value: string) =>
@@ -150,7 +213,6 @@ export default {
                             .editProduct(this.product.id, this.product.toEditRequest())
                             .then((_res) => {
                                 this.show = false;
-                                // @ts-ignore
                                 this.$emit("isDone");
                             })
                             .catch((err: any) => {
