@@ -6,9 +6,9 @@ export class Product {
     id: string;
     name: string;
     image?: string;
-    display_order: number,
-    sell_price: number;
-    sell_price_currency: Currency;
+    displayOrder: number;
+    sellPrice: number;
+    sellPriceCurrency: Currency;
     maxQuantityPerCommand?: number;
     purchasable: boolean;
     unit: Unit;
@@ -36,9 +36,9 @@ export class Product {
     ) {
         this.id = id;
         this.name = name;
-        this.display_order = display_order;
-        this.sell_price = sell_price;
-        this.sell_price_currency = sell_price_currency;
+        this.displayOrder = display_order;
+        this.sellPrice = sell_price;
+        this.sellPriceCurrency = sell_price_currency;
         this.unit = unit;
         this.image = image ?? undefined;
         this.maxQuantityPerCommand = maxQuantityPerCommand ?? undefined;
@@ -84,9 +84,9 @@ export class Product {
         return new Product(
             this.id,
             this.name,
-            this.display_order,
-            this.sell_price,
-            this.sell_price_currency.clone(), // Ensure CurrencyResponse is cloned
+            this.displayOrder,
+            this.sellPrice,
+            this.sellPriceCurrency.clone(), // Ensure CurrencyResponse is cloned
             this.unit.clone(),
             new Date(this.createdAt), // Clone the Date to avoid shared reference
             this.maxQuantityPerCommand,
@@ -126,9 +126,9 @@ export class Product {
     toEditRequest(): EditProductRequest {
         return {
             name: this.name ?? null,
-            sell_price: this.sell_price ?? null,
-            sell_price_currency: this.sell_price_currency.toRequest(),
-            display_order: this.display_order,
+            sell_price: this.sellPrice ?? null,
+            sell_price_currency: this.sellPriceCurrency.toRequest(),
+            display_order: this.displayOrder,
             unit: this.unit.toRequest(),
             image: this.image ?? null,
             max_quantity_per_command: this.maxQuantityPerCommand ?? null,
@@ -145,8 +145,8 @@ export class Product {
     toNewRequest(): NewProductRequest {
         return {
             name: this.name,
-            sell_price: this.sell_price,
-            sell_price_currency: this.sell_price_currency.toRequest(),
+            sell_price: this.sellPrice,
+            sell_price_currency: this.sellPriceCurrency.toRequest(),
             unit: this.unit.toRequest(),
             image: this.image ?? null,
             max_quantity_per_command: this.maxQuantityPerCommand ?? null,
