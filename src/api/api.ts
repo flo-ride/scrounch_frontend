@@ -103,6 +103,12 @@ export interface EditProductRequest {
      */
     'image'?: string | null;
     /**
+     * Optional Inventree IPN, can be `None` if specified.
+     * @type {string}
+     * @memberof EditProductRequest
+     */
+    'inventree_code'?: string | null;
+    /**
      * Optional maximum quantity per command with conversion and size limits.
      * @type {number}
      * @memberof EditProductRequest
@@ -430,6 +436,12 @@ export interface NewProductRequest {
      */
     'image'?: string | null;
     /**
+     * Optional Inventree IPN
+     * @type {string}
+     * @memberof NewProductRequest
+     */
+    'inventree_code'?: string | null;
+    /**
      * Optional maximum quantity per command, limited to a certain maximum.
      * @type {number}
      * @memberof NewProductRequest
@@ -575,6 +587,12 @@ export interface ProductResponse {
      */
     'image'?: string | null;
     /**
+     * Optional Inventree IPN
+     * @type {string}
+     * @memberof ProductResponse
+     */
+    'inventree_code'?: string | null;
+    /**
      * Optional maximum quantity allowed per command.
      * @type {number}
      * @memberof ProductResponse
@@ -587,7 +605,7 @@ export interface ProductResponse {
      */
     'name': string;
     /**
-     * 
+     * Is the product purchasable
      * @type {boolean}
      * @memberof ProductResponse
      */
@@ -611,7 +629,7 @@ export interface ProductResponse {
      */
     'sma_code'?: string | null;
     /**
-     * 
+     * Represent the unit type of Product, if it\'s a liquid -> Liter, etc...
      * @type {UnitResponse}
      * @memberof ProductResponse
      */
