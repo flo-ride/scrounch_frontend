@@ -944,12 +944,26 @@ export const LocationApiAxiosParamCreator = function (configuration?: Configurat
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled location
          * @summary Handles the request to retrieve a paginated list of locations.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
+         * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
+         * @param {Array<string>} [idEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [idNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [nameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [nameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [createdAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [createdAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [createdAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [createdAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<LocationCategoryRequest>} [categoryEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<LocationCategoryRequest>} [categoryNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllLocations: async (page?: number | null, perPage?: number | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllLocations: async (page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, categoryEq?: Array<LocationCategoryRequest>, categoryNeq?: Array<LocationCategoryRequest>, disabledEq?: boolean | null, disabledNeq?: boolean | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/location`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -970,6 +984,70 @@ export const LocationApiAxiosParamCreator = function (configuration?: Configurat
 
             if (perPage !== undefined) {
                 localVarQueryParameter['per_page'] = perPage;
+            }
+
+            if (idEq) {
+                localVarQueryParameter['id_eq'] = idEq;
+            }
+
+            if (idNeq) {
+                localVarQueryParameter['id_neq'] = idNeq;
+            }
+
+            if (nameEq) {
+                localVarQueryParameter['name_eq'] = nameEq;
+            }
+
+            if (nameNeq) {
+                localVarQueryParameter['name_neq'] = nameNeq;
+            }
+
+            if (createdAtEq) {
+                localVarQueryParameter['created_at_eq'] = createdAtEq;
+            }
+
+            if (createdAtNeq) {
+                localVarQueryParameter['created_at_neq'] = createdAtNeq;
+            }
+
+            if (createdAtGt !== undefined) {
+                localVarQueryParameter['created_at_gt'] = (createdAtGt as any instanceof Date) ?
+                    (createdAtGt as any).toISOString() :
+                    createdAtGt;
+            }
+
+            if (createdAtLt !== undefined) {
+                localVarQueryParameter['created_at_lt'] = (createdAtLt as any instanceof Date) ?
+                    (createdAtLt as any).toISOString() :
+                    createdAtLt;
+            }
+
+            if (createdAtGte !== undefined) {
+                localVarQueryParameter['created_at_gte'] = (createdAtGte as any instanceof Date) ?
+                    (createdAtGte as any).toISOString() :
+                    createdAtGte;
+            }
+
+            if (createdAtLte !== undefined) {
+                localVarQueryParameter['created_at_lte'] = (createdAtLte as any instanceof Date) ?
+                    (createdAtLte as any).toISOString() :
+                    createdAtLte;
+            }
+
+            if (categoryEq) {
+                localVarQueryParameter['category_eq'] = categoryEq;
+            }
+
+            if (categoryNeq) {
+                localVarQueryParameter['category_neq'] = categoryNeq;
+            }
+
+            if (disabledEq !== undefined) {
+                localVarQueryParameter['disabled_eq'] = disabledEq;
+            }
+
+            if (disabledNeq !== undefined) {
+                localVarQueryParameter['disabled_neq'] = disabledNeq;
             }
 
 
@@ -1097,13 +1175,27 @@ export const LocationApiFp = function(configuration?: Configuration) {
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled location
          * @summary Handles the request to retrieve a paginated list of locations.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
+         * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
+         * @param {Array<string>} [idEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [idNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [nameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [nameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [createdAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [createdAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [createdAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [createdAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<LocationCategoryRequest>} [categoryEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<LocationCategoryRequest>} [categoryNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllLocations(page?: number | null, perPage?: number | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LocationListResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllLocations(page, perPage, options);
+        async getAllLocations(page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, categoryEq?: Array<LocationCategoryRequest>, categoryNeq?: Array<LocationCategoryRequest>, disabledEq?: boolean | null, disabledNeq?: boolean | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LocationListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllLocations(page, perPage, idEq, idNeq, nameEq, nameNeq, createdAtEq, createdAtNeq, createdAtGt, createdAtLt, createdAtGte, createdAtLte, categoryEq, categoryNeq, disabledEq, disabledNeq, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['LocationApi.getAllLocations']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1172,7 +1264,7 @@ export const LocationApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         getAllLocations(requestParameters: LocationApiGetAllLocationsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<LocationListResponse> {
-            return localVarFp.getAllLocations(requestParameters.page, requestParameters.perPage, options).then((request) => request(axios, basePath));
+            return localVarFp.getAllLocations(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.categoryEq, requestParameters.categoryNeq, requestParameters.disabledEq, requestParameters.disabledNeq, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is disabled, only an admin can retrieve it.
@@ -1239,7 +1331,7 @@ export interface LocationApiEditLocationRequest {
  */
 export interface LocationApiGetAllLocationsRequest {
     /**
-     * The page number to retrieve, starting from 1.
+     * The page number to retrieve, starting from 0.
      * @type {number}
      * @memberof LocationApiGetAllLocations
      */
@@ -1251,6 +1343,104 @@ export interface LocationApiGetAllLocationsRequest {
      * @memberof LocationApiGetAllLocations
      */
     readonly perPage?: number | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly idEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly idNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly nameEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly nameNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly createdAtEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly createdAtNeq?: Array<string>
+
+    /**
+     * Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+     * @type {string}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly createdAtGt?: string | null
+
+    /**
+     * Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+     * @type {string}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly createdAtLt?: string | null
+
+    /**
+     * Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly createdAtGte?: string | null
+
+    /**
+     * Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly createdAtLte?: string | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<LocationCategoryRequest>}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly categoryEq?: Array<LocationCategoryRequest>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<LocationCategoryRequest>}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly categoryNeq?: Array<LocationCategoryRequest>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {boolean}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly disabledEq?: boolean | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {boolean}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly disabledNeq?: boolean | null
 }
 
 /**
@@ -1321,7 +1511,7 @@ export class LocationApi extends BaseAPI {
      * @memberof LocationApi
      */
     public getAllLocations(requestParameters: LocationApiGetAllLocationsRequest = {}, options?: RawAxiosRequestConfig) {
-        return LocationApiFp(this.configuration).getAllLocations(requestParameters.page, requestParameters.perPage, options).then((request) => request(this.axios, this.basePath));
+        return LocationApiFp(this.configuration).getAllLocations(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.categoryEq, requestParameters.categoryNeq, requestParameters.disabledEq, requestParameters.disabledNeq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1843,12 +2033,46 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not disabled.
          * @summary Handles the request to retrieve a paginated list of products.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
+         * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
+         * @param {Array<string>} [idEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [idNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [imageEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [imageNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [nameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [nameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<number>} [displayOrderEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<number>} [displayOrderNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {number | null} [displayOrderGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {number | null} [displayOrderLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {number | null} [displayOrderGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {number | null} [displayOrderLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<string>} [sellPriceEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [sellPriceNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<CurrencyRequest>} [sellPriceCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<CurrencyRequest>} [sellPriceCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [purchasableEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [purchasableNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {Array<UnitRequest>} [unitEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<UnitRequest>} [unitNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<number>} [maxQuantityPerCommandEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<number>} [maxQuantityPerCommandNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [createdAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [createdAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [createdAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [createdAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<string>} [smaCodeEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [smaCodeNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [inventreeCodeEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [inventreeCodeNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllProducts: async (page?: number | null, perPage?: number | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllProducts: async (page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, imageEq?: Array<string>, imageNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, displayOrderEq?: Array<number>, displayOrderNeq?: Array<number>, displayOrderGt?: number | null, displayOrderLt?: number | null, displayOrderGte?: number | null, displayOrderLte?: number | null, sellPriceEq?: Array<string>, sellPriceNeq?: Array<string>, sellPriceCurrencyEq?: Array<CurrencyRequest>, sellPriceCurrencyNeq?: Array<CurrencyRequest>, purchasableEq?: boolean | null, purchasableNeq?: boolean | null, unitEq?: Array<UnitRequest>, unitNeq?: Array<UnitRequest>, maxQuantityPerCommandEq?: Array<number>, maxQuantityPerCommandNeq?: Array<number>, disabledEq?: boolean | null, disabledNeq?: boolean | null, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, smaCodeEq?: Array<string>, smaCodeNeq?: Array<string>, inventreeCodeEq?: Array<string>, inventreeCodeNeq?: Array<string>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/product`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1867,6 +2091,150 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
 
             if (perPage !== undefined) {
                 localVarQueryParameter['per_page'] = perPage;
+            }
+
+            if (idEq) {
+                localVarQueryParameter['id_eq'] = idEq;
+            }
+
+            if (idNeq) {
+                localVarQueryParameter['id_neq'] = idNeq;
+            }
+
+            if (imageEq) {
+                localVarQueryParameter['image_eq'] = imageEq;
+            }
+
+            if (imageNeq) {
+                localVarQueryParameter['image_neq'] = imageNeq;
+            }
+
+            if (nameEq) {
+                localVarQueryParameter['name_eq'] = nameEq;
+            }
+
+            if (nameNeq) {
+                localVarQueryParameter['name_neq'] = nameNeq;
+            }
+
+            if (displayOrderEq) {
+                localVarQueryParameter['display_order_eq'] = displayOrderEq;
+            }
+
+            if (displayOrderNeq) {
+                localVarQueryParameter['display_order_neq'] = displayOrderNeq;
+            }
+
+            if (displayOrderGt !== undefined) {
+                localVarQueryParameter['display_order_gt'] = displayOrderGt;
+            }
+
+            if (displayOrderLt !== undefined) {
+                localVarQueryParameter['display_order_lt'] = displayOrderLt;
+            }
+
+            if (displayOrderGte !== undefined) {
+                localVarQueryParameter['display_order_gte'] = displayOrderGte;
+            }
+
+            if (displayOrderLte !== undefined) {
+                localVarQueryParameter['display_order_lte'] = displayOrderLte;
+            }
+
+            if (sellPriceEq) {
+                localVarQueryParameter['sell_price_eq'] = sellPriceEq;
+            }
+
+            if (sellPriceNeq) {
+                localVarQueryParameter['sell_price_neq'] = sellPriceNeq;
+            }
+
+            if (sellPriceCurrencyEq) {
+                localVarQueryParameter['sell_price_currency_eq'] = sellPriceCurrencyEq;
+            }
+
+            if (sellPriceCurrencyNeq) {
+                localVarQueryParameter['sell_price_currency_neq'] = sellPriceCurrencyNeq;
+            }
+
+            if (purchasableEq !== undefined) {
+                localVarQueryParameter['purchasable_eq'] = purchasableEq;
+            }
+
+            if (purchasableNeq !== undefined) {
+                localVarQueryParameter['purchasable_neq'] = purchasableNeq;
+            }
+
+            if (unitEq) {
+                localVarQueryParameter['unit_eq'] = unitEq;
+            }
+
+            if (unitNeq) {
+                localVarQueryParameter['unit_neq'] = unitNeq;
+            }
+
+            if (maxQuantityPerCommandEq) {
+                localVarQueryParameter['max_quantity_per_command_eq'] = maxQuantityPerCommandEq;
+            }
+
+            if (maxQuantityPerCommandNeq) {
+                localVarQueryParameter['max_quantity_per_command_neq'] = maxQuantityPerCommandNeq;
+            }
+
+            if (disabledEq !== undefined) {
+                localVarQueryParameter['disabled_eq'] = disabledEq;
+            }
+
+            if (disabledNeq !== undefined) {
+                localVarQueryParameter['disabled_neq'] = disabledNeq;
+            }
+
+            if (createdAtEq) {
+                localVarQueryParameter['created_at_eq'] = createdAtEq;
+            }
+
+            if (createdAtNeq) {
+                localVarQueryParameter['created_at_neq'] = createdAtNeq;
+            }
+
+            if (createdAtGt !== undefined) {
+                localVarQueryParameter['created_at_gt'] = (createdAtGt as any instanceof Date) ?
+                    (createdAtGt as any).toISOString() :
+                    createdAtGt;
+            }
+
+            if (createdAtLt !== undefined) {
+                localVarQueryParameter['created_at_lt'] = (createdAtLt as any instanceof Date) ?
+                    (createdAtLt as any).toISOString() :
+                    createdAtLt;
+            }
+
+            if (createdAtGte !== undefined) {
+                localVarQueryParameter['created_at_gte'] = (createdAtGte as any instanceof Date) ?
+                    (createdAtGte as any).toISOString() :
+                    createdAtGte;
+            }
+
+            if (createdAtLte !== undefined) {
+                localVarQueryParameter['created_at_lte'] = (createdAtLte as any instanceof Date) ?
+                    (createdAtLte as any).toISOString() :
+                    createdAtLte;
+            }
+
+            if (smaCodeEq) {
+                localVarQueryParameter['sma_code_eq'] = smaCodeEq;
+            }
+
+            if (smaCodeNeq) {
+                localVarQueryParameter['sma_code_neq'] = smaCodeNeq;
+            }
+
+            if (inventreeCodeEq) {
+                localVarQueryParameter['inventree_code_eq'] = inventreeCodeEq;
+            }
+
+            if (inventreeCodeNeq) {
+                localVarQueryParameter['inventree_code_neq'] = inventreeCodeNeq;
             }
 
 
@@ -1992,13 +2360,47 @@ export const ProductApiFp = function(configuration?: Configuration) {
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not disabled.
          * @summary Handles the request to retrieve a paginated list of products.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
+         * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
+         * @param {Array<string>} [idEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [idNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [imageEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [imageNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [nameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [nameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<number>} [displayOrderEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<number>} [displayOrderNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {number | null} [displayOrderGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {number | null} [displayOrderLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {number | null} [displayOrderGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {number | null} [displayOrderLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<string>} [sellPriceEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [sellPriceNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<CurrencyRequest>} [sellPriceCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<CurrencyRequest>} [sellPriceCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [purchasableEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [purchasableNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {Array<UnitRequest>} [unitEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<UnitRequest>} [unitNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<number>} [maxQuantityPerCommandEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<number>} [maxQuantityPerCommandNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [createdAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [createdAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [createdAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [createdAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<string>} [smaCodeEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [smaCodeNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [inventreeCodeEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [inventreeCodeNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllProducts(page?: number | null, perPage?: number | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductListResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllProducts(page, perPage, options);
+        async getAllProducts(page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, imageEq?: Array<string>, imageNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, displayOrderEq?: Array<number>, displayOrderNeq?: Array<number>, displayOrderGt?: number | null, displayOrderLt?: number | null, displayOrderGte?: number | null, displayOrderLte?: number | null, sellPriceEq?: Array<string>, sellPriceNeq?: Array<string>, sellPriceCurrencyEq?: Array<CurrencyRequest>, sellPriceCurrencyNeq?: Array<CurrencyRequest>, purchasableEq?: boolean | null, purchasableNeq?: boolean | null, unitEq?: Array<UnitRequest>, unitNeq?: Array<UnitRequest>, maxQuantityPerCommandEq?: Array<number>, maxQuantityPerCommandNeq?: Array<number>, disabledEq?: boolean | null, disabledNeq?: boolean | null, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, smaCodeEq?: Array<string>, smaCodeNeq?: Array<string>, inventreeCodeEq?: Array<string>, inventreeCodeNeq?: Array<string>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllProducts(page, perPage, idEq, idNeq, imageEq, imageNeq, nameEq, nameNeq, displayOrderEq, displayOrderNeq, displayOrderGt, displayOrderLt, displayOrderGte, displayOrderLte, sellPriceEq, sellPriceNeq, sellPriceCurrencyEq, sellPriceCurrencyNeq, purchasableEq, purchasableNeq, unitEq, unitNeq, maxQuantityPerCommandEq, maxQuantityPerCommandNeq, disabledEq, disabledNeq, createdAtEq, createdAtNeq, createdAtGt, createdAtLt, createdAtGte, createdAtLte, smaCodeEq, smaCodeNeq, inventreeCodeEq, inventreeCodeNeq, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProductApi.getAllProducts']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2067,7 +2469,7 @@ export const ProductApiFactory = function (configuration?: Configuration, basePa
          * @throws {RequiredError}
          */
         getAllProducts(requestParameters: ProductApiGetAllProductsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<ProductListResponse> {
-            return localVarFp.getAllProducts(requestParameters.page, requestParameters.perPage, options).then((request) => request(axios, basePath));
+            return localVarFp.getAllProducts(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.imageEq, requestParameters.imageNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.displayOrderEq, requestParameters.displayOrderNeq, requestParameters.displayOrderGt, requestParameters.displayOrderLt, requestParameters.displayOrderGte, requestParameters.displayOrderLte, requestParameters.sellPriceEq, requestParameters.sellPriceNeq, requestParameters.sellPriceCurrencyEq, requestParameters.sellPriceCurrencyNeq, requestParameters.purchasableEq, requestParameters.purchasableNeq, requestParameters.unitEq, requestParameters.unitNeq, requestParameters.maxQuantityPerCommandEq, requestParameters.maxQuantityPerCommandNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.smaCodeEq, requestParameters.smaCodeNeq, requestParameters.inventreeCodeEq, requestParameters.inventreeCodeNeq, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is disabled, only an admin can retrieve it.
@@ -2134,7 +2536,7 @@ export interface ProductApiEditProductRequest {
  */
 export interface ProductApiGetAllProductsRequest {
     /**
-     * The page number to retrieve, starting from 1.
+     * The page number to retrieve, starting from 0.
      * @type {number}
      * @memberof ProductApiGetAllProducts
      */
@@ -2146,6 +2548,244 @@ export interface ProductApiGetAllProductsRequest {
      * @memberof ProductApiGetAllProducts
      */
     readonly perPage?: number | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly idEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly idNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly imageEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly imageNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly nameEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly nameNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<number>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly displayOrderEq?: Array<number>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<number>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly displayOrderNeq?: Array<number>
+
+    /**
+     * Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+     * @type {number}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly displayOrderGt?: number | null
+
+    /**
+     * Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+     * @type {number}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly displayOrderLt?: number | null
+
+    /**
+     * Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+     * @type {number}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly displayOrderGte?: number | null
+
+    /**
+     * Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+     * @type {number}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly displayOrderLte?: number | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly sellPriceEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly sellPriceNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<CurrencyRequest>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly sellPriceCurrencyEq?: Array<CurrencyRequest>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<CurrencyRequest>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly sellPriceCurrencyNeq?: Array<CurrencyRequest>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {boolean}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly purchasableEq?: boolean | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {boolean}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly purchasableNeq?: boolean | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<UnitRequest>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly unitEq?: Array<UnitRequest>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<UnitRequest>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly unitNeq?: Array<UnitRequest>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<number>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly maxQuantityPerCommandEq?: Array<number>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<number>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly maxQuantityPerCommandNeq?: Array<number>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {boolean}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly disabledEq?: boolean | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {boolean}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly disabledNeq?: boolean | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly createdAtEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly createdAtNeq?: Array<string>
+
+    /**
+     * Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+     * @type {string}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly createdAtGt?: string | null
+
+    /**
+     * Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+     * @type {string}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly createdAtLt?: string | null
+
+    /**
+     * Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly createdAtGte?: string | null
+
+    /**
+     * Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly createdAtLte?: string | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly smaCodeEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly smaCodeNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly inventreeCodeEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly inventreeCodeNeq?: Array<string>
 }
 
 /**
@@ -2216,7 +2856,7 @@ export class ProductApi extends BaseAPI {
      * @memberof ProductApi
      */
     public getAllProducts(requestParameters: ProductApiGetAllProductsRequest = {}, options?: RawAxiosRequestConfig) {
-        return ProductApiFp(this.configuration).getAllProducts(requestParameters.page, requestParameters.perPage, options).then((request) => request(this.axios, this.basePath));
+        return ProductApiFp(this.configuration).getAllProducts(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.imageEq, requestParameters.imageNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.displayOrderEq, requestParameters.displayOrderNeq, requestParameters.displayOrderGt, requestParameters.displayOrderLt, requestParameters.displayOrderGte, requestParameters.displayOrderLte, requestParameters.sellPriceEq, requestParameters.sellPriceNeq, requestParameters.sellPriceCurrencyEq, requestParameters.sellPriceCurrencyNeq, requestParameters.purchasableEq, requestParameters.purchasableNeq, requestParameters.unitEq, requestParameters.unitNeq, requestParameters.maxQuantityPerCommandEq, requestParameters.maxQuantityPerCommandNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.smaCodeEq, requestParameters.smaCodeNeq, requestParameters.inventreeCodeEq, requestParameters.inventreeCodeNeq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2333,12 +2973,32 @@ export const RefillApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled refill
          * @summary Handles the request to retrieve a paginated list of refills.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
+         * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
+         * @param {Array<string>} [idEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [idNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [nameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [nameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [createdAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [createdAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [createdAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [createdAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<string>} [priceEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [priceNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<CurrencyRequest>} [priceCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<CurrencyRequest>} [priceCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [creditEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [creditNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<CurrencyRequest>} [creditCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<CurrencyRequest>} [creditCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllRefills: async (page?: number | null, perPage?: number | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllRefills: async (page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, priceEq?: Array<string>, priceNeq?: Array<string>, priceCurrencyEq?: Array<CurrencyRequest>, priceCurrencyNeq?: Array<CurrencyRequest>, creditEq?: Array<string>, creditNeq?: Array<string>, creditCurrencyEq?: Array<CurrencyRequest>, creditCurrencyNeq?: Array<CurrencyRequest>, disabledEq?: boolean | null, disabledNeq?: boolean | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/refill`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2359,6 +3019,94 @@ export const RefillApiAxiosParamCreator = function (configuration?: Configuratio
 
             if (perPage !== undefined) {
                 localVarQueryParameter['per_page'] = perPage;
+            }
+
+            if (idEq) {
+                localVarQueryParameter['id_eq'] = idEq;
+            }
+
+            if (idNeq) {
+                localVarQueryParameter['id_neq'] = idNeq;
+            }
+
+            if (nameEq) {
+                localVarQueryParameter['name_eq'] = nameEq;
+            }
+
+            if (nameNeq) {
+                localVarQueryParameter['name_neq'] = nameNeq;
+            }
+
+            if (createdAtEq) {
+                localVarQueryParameter['created_at_eq'] = createdAtEq;
+            }
+
+            if (createdAtNeq) {
+                localVarQueryParameter['created_at_neq'] = createdAtNeq;
+            }
+
+            if (createdAtGt !== undefined) {
+                localVarQueryParameter['created_at_gt'] = (createdAtGt as any instanceof Date) ?
+                    (createdAtGt as any).toISOString() :
+                    createdAtGt;
+            }
+
+            if (createdAtLt !== undefined) {
+                localVarQueryParameter['created_at_lt'] = (createdAtLt as any instanceof Date) ?
+                    (createdAtLt as any).toISOString() :
+                    createdAtLt;
+            }
+
+            if (createdAtGte !== undefined) {
+                localVarQueryParameter['created_at_gte'] = (createdAtGte as any instanceof Date) ?
+                    (createdAtGte as any).toISOString() :
+                    createdAtGte;
+            }
+
+            if (createdAtLte !== undefined) {
+                localVarQueryParameter['created_at_lte'] = (createdAtLte as any instanceof Date) ?
+                    (createdAtLte as any).toISOString() :
+                    createdAtLte;
+            }
+
+            if (priceEq) {
+                localVarQueryParameter['price_eq'] = priceEq;
+            }
+
+            if (priceNeq) {
+                localVarQueryParameter['price_neq'] = priceNeq;
+            }
+
+            if (priceCurrencyEq) {
+                localVarQueryParameter['price_currency_eq'] = priceCurrencyEq;
+            }
+
+            if (priceCurrencyNeq) {
+                localVarQueryParameter['price_currency_neq'] = priceCurrencyNeq;
+            }
+
+            if (creditEq) {
+                localVarQueryParameter['credit_eq'] = creditEq;
+            }
+
+            if (creditNeq) {
+                localVarQueryParameter['credit_neq'] = creditNeq;
+            }
+
+            if (creditCurrencyEq) {
+                localVarQueryParameter['credit_currency_eq'] = creditCurrencyEq;
+            }
+
+            if (creditCurrencyNeq) {
+                localVarQueryParameter['credit_currency_neq'] = creditCurrencyNeq;
+            }
+
+            if (disabledEq !== undefined) {
+                localVarQueryParameter['disabled_eq'] = disabledEq;
+            }
+
+            if (disabledNeq !== undefined) {
+                localVarQueryParameter['disabled_neq'] = disabledNeq;
             }
 
 
@@ -2486,13 +3234,33 @@ export const RefillApiFp = function(configuration?: Configuration) {
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled refill
          * @summary Handles the request to retrieve a paginated list of refills.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
+         * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
+         * @param {Array<string>} [idEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [idNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [nameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [nameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [createdAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [createdAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [createdAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [createdAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<string>} [priceEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [priceNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<CurrencyRequest>} [priceCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<CurrencyRequest>} [priceCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [creditEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [creditNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<CurrencyRequest>} [creditCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<CurrencyRequest>} [creditCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllRefills(page?: number | null, perPage?: number | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RefillListResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllRefills(page, perPage, options);
+        async getAllRefills(page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, priceEq?: Array<string>, priceNeq?: Array<string>, priceCurrencyEq?: Array<CurrencyRequest>, priceCurrencyNeq?: Array<CurrencyRequest>, creditEq?: Array<string>, creditNeq?: Array<string>, creditCurrencyEq?: Array<CurrencyRequest>, creditCurrencyNeq?: Array<CurrencyRequest>, disabledEq?: boolean | null, disabledNeq?: boolean | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RefillListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllRefills(page, perPage, idEq, idNeq, nameEq, nameNeq, createdAtEq, createdAtNeq, createdAtGt, createdAtLt, createdAtGte, createdAtLte, priceEq, priceNeq, priceCurrencyEq, priceCurrencyNeq, creditEq, creditNeq, creditCurrencyEq, creditCurrencyNeq, disabledEq, disabledNeq, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RefillApi.getAllRefills']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2561,7 +3329,7 @@ export const RefillApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         getAllRefills(requestParameters: RefillApiGetAllRefillsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<RefillListResponse> {
-            return localVarFp.getAllRefills(requestParameters.page, requestParameters.perPage, options).then((request) => request(axios, basePath));
+            return localVarFp.getAllRefills(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.priceEq, requestParameters.priceNeq, requestParameters.priceCurrencyEq, requestParameters.priceCurrencyNeq, requestParameters.creditEq, requestParameters.creditNeq, requestParameters.creditCurrencyEq, requestParameters.creditCurrencyNeq, requestParameters.disabledEq, requestParameters.disabledNeq, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is disabled, only an admin can retrieve it.
@@ -2628,7 +3396,7 @@ export interface RefillApiEditRefillRequest {
  */
 export interface RefillApiGetAllRefillsRequest {
     /**
-     * The page number to retrieve, starting from 1.
+     * The page number to retrieve, starting from 0.
      * @type {number}
      * @memberof RefillApiGetAllRefills
      */
@@ -2640,6 +3408,146 @@ export interface RefillApiGetAllRefillsRequest {
      * @memberof RefillApiGetAllRefills
      */
     readonly perPage?: number | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly idEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly idNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly nameEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly nameNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly createdAtEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly createdAtNeq?: Array<string>
+
+    /**
+     * Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+     * @type {string}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly createdAtGt?: string | null
+
+    /**
+     * Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+     * @type {string}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly createdAtLt?: string | null
+
+    /**
+     * Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly createdAtGte?: string | null
+
+    /**
+     * Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly createdAtLte?: string | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly priceEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly priceNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<CurrencyRequest>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly priceCurrencyEq?: Array<CurrencyRequest>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<CurrencyRequest>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly priceCurrencyNeq?: Array<CurrencyRequest>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly creditEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly creditNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<CurrencyRequest>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly creditCurrencyEq?: Array<CurrencyRequest>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<CurrencyRequest>}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly creditCurrencyNeq?: Array<CurrencyRequest>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {boolean}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly disabledEq?: boolean | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {boolean}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly disabledNeq?: boolean | null
 }
 
 /**
@@ -2710,7 +3618,7 @@ export class RefillApi extends BaseAPI {
      * @memberof RefillApi
      */
     public getAllRefills(requestParameters: RefillApiGetAllRefillsRequest = {}, options?: RawAxiosRequestConfig) {
-        return RefillApiFp(this.configuration).getAllRefills(requestParameters.page, requestParameters.perPage, options).then((request) => request(this.axios, this.basePath));
+        return RefillApiFp(this.configuration).getAllRefills(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.priceEq, requestParameters.priceNeq, requestParameters.priceCurrencyEq, requestParameters.priceCurrencyNeq, requestParameters.creditEq, requestParameters.creditNeq, requestParameters.creditCurrencyEq, requestParameters.creditCurrencyNeq, requestParameters.disabledEq, requestParameters.disabledNeq, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2791,12 +3699,44 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of user per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of users.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view others users
          * @summary Handles the request to retrieve a paginated list of users.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
+         * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
+         * @param {Array<string>} [idEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [idNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [emailEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [emailNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [nameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [nameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [usernameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [usernameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [balanceEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [balanceNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [balanceGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [balanceLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [balanceGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [balanceLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<CurrencyRequest>} [balanceCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<CurrencyRequest>} [balanceCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [isAdminEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [isAdminNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {boolean | null} [isBannedEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [isBannedNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [createdAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [createdAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [createdAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [createdAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<string>} [lastAccessAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [lastAccessAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [lastAccessAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [lastAccessAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [lastAccessAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [lastAccessAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllUsers: async (page?: number | null, perPage?: number | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllUsers: async (page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, emailEq?: Array<string>, emailNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, usernameEq?: Array<string>, usernameNeq?: Array<string>, balanceEq?: Array<string>, balanceNeq?: Array<string>, balanceGt?: string | null, balanceLt?: string | null, balanceGte?: string | null, balanceLte?: string | null, balanceCurrencyEq?: Array<CurrencyRequest>, balanceCurrencyNeq?: Array<CurrencyRequest>, isAdminEq?: boolean | null, isAdminNeq?: boolean | null, isBannedEq?: boolean | null, isBannedNeq?: boolean | null, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, lastAccessAtEq?: Array<string>, lastAccessAtNeq?: Array<string>, lastAccessAtGt?: string | null, lastAccessAtLt?: string | null, lastAccessAtGte?: string | null, lastAccessAtLte?: string | null, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/user`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2817,6 +3757,150 @@ export const UserApiAxiosParamCreator = function (configuration?: Configuration)
 
             if (perPage !== undefined) {
                 localVarQueryParameter['per_page'] = perPage;
+            }
+
+            if (idEq) {
+                localVarQueryParameter['id_eq'] = idEq;
+            }
+
+            if (idNeq) {
+                localVarQueryParameter['id_neq'] = idNeq;
+            }
+
+            if (emailEq) {
+                localVarQueryParameter['email_eq'] = emailEq;
+            }
+
+            if (emailNeq) {
+                localVarQueryParameter['email_neq'] = emailNeq;
+            }
+
+            if (nameEq) {
+                localVarQueryParameter['name_eq'] = nameEq;
+            }
+
+            if (nameNeq) {
+                localVarQueryParameter['name_neq'] = nameNeq;
+            }
+
+            if (usernameEq) {
+                localVarQueryParameter['username_eq'] = usernameEq;
+            }
+
+            if (usernameNeq) {
+                localVarQueryParameter['username_neq'] = usernameNeq;
+            }
+
+            if (balanceEq) {
+                localVarQueryParameter['balance_eq'] = balanceEq;
+            }
+
+            if (balanceNeq) {
+                localVarQueryParameter['balance_neq'] = balanceNeq;
+            }
+
+            if (balanceGt !== undefined) {
+                localVarQueryParameter['balance_gt'] = balanceGt;
+            }
+
+            if (balanceLt !== undefined) {
+                localVarQueryParameter['balance_lt'] = balanceLt;
+            }
+
+            if (balanceGte !== undefined) {
+                localVarQueryParameter['balance_gte'] = balanceGte;
+            }
+
+            if (balanceLte !== undefined) {
+                localVarQueryParameter['balance_lte'] = balanceLte;
+            }
+
+            if (balanceCurrencyEq) {
+                localVarQueryParameter['balance_currency_eq'] = balanceCurrencyEq;
+            }
+
+            if (balanceCurrencyNeq) {
+                localVarQueryParameter['balance_currency_neq'] = balanceCurrencyNeq;
+            }
+
+            if (isAdminEq !== undefined) {
+                localVarQueryParameter['is_admin_eq'] = isAdminEq;
+            }
+
+            if (isAdminNeq !== undefined) {
+                localVarQueryParameter['is_admin_neq'] = isAdminNeq;
+            }
+
+            if (isBannedEq !== undefined) {
+                localVarQueryParameter['is_banned_eq'] = isBannedEq;
+            }
+
+            if (isBannedNeq !== undefined) {
+                localVarQueryParameter['is_banned_neq'] = isBannedNeq;
+            }
+
+            if (createdAtEq) {
+                localVarQueryParameter['created_at_eq'] = createdAtEq;
+            }
+
+            if (createdAtNeq) {
+                localVarQueryParameter['created_at_neq'] = createdAtNeq;
+            }
+
+            if (createdAtGt !== undefined) {
+                localVarQueryParameter['created_at_gt'] = (createdAtGt as any instanceof Date) ?
+                    (createdAtGt as any).toISOString() :
+                    createdAtGt;
+            }
+
+            if (createdAtLt !== undefined) {
+                localVarQueryParameter['created_at_lt'] = (createdAtLt as any instanceof Date) ?
+                    (createdAtLt as any).toISOString() :
+                    createdAtLt;
+            }
+
+            if (createdAtGte !== undefined) {
+                localVarQueryParameter['created_at_gte'] = (createdAtGte as any instanceof Date) ?
+                    (createdAtGte as any).toISOString() :
+                    createdAtGte;
+            }
+
+            if (createdAtLte !== undefined) {
+                localVarQueryParameter['created_at_lte'] = (createdAtLte as any instanceof Date) ?
+                    (createdAtLte as any).toISOString() :
+                    createdAtLte;
+            }
+
+            if (lastAccessAtEq) {
+                localVarQueryParameter['last_access_at_eq'] = lastAccessAtEq;
+            }
+
+            if (lastAccessAtNeq) {
+                localVarQueryParameter['last_access_at_neq'] = lastAccessAtNeq;
+            }
+
+            if (lastAccessAtGt !== undefined) {
+                localVarQueryParameter['last_access_at_gt'] = (lastAccessAtGt as any instanceof Date) ?
+                    (lastAccessAtGt as any).toISOString() :
+                    lastAccessAtGt;
+            }
+
+            if (lastAccessAtLt !== undefined) {
+                localVarQueryParameter['last_access_at_lt'] = (lastAccessAtLt as any instanceof Date) ?
+                    (lastAccessAtLt as any).toISOString() :
+                    lastAccessAtLt;
+            }
+
+            if (lastAccessAtGte !== undefined) {
+                localVarQueryParameter['last_access_at_gte'] = (lastAccessAtGte as any instanceof Date) ?
+                    (lastAccessAtGte as any).toISOString() :
+                    lastAccessAtGte;
+            }
+
+            if (lastAccessAtLte !== undefined) {
+                localVarQueryParameter['last_access_at_lte'] = (lastAccessAtLte as any instanceof Date) ?
+                    (lastAccessAtLte as any).toISOString() :
+                    lastAccessAtLte;
             }
 
 
@@ -2987,13 +4071,45 @@ export const UserApiFp = function(configuration?: Configuration) {
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of user per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of users.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view others users
          * @summary Handles the request to retrieve a paginated list of users.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
+         * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
+         * @param {Array<string>} [idEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [idNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [emailEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [emailNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [nameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [nameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [usernameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [usernameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {Array<string>} [balanceEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [balanceNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [balanceGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [balanceLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [balanceGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [balanceLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<CurrencyRequest>} [balanceCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<CurrencyRequest>} [balanceCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [isAdminEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [isAdminNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {boolean | null} [isBannedEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [isBannedNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [createdAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [createdAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [createdAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [createdAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<string>} [lastAccessAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [lastAccessAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [lastAccessAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [lastAccessAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [lastAccessAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [lastAccessAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllUsers(page?: number | null, perPage?: number | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserListResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllUsers(page, perPage, options);
+        async getAllUsers(page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, emailEq?: Array<string>, emailNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, usernameEq?: Array<string>, usernameNeq?: Array<string>, balanceEq?: Array<string>, balanceNeq?: Array<string>, balanceGt?: string | null, balanceLt?: string | null, balanceGte?: string | null, balanceLte?: string | null, balanceCurrencyEq?: Array<CurrencyRequest>, balanceCurrencyNeq?: Array<CurrencyRequest>, isAdminEq?: boolean | null, isAdminNeq?: boolean | null, isBannedEq?: boolean | null, isBannedNeq?: boolean | null, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, lastAccessAtEq?: Array<string>, lastAccessAtNeq?: Array<string>, lastAccessAtGt?: string | null, lastAccessAtLt?: string | null, lastAccessAtGte?: string | null, lastAccessAtLte?: string | null, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<UserListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllUsers(page, perPage, idEq, idNeq, emailEq, emailNeq, nameEq, nameNeq, usernameEq, usernameNeq, balanceEq, balanceNeq, balanceGt, balanceLt, balanceGte, balanceLte, balanceCurrencyEq, balanceCurrencyNeq, isAdminEq, isAdminNeq, isBannedEq, isBannedNeq, createdAtEq, createdAtNeq, createdAtGt, createdAtLt, createdAtGte, createdAtLte, lastAccessAtEq, lastAccessAtNeq, lastAccessAtGt, lastAccessAtLt, lastAccessAtGte, lastAccessAtLte, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['UserApi.getAllUsers']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -3075,7 +4191,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @throws {RequiredError}
          */
         getAllUsers(requestParameters: UserApiGetAllUsersRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<UserListResponse> {
-            return localVarFp.getAllUsers(requestParameters.page, requestParameters.perPage, options).then((request) => request(axios, basePath));
+            return localVarFp.getAllUsers(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.emailEq, requestParameters.emailNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.usernameEq, requestParameters.usernameNeq, requestParameters.balanceEq, requestParameters.balanceNeq, requestParameters.balanceGt, requestParameters.balanceLt, requestParameters.balanceGte, requestParameters.balanceLte, requestParameters.balanceCurrencyEq, requestParameters.balanceCurrencyNeq, requestParameters.isAdminEq, requestParameters.isAdminNeq, requestParameters.isBannedEq, requestParameters.isBannedNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.lastAccessAtEq, requestParameters.lastAccessAtNeq, requestParameters.lastAccessAtGt, requestParameters.lastAccessAtLt, requestParameters.lastAccessAtGte, requestParameters.lastAccessAtLte, options).then((request) => request(axios, basePath));
         },
         /**
          * This function is responsible for handling login requests. When a user attempts to access the login route, they are redirected to the frontend base URL specified in the application\'s configuration (command-line arguments or environment variables).  
@@ -3145,7 +4261,7 @@ export interface UserApiEditUserRequest {
  */
 export interface UserApiGetAllUsersRequest {
     /**
-     * The page number to retrieve, starting from 1.
+     * The page number to retrieve, starting from 0.
      * @type {number}
      * @memberof UserApiGetAllUsers
      */
@@ -3157,6 +4273,230 @@ export interface UserApiGetAllUsersRequest {
      * @memberof UserApiGetAllUsers
      */
     readonly perPage?: number | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly idEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly idNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly emailEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly emailNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly nameEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly nameNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly usernameEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly usernameNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly balanceEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly balanceNeq?: Array<string>
+
+    /**
+     * Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly balanceGt?: string | null
+
+    /**
+     * Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly balanceLt?: string | null
+
+    /**
+     * Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly balanceGte?: string | null
+
+    /**
+     * Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly balanceLte?: string | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<CurrencyRequest>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly balanceCurrencyEq?: Array<CurrencyRequest>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<CurrencyRequest>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly balanceCurrencyNeq?: Array<CurrencyRequest>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {boolean}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly isAdminEq?: boolean | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {boolean}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly isAdminNeq?: boolean | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {boolean}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly isBannedEq?: boolean | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {boolean}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly isBannedNeq?: boolean | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly createdAtEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly createdAtNeq?: Array<string>
+
+    /**
+     * Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly createdAtGt?: string | null
+
+    /**
+     * Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly createdAtLt?: string | null
+
+    /**
+     * Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly createdAtGte?: string | null
+
+    /**
+     * Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly createdAtLte?: string | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly lastAccessAtEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly lastAccessAtNeq?: Array<string>
+
+    /**
+     * Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly lastAccessAtGt?: string | null
+
+    /**
+     * Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly lastAccessAtLt?: string | null
+
+    /**
+     * Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly lastAccessAtGte?: string | null
+
+    /**
+     * Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly lastAccessAtLte?: string | null
 }
 
 /**
@@ -3201,7 +4541,7 @@ export class UserApi extends BaseAPI {
      * @memberof UserApi
      */
     public getAllUsers(requestParameters: UserApiGetAllUsersRequest = {}, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getAllUsers(requestParameters.page, requestParameters.perPage, options).then((request) => request(this.axios, this.basePath));
+        return UserApiFp(this.configuration).getAllUsers(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.emailEq, requestParameters.emailNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.usernameEq, requestParameters.usernameNeq, requestParameters.balanceEq, requestParameters.balanceNeq, requestParameters.balanceGt, requestParameters.balanceLt, requestParameters.balanceGte, requestParameters.balanceLte, requestParameters.balanceCurrencyEq, requestParameters.balanceCurrencyNeq, requestParameters.isAdminEq, requestParameters.isAdminNeq, requestParameters.isBannedEq, requestParameters.isBannedNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.lastAccessAtEq, requestParameters.lastAccessAtNeq, requestParameters.lastAccessAtGt, requestParameters.lastAccessAtLt, requestParameters.lastAccessAtGte, requestParameters.lastAccessAtLte, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
