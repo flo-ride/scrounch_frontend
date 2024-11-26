@@ -159,14 +159,16 @@ export default {
             this.loading = true;
             try {
                 if (this.productImage) {
-                    const res = await this.$miscApi.postUploadFiles(
-                        FileType.Product,
-                        this.productImage,
-                    );
+                    const res = await this.$miscApi.postUploadFiles({
+                        fileType: FileType.Product,
+                        file: this.productImage,
+                    });
                     const filename = res.data[0][1];
                     this.product.image = filename;
                 }
-                await this.$productApi.postNewProduct(this.product.toNewRequest());
+                await this.$productApi.postNewProduct({
+                    newProductRequest: this.product.toNewRequest(),
+                });
                 this.show = false;
                 // @ts-ignore
                 this.$refs.dialogRef.clearForm();

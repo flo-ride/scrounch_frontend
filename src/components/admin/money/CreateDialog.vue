@@ -74,7 +74,9 @@ export default {
         async createItem() {
             this.loading = true;
             try {
-                await this.$refillApi.postNewRefill(this.refill.toNewRequest());
+                await this.$refillApi.postNewRefill({
+                    newRefillRequest: this.refill.toNewRequest(),
+                });
                 this.show = false;
                 // @ts-ignore
                 this.$refs.dialogRef.clearForm();

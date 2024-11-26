@@ -52,7 +52,7 @@ export default {
         async updateItem() {
             this.loading = true;
             try {
-                await this.$productApi.deleteProduct(this.productId);
+                await this.$productApi.deleteProduct({ id: this.productId });
                 this.show = false;
                 this.$emit("isDone");
             } catch (err) {

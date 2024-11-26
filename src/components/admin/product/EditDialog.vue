@@ -210,13 +210,16 @@ export default {
 
             if (this.productImage != undefined) {
                 this.$miscApi
-                    .postUploadFiles(FileType.Product, this.productImage)
+                    .postUploadFiles({ fileType: FileType.Product, file: this.productImage })
                     .then((res) => {
                         let filename = res.data[0][1];
                         this.product.image = filename;
 
                         this.$productApi
-                            .editProduct(this.product.id, this.product.toEditRequest())
+                            .editProduct({
+                                id: this.product.id,
+                                editProductRequest: this.product.toEditRequest(),
+                            })
                             .then((_res) => {
                                 this.show = false;
                                 this.$emit("isDone");
@@ -238,7 +241,10 @@ export default {
                     });
             } else {
                 this.$productApi
-                    .editProduct(this.product.id, this.product.toEditRequest())
+                    .editProduct({
+                        id: this.product.id,
+                        editProductRequest: this.product.toEditRequest(),
+                    })
                     .then((_res) => {
                         this.show = false;
                         this.$emit("isDone");

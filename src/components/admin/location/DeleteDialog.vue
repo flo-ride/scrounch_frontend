@@ -52,7 +52,7 @@ export default {
         async updateItem() {
             this.loading = true;
             try {
-                await this.$locationApi.deleteLocation(this.locationId);
+                await this.$locationApi.deleteLocation({ id: this.locationId });
                 this.show = false;
                 this.$emit("isDone");
             } catch (err) {

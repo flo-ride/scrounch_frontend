@@ -112,11 +112,13 @@ export default {
     methods: {
         loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
             this.loading = true;
-            this.$locationApi.getAllLocations(page - 1, itemsPerPage).then((res) => {
-                this.serverItems = res.data.locations.map((x) => Location.fromResponse(x));
-                this.totalItems = res.data.total_page * itemsPerPage;
-                this.loading = false;
-            });
+            this.$locationApi
+                .getAllLocations({ page: page - 1, perPage: itemsPerPage })
+                .then((res) => {
+                    this.serverItems = res.data.locations.map((x) => Location.fromResponse(x));
+                    this.totalItems = res.data.total_page * itemsPerPage;
+                    this.loading = false;
+                });
         },
         timeSinceCreation(creationTimeString: string) {
             const creationTime = new Date(creationTimeString);

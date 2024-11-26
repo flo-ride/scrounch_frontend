@@ -102,7 +102,7 @@ export default {
     methods: {
         loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
             this.loading = true;
-            this.$refillApi.getAllRefills(page - 1, itemsPerPage).then((res) => {
+            this.$refillApi.getAllRefills({ page: page - 1, perPage: itemsPerPage }).then((res) => {
                 this.serverItems = res.data.refills.map((x) => Refill.fromResponse(x));
                 this.totalItems = res.data.total_page * itemsPerPage;
                 this.loading = false;

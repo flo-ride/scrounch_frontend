@@ -88,10 +88,10 @@ export default {
         async updateItem() {
             this.loading = true;
             try {
-                await this.$locationApi.editLocation(
-                    this.location.id,
-                    this.location.toEditRequest(),
-                );
+                await this.$locationApi.editLocation({
+                    id: this.location.id,
+                    editLocationRequest: this.location.toEditRequest(),
+                });
                 this.show = false;
                 // @ts-ignore
                 this.$refs.dialogRef.clearForm();

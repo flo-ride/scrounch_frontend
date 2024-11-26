@@ -66,7 +66,9 @@ export default {
         async createItem() {
             this.loading = true;
             try {
-                await this.$locationApi.postNewLocation(this.location.toNewRequest());
+                await this.$locationApi.postNewLocation({
+                    newLocationRequest: this.location.toNewRequest(),
+                });
                 this.show = false;
                 // @ts-ignore
                 this.$refs.dialogRef.clearForm();

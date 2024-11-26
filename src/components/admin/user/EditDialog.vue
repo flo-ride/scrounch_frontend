@@ -72,7 +72,7 @@ export default {
             this.loading = true;
 
             this.$userApi
-                .editUser(this.user.id, this.user.toEditRequest())
+                .editUser({ id: this.user.id, editUserRequest: this.user.toEditRequest() })
                 .then((_res) => {
                     this.show = false;
                     this.$emit("isDone");

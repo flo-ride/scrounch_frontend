@@ -109,7 +109,7 @@ export default {
     methods: {
         loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
             this.loading = true;
-            this.$userApi.getAllUsers(page - 1, itemsPerPage).then((res) => {
+            this.$userApi.getAllUsers({ page: page - 1, perPage: itemsPerPage }).then((res) => {
                 this.serverItems = res.data.users.map((x) => User.fromResponse(x));
                 this.totalItems = res.data.total_page * itemsPerPage;
                 this.loading = false;

@@ -96,7 +96,10 @@ export default {
         async updateItem() {
             this.loading = true;
             try {
-                await this.$refillApi.editRefill(this.refill.id, this.refill.toEditRequest());
+                await this.$refillApi.editRefill({
+                    id: this.refill.id,
+                    editRefillRequest: this.refill.toEditRequest(),
+                });
                 this.show = false;
                 // @ts-ignore
                 this.$refs.dialogRef.clearForm();

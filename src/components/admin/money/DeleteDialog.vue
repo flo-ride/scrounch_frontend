@@ -52,7 +52,7 @@ export default {
         async updateItem() {
             this.loading = true;
             try {
-                await this.$refillApi.deleteRefill(this.refillId);
+                await this.$refillApi.deleteRefill({ id: this.refillId });
                 this.show = false;
                 this.$emit("isDone");
             } catch (err) {

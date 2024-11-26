@@ -240,12 +240,14 @@ export default {
     methods: {
         loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
             this.loading = true;
-            this.$productApi.getAllProducts(page - 1, itemsPerPage).then((res) => {
-                this.serverItems = res.data.products.map((x) => Product.fromResponse(x));
-                this.totalItems = res.data.total_page * itemsPerPage;
-                this.totalPage = res.data.total_page;
-                this.loading = false;
-            });
+            this.$productApi
+                .getAllProducts({ page: page - 1, perPage: itemsPerPage })
+                .then((res) => {
+                    this.serverItems = res.data.products.map((x) => Product.fromResponse(x));
+                    this.totalItems = res.data.total_page * itemsPerPage;
+                    this.totalPage = res.data.total_page;
+                    this.loading = false;
+                });
         },
         imageSrcUrl: (imageName: string | undefined) => {
             // @ts-ignore

@@ -50,7 +50,7 @@ export default defineComponent({
             this.disable = true;
 
             this.$miscApi
-                .postUpdateFromSma(this.overwriteName, this.overwritePrice)
+                .postUpdateFromSma({ name: this.overwriteName, price: this.overwritePrice })
                 .then((_res: AxiosResponse<any, any>) => {
                     // TODO: ADD new dialog just for confirmation
                     this.show = false;

@@ -1147,57 +1147,139 @@ export const LocationApiFactory = function (configuration?: Configuration, baseP
         /**
          * The location is not fully removed but marked as disabled in the database. Only an admin can perform this action.  - **Path Parameters:**   - `id`: The unique ID of the location in the database.  - **Responses:**   - `500`: Internal error, likely related to the database.   - `400`: The request format is invalid.   - `200`: The location has been successfully disabled.
          * @summary Deletes a location by its database ID.
-         * @param {string} id Location database id to delete location for
+         * @param {LocationApiDeleteLocationRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteLocation(id: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteLocation(id, options).then((request) => request(axios, basePath));
+        deleteLocation(requestParameters: LocationApiDeleteLocationRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteLocation(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * Returns an error if the location doesn\'t exist, if there is a validation issue, or if a database.
          * @summary Edit an existing location by ID.
-         * @param {string} id location database id to edit location for
-         * @param {EditLocationRequest} editLocationRequest 
+         * @param {LocationApiEditLocationRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        editLocation(id: string, editLocationRequest: EditLocationRequest, options?: any): AxiosPromise<void> {
-            return localVarFp.editLocation(id, editLocationRequest, options).then((request) => request(axios, basePath));
+        editLocation(requestParameters: LocationApiEditLocationRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.editLocation(requestParameters.id, requestParameters.editLocationRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled location
          * @summary Handles the request to retrieve a paginated list of locations.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
-         * @param {number | null} [perPage] The number of items to return per page.
+         * @param {LocationApiGetAllLocationsRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllLocations(page?: number | null, perPage?: number | null, options?: any): AxiosPromise<LocationListResponse> {
-            return localVarFp.getAllLocations(page, perPage, options).then((request) => request(axios, basePath));
+        getAllLocations(requestParameters: LocationApiGetAllLocationsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<LocationListResponse> {
+            return localVarFp.getAllLocations(requestParameters.page, requestParameters.perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is disabled, only an admin can retrieve it.
          * @summary Handles the request to fetch a location by its unique identifier.
-         * @param {string} id The database ID of the location to retrieve.
+         * @param {LocationApiGetLocationRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getLocation(id: string, options?: any): AxiosPromise<LocationResponse> {
-            return localVarFp.getLocation(id, options).then((request) => request(axios, basePath));
+        getLocation(requestParameters: LocationApiGetLocationRequest, options?: RawAxiosRequestConfig): AxiosPromise<LocationResponse> {
+            return localVarFp.getLocation(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * This function allows an admin to create a new location by sending a POST request to the `/location` endpoint. The new location is validated and stored in the database. The image associated with the location is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the location\'s ID.  Path: `/location`  - **Request Body:** Expects a `NewLocation` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new location, returns the new location\'s ID as a string.
          * @summary Handler for creating a new location.
-         * @param {NewLocationRequest} newLocationRequest 
+         * @param {LocationApiPostNewLocationRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postNewLocation(newLocationRequest: NewLocationRequest, options?: any): AxiosPromise<string> {
-            return localVarFp.postNewLocation(newLocationRequest, options).then((request) => request(axios, basePath));
+        postNewLocation(requestParameters: LocationApiPostNewLocationRequest, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.postNewLocation(requestParameters.newLocationRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
+
+/**
+ * Request parameters for deleteLocation operation in LocationApi.
+ * @export
+ * @interface LocationApiDeleteLocationRequest
+ */
+export interface LocationApiDeleteLocationRequest {
+    /**
+     * Location database id to delete location for
+     * @type {string}
+     * @memberof LocationApiDeleteLocation
+     */
+    readonly id: string
+}
+
+/**
+ * Request parameters for editLocation operation in LocationApi.
+ * @export
+ * @interface LocationApiEditLocationRequest
+ */
+export interface LocationApiEditLocationRequest {
+    /**
+     * location database id to edit location for
+     * @type {string}
+     * @memberof LocationApiEditLocation
+     */
+    readonly id: string
+
+    /**
+     * 
+     * @type {EditLocationRequest}
+     * @memberof LocationApiEditLocation
+     */
+    readonly editLocationRequest: EditLocationRequest
+}
+
+/**
+ * Request parameters for getAllLocations operation in LocationApi.
+ * @export
+ * @interface LocationApiGetAllLocationsRequest
+ */
+export interface LocationApiGetAllLocationsRequest {
+    /**
+     * The page number to retrieve, starting from 1.
+     * @type {number}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly page?: number | null
+
+    /**
+     * The number of items to return per page.
+     * @type {number}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly perPage?: number | null
+}
+
+/**
+ * Request parameters for getLocation operation in LocationApi.
+ * @export
+ * @interface LocationApiGetLocationRequest
+ */
+export interface LocationApiGetLocationRequest {
+    /**
+     * The database ID of the location to retrieve.
+     * @type {string}
+     * @memberof LocationApiGetLocation
+     */
+    readonly id: string
+}
+
+/**
+ * Request parameters for postNewLocation operation in LocationApi.
+ * @export
+ * @interface LocationApiPostNewLocationRequest
+ */
+export interface LocationApiPostNewLocationRequest {
+    /**
+     * 
+     * @type {NewLocationRequest}
+     * @memberof LocationApiPostNewLocation
+     */
+    readonly newLocationRequest: NewLocationRequest
+}
 
 /**
  * LocationApi - object-oriented interface
@@ -1209,63 +1291,61 @@ export class LocationApi extends BaseAPI {
     /**
      * The location is not fully removed but marked as disabled in the database. Only an admin can perform this action.  - **Path Parameters:**   - `id`: The unique ID of the location in the database.  - **Responses:**   - `500`: Internal error, likely related to the database.   - `400`: The request format is invalid.   - `200`: The location has been successfully disabled.
      * @summary Deletes a location by its database ID.
-     * @param {string} id Location database id to delete location for
+     * @param {LocationApiDeleteLocationRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof LocationApi
      */
-    public deleteLocation(id: string, options?: RawAxiosRequestConfig) {
-        return LocationApiFp(this.configuration).deleteLocation(id, options).then((request) => request(this.axios, this.basePath));
+    public deleteLocation(requestParameters: LocationApiDeleteLocationRequest, options?: RawAxiosRequestConfig) {
+        return LocationApiFp(this.configuration).deleteLocation(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * Returns an error if the location doesn\'t exist, if there is a validation issue, or if a database.
      * @summary Edit an existing location by ID.
-     * @param {string} id location database id to edit location for
-     * @param {EditLocationRequest} editLocationRequest 
+     * @param {LocationApiEditLocationRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof LocationApi
      */
-    public editLocation(id: string, editLocationRequest: EditLocationRequest, options?: RawAxiosRequestConfig) {
-        return LocationApiFp(this.configuration).editLocation(id, editLocationRequest, options).then((request) => request(this.axios, this.basePath));
+    public editLocation(requestParameters: LocationApiEditLocationRequest, options?: RawAxiosRequestConfig) {
+        return LocationApiFp(this.configuration).editLocation(requestParameters.id, requestParameters.editLocationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled location
      * @summary Handles the request to retrieve a paginated list of locations.
-     * @param {number | null} [page] The page number to retrieve, starting from 1.
-     * @param {number | null} [perPage] The number of items to return per page.
+     * @param {LocationApiGetAllLocationsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof LocationApi
      */
-    public getAllLocations(page?: number | null, perPage?: number | null, options?: RawAxiosRequestConfig) {
-        return LocationApiFp(this.configuration).getAllLocations(page, perPage, options).then((request) => request(this.axios, this.basePath));
+    public getAllLocations(requestParameters: LocationApiGetAllLocationsRequest = {}, options?: RawAxiosRequestConfig) {
+        return LocationApiFp(this.configuration).getAllLocations(requestParameters.page, requestParameters.perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is disabled, only an admin can retrieve it.
      * @summary Handles the request to fetch a location by its unique identifier.
-     * @param {string} id The database ID of the location to retrieve.
+     * @param {LocationApiGetLocationRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof LocationApi
      */
-    public getLocation(id: string, options?: RawAxiosRequestConfig) {
-        return LocationApiFp(this.configuration).getLocation(id, options).then((request) => request(this.axios, this.basePath));
+    public getLocation(requestParameters: LocationApiGetLocationRequest, options?: RawAxiosRequestConfig) {
+        return LocationApiFp(this.configuration).getLocation(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * This function allows an admin to create a new location by sending a POST request to the `/location` endpoint. The new location is validated and stored in the database. The image associated with the location is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the location\'s ID.  Path: `/location`  - **Request Body:** Expects a `NewLocation` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new location, returns the new location\'s ID as a string.
      * @summary Handler for creating a new location.
-     * @param {NewLocationRequest} newLocationRequest 
+     * @param {LocationApiPostNewLocationRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof LocationApi
      */
-    public postNewLocation(newLocationRequest: NewLocationRequest, options?: RawAxiosRequestConfig) {
-        return LocationApiFp(this.configuration).postNewLocation(newLocationRequest, options).then((request) => request(this.axios, this.basePath));
+    public postNewLocation(requestParameters: LocationApiPostNewLocationRequest, options?: RawAxiosRequestConfig) {
+        return LocationApiFp(this.configuration).postNewLocation(requestParameters.newLocationRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1517,13 +1597,12 @@ export const MiscApiFactory = function (configuration?: Configuration, basePath?
         /**
          * This function retrieves a specified file based on the given filename and type, and streams it to the client. It also handles errors related to file access, returning appropriate HTTP status codes for various scenarios such as file not found or other errors.  # Parameters - `filename`: The name of the file to be downloaded. - `params`: The type of the file, which affects the download behavior.  # Responses - `200`: The file is correctly uploaded. - `400`: You\'re missing some field.  # Errors Returns an error if the file does not exist or if there is an issue with the S3 storage.
          * @summary Downloads files from the server\'s storage.
-         * @param {string} filename The filename
-         * @param {FileType} fileType 
+         * @param {MiscApiDownloadFileRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        downloadFile(filename: string, fileType: FileType, options?: any): AxiosPromise<string> {
-            return localVarFp.downloadFile(filename, fileType, options).then((request) => request(axios, basePath));
+        downloadFile(requestParameters: MiscApiDownloadFileRequest, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.downloadFile(requestParameters.filename, requestParameters.fileType, options).then((request) => request(axios, basePath));
         },
         /**
          * This asynchronous function handles the `/status` endpoint and returns a static string indicating that the server is running. It is commonly used for health checks to confirm that the application is up and operational.  # Returns A static string `\"UP\"`, representing the server\'s status.  # Endpoint - **GET /status**: Responds with `\"UP\"` and a `200 OK` status.
@@ -1531,33 +1610,94 @@ export const MiscApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getStatus(options?: any): AxiosPromise<string> {
+        getStatus(options?: RawAxiosRequestConfig): AxiosPromise<string> {
             return localVarFp.getStatus(options).then((request) => request(axios, basePath));
         },
         /**
          * # Errors - Returns a 500 status code if there is an internal error, such as a failure to fetch or process Sma data. - Returns a 400 status code if the request to Sma is not correctly formatted.  # Responses - 200: The products have been successfully updated.
          * @summary Updates the local product database by importing products from the Sma API. This function retrieves the latest products from Sma, processes the data, and updates the local products accordingly.
-         * @param {boolean} [name] Indicates if the product\&#39;s name has changed.
-         * @param {boolean} [price] Indicates if the product\&#39;s price has changed.
+         * @param {MiscApiPostUpdateFromSmaRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postUpdateFromSma(name?: boolean, price?: boolean, options?: any): AxiosPromise<SmaResponse> {
-            return localVarFp.postUpdateFromSma(name, price, options).then((request) => request(axios, basePath));
+        postUpdateFromSma(requestParameters: MiscApiPostUpdateFromSmaRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<SmaResponse> {
+            return localVarFp.postUpdateFromSma(requestParameters.name, requestParameters.price, options).then((request) => request(axios, basePath));
         },
         /**
          * This endpoint allows an admin user to upload files to a specified S3 bucket. It uses multipart form data to handle file uploads and stores them in a temporary S3 directory.
          * @summary Upload files
-         * @param {FileType} fileType 
-         * @param {File} file Represents the file data
+         * @param {MiscApiPostUploadFilesRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postUploadFiles(fileType: FileType, file: File, options?: any): AxiosPromise<string> {
-            return localVarFp.postUploadFiles(fileType, file, options).then((request) => request(axios, basePath));
+        postUploadFiles(requestParameters: MiscApiPostUploadFilesRequest, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.postUploadFiles(requestParameters.fileType, requestParameters.file, options).then((request) => request(axios, basePath));
         },
     };
 };
+
+/**
+ * Request parameters for downloadFile operation in MiscApi.
+ * @export
+ * @interface MiscApiDownloadFileRequest
+ */
+export interface MiscApiDownloadFileRequest {
+    /**
+     * The filename
+     * @type {string}
+     * @memberof MiscApiDownloadFile
+     */
+    readonly filename: string
+
+    /**
+     * 
+     * @type {FileType}
+     * @memberof MiscApiDownloadFile
+     */
+    readonly fileType: FileType
+}
+
+/**
+ * Request parameters for postUpdateFromSma operation in MiscApi.
+ * @export
+ * @interface MiscApiPostUpdateFromSmaRequest
+ */
+export interface MiscApiPostUpdateFromSmaRequest {
+    /**
+     * Indicates if the product\&#39;s name has changed.
+     * @type {boolean}
+     * @memberof MiscApiPostUpdateFromSma
+     */
+    readonly name?: boolean
+
+    /**
+     * Indicates if the product\&#39;s price has changed.
+     * @type {boolean}
+     * @memberof MiscApiPostUpdateFromSma
+     */
+    readonly price?: boolean
+}
+
+/**
+ * Request parameters for postUploadFiles operation in MiscApi.
+ * @export
+ * @interface MiscApiPostUploadFilesRequest
+ */
+export interface MiscApiPostUploadFilesRequest {
+    /**
+     * 
+     * @type {FileType}
+     * @memberof MiscApiPostUploadFiles
+     */
+    readonly fileType: FileType
+
+    /**
+     * Represents the file data
+     * @type {File}
+     * @memberof MiscApiPostUploadFiles
+     */
+    readonly file: File
+}
 
 /**
  * MiscApi - object-oriented interface
@@ -1569,14 +1709,13 @@ export class MiscApi extends BaseAPI {
     /**
      * This function retrieves a specified file based on the given filename and type, and streams it to the client. It also handles errors related to file access, returning appropriate HTTP status codes for various scenarios such as file not found or other errors.  # Parameters - `filename`: The name of the file to be downloaded. - `params`: The type of the file, which affects the download behavior.  # Responses - `200`: The file is correctly uploaded. - `400`: You\'re missing some field.  # Errors Returns an error if the file does not exist or if there is an issue with the S3 storage.
      * @summary Downloads files from the server\'s storage.
-     * @param {string} filename The filename
-     * @param {FileType} fileType 
+     * @param {MiscApiDownloadFileRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MiscApi
      */
-    public downloadFile(filename: string, fileType: FileType, options?: RawAxiosRequestConfig) {
-        return MiscApiFp(this.configuration).downloadFile(filename, fileType, options).then((request) => request(this.axios, this.basePath));
+    public downloadFile(requestParameters: MiscApiDownloadFileRequest, options?: RawAxiosRequestConfig) {
+        return MiscApiFp(this.configuration).downloadFile(requestParameters.filename, requestParameters.fileType, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1593,27 +1732,25 @@ export class MiscApi extends BaseAPI {
     /**
      * # Errors - Returns a 500 status code if there is an internal error, such as a failure to fetch or process Sma data. - Returns a 400 status code if the request to Sma is not correctly formatted.  # Responses - 200: The products have been successfully updated.
      * @summary Updates the local product database by importing products from the Sma API. This function retrieves the latest products from Sma, processes the data, and updates the local products accordingly.
-     * @param {boolean} [name] Indicates if the product\&#39;s name has changed.
-     * @param {boolean} [price] Indicates if the product\&#39;s price has changed.
+     * @param {MiscApiPostUpdateFromSmaRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MiscApi
      */
-    public postUpdateFromSma(name?: boolean, price?: boolean, options?: RawAxiosRequestConfig) {
-        return MiscApiFp(this.configuration).postUpdateFromSma(name, price, options).then((request) => request(this.axios, this.basePath));
+    public postUpdateFromSma(requestParameters: MiscApiPostUpdateFromSmaRequest = {}, options?: RawAxiosRequestConfig) {
+        return MiscApiFp(this.configuration).postUpdateFromSma(requestParameters.name, requestParameters.price, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * This endpoint allows an admin user to upload files to a specified S3 bucket. It uses multipart form data to handle file uploads and stores them in a temporary S3 directory.
      * @summary Upload files
-     * @param {FileType} fileType 
-     * @param {File} file Represents the file data
+     * @param {MiscApiPostUploadFilesRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MiscApi
      */
-    public postUploadFiles(fileType: FileType, file: File, options?: RawAxiosRequestConfig) {
-        return MiscApiFp(this.configuration).postUploadFiles(fileType, file, options).then((request) => request(this.axios, this.basePath));
+    public postUploadFiles(requestParameters: MiscApiPostUploadFilesRequest, options?: RawAxiosRequestConfig) {
+        return MiscApiFp(this.configuration).postUploadFiles(requestParameters.fileType, requestParameters.file, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1905,57 +2042,139 @@ export const ProductApiFactory = function (configuration?: Configuration, basePa
         /**
          * The product is not fully removed but marked as disabled in the database. Only an admin can perform this action.  - **Path Parameters:**   - `id`: The unique ID of the product in the database.  - **Responses:**   - `500`: Internal error, likely related to the database.   - `400`: The request format is invalid.   - `200`: The product has been successfully disabled.
          * @summary Deletes a product by its database ID.
-         * @param {string} id Product database id to delete product for
+         * @param {ProductApiDeleteProductRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteProduct(id: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteProduct(id, options).then((request) => request(axios, basePath));
+        deleteProduct(requestParameters: ProductApiDeleteProductRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteProduct(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * The admin can change attributes such as the name, price, quantity, or image of the product. If the product image is changed, the old image will be deleted from S3 storage.  Returns an error if the product doesn\'t exist, if there is a validation issue, or if a database or S3 operation fails.
          * @summary Edit an existing product by ID in the store.
-         * @param {string} id Product database id to edit product for
-         * @param {EditProductRequest} editProductRequest 
+         * @param {ProductApiEditProductRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        editProduct(id: string, editProductRequest: EditProductRequest, options?: any): AxiosPromise<void> {
-            return localVarFp.editProduct(id, editProductRequest, options).then((request) => request(axios, basePath));
+        editProduct(requestParameters: ProductApiEditProductRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.editProduct(requestParameters.id, requestParameters.editProductRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not disabled.
          * @summary Handles the request to retrieve a paginated list of products.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
-         * @param {number | null} [perPage] The number of items to return per page.
+         * @param {ProductApiGetAllProductsRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllProducts(page?: number | null, perPage?: number | null, options?: any): AxiosPromise<ProductListResponse> {
-            return localVarFp.getAllProducts(page, perPage, options).then((request) => request(axios, basePath));
+        getAllProducts(requestParameters: ProductApiGetAllProductsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<ProductListResponse> {
+            return localVarFp.getAllProducts(requestParameters.page, requestParameters.perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is disabled, only an admin can retrieve it.
          * @summary Handles the request to fetch a product by its unique identifier.
-         * @param {string} id The database ID of the product to retrieve.
+         * @param {ProductApiGetProductRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getProduct(id: string, options?: any): AxiosPromise<ProductResponse> {
-            return localVarFp.getProduct(id, options).then((request) => request(axios, basePath));
+        getProduct(requestParameters: ProductApiGetProductRequest, options?: RawAxiosRequestConfig): AxiosPromise<ProductResponse> {
+            return localVarFp.getProduct(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * This function allows an admin to create a new product by sending a POST request to the `/product` endpoint. The new product is validated and stored in the database. The image associated with the product is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the product\'s ID.  Path: `/product`  - **Request Body:** Expects a `NewProduct` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new product, returns the new product\'s ID as a string.
          * @summary Handler for creating a new product.
-         * @param {NewProductRequest} newProductRequest 
+         * @param {ProductApiPostNewProductRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postNewProduct(newProductRequest: NewProductRequest, options?: any): AxiosPromise<string> {
-            return localVarFp.postNewProduct(newProductRequest, options).then((request) => request(axios, basePath));
+        postNewProduct(requestParameters: ProductApiPostNewProductRequest, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.postNewProduct(requestParameters.newProductRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
+
+/**
+ * Request parameters for deleteProduct operation in ProductApi.
+ * @export
+ * @interface ProductApiDeleteProductRequest
+ */
+export interface ProductApiDeleteProductRequest {
+    /**
+     * Product database id to delete product for
+     * @type {string}
+     * @memberof ProductApiDeleteProduct
+     */
+    readonly id: string
+}
+
+/**
+ * Request parameters for editProduct operation in ProductApi.
+ * @export
+ * @interface ProductApiEditProductRequest
+ */
+export interface ProductApiEditProductRequest {
+    /**
+     * Product database id to edit product for
+     * @type {string}
+     * @memberof ProductApiEditProduct
+     */
+    readonly id: string
+
+    /**
+     * 
+     * @type {EditProductRequest}
+     * @memberof ProductApiEditProduct
+     */
+    readonly editProductRequest: EditProductRequest
+}
+
+/**
+ * Request parameters for getAllProducts operation in ProductApi.
+ * @export
+ * @interface ProductApiGetAllProductsRequest
+ */
+export interface ProductApiGetAllProductsRequest {
+    /**
+     * The page number to retrieve, starting from 1.
+     * @type {number}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly page?: number | null
+
+    /**
+     * The number of items to return per page.
+     * @type {number}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly perPage?: number | null
+}
+
+/**
+ * Request parameters for getProduct operation in ProductApi.
+ * @export
+ * @interface ProductApiGetProductRequest
+ */
+export interface ProductApiGetProductRequest {
+    /**
+     * The database ID of the product to retrieve.
+     * @type {string}
+     * @memberof ProductApiGetProduct
+     */
+    readonly id: string
+}
+
+/**
+ * Request parameters for postNewProduct operation in ProductApi.
+ * @export
+ * @interface ProductApiPostNewProductRequest
+ */
+export interface ProductApiPostNewProductRequest {
+    /**
+     * 
+     * @type {NewProductRequest}
+     * @memberof ProductApiPostNewProduct
+     */
+    readonly newProductRequest: NewProductRequest
+}
 
 /**
  * ProductApi - object-oriented interface
@@ -1967,63 +2186,61 @@ export class ProductApi extends BaseAPI {
     /**
      * The product is not fully removed but marked as disabled in the database. Only an admin can perform this action.  - **Path Parameters:**   - `id`: The unique ID of the product in the database.  - **Responses:**   - `500`: Internal error, likely related to the database.   - `400`: The request format is invalid.   - `200`: The product has been successfully disabled.
      * @summary Deletes a product by its database ID.
-     * @param {string} id Product database id to delete product for
+     * @param {ProductApiDeleteProductRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProductApi
      */
-    public deleteProduct(id: string, options?: RawAxiosRequestConfig) {
-        return ProductApiFp(this.configuration).deleteProduct(id, options).then((request) => request(this.axios, this.basePath));
+    public deleteProduct(requestParameters: ProductApiDeleteProductRequest, options?: RawAxiosRequestConfig) {
+        return ProductApiFp(this.configuration).deleteProduct(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * The admin can change attributes such as the name, price, quantity, or image of the product. If the product image is changed, the old image will be deleted from S3 storage.  Returns an error if the product doesn\'t exist, if there is a validation issue, or if a database or S3 operation fails.
      * @summary Edit an existing product by ID in the store.
-     * @param {string} id Product database id to edit product for
-     * @param {EditProductRequest} editProductRequest 
+     * @param {ProductApiEditProductRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProductApi
      */
-    public editProduct(id: string, editProductRequest: EditProductRequest, options?: RawAxiosRequestConfig) {
-        return ProductApiFp(this.configuration).editProduct(id, editProductRequest, options).then((request) => request(this.axios, this.basePath));
+    public editProduct(requestParameters: ProductApiEditProductRequest, options?: RawAxiosRequestConfig) {
+        return ProductApiFp(this.configuration).editProduct(requestParameters.id, requestParameters.editProductRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not disabled.
      * @summary Handles the request to retrieve a paginated list of products.
-     * @param {number | null} [page] The page number to retrieve, starting from 1.
-     * @param {number | null} [perPage] The number of items to return per page.
+     * @param {ProductApiGetAllProductsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProductApi
      */
-    public getAllProducts(page?: number | null, perPage?: number | null, options?: RawAxiosRequestConfig) {
-        return ProductApiFp(this.configuration).getAllProducts(page, perPage, options).then((request) => request(this.axios, this.basePath));
+    public getAllProducts(requestParameters: ProductApiGetAllProductsRequest = {}, options?: RawAxiosRequestConfig) {
+        return ProductApiFp(this.configuration).getAllProducts(requestParameters.page, requestParameters.perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is disabled, only an admin can retrieve it.
      * @summary Handles the request to fetch a product by its unique identifier.
-     * @param {string} id The database ID of the product to retrieve.
+     * @param {ProductApiGetProductRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProductApi
      */
-    public getProduct(id: string, options?: RawAxiosRequestConfig) {
-        return ProductApiFp(this.configuration).getProduct(id, options).then((request) => request(this.axios, this.basePath));
+    public getProduct(requestParameters: ProductApiGetProductRequest, options?: RawAxiosRequestConfig) {
+        return ProductApiFp(this.configuration).getProduct(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * This function allows an admin to create a new product by sending a POST request to the `/product` endpoint. The new product is validated and stored in the database. The image associated with the product is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the product\'s ID.  Path: `/product`  - **Request Body:** Expects a `NewProduct` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new product, returns the new product\'s ID as a string.
      * @summary Handler for creating a new product.
-     * @param {NewProductRequest} newProductRequest 
+     * @param {ProductApiPostNewProductRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ProductApi
      */
-    public postNewProduct(newProductRequest: NewProductRequest, options?: RawAxiosRequestConfig) {
-        return ProductApiFp(this.configuration).postNewProduct(newProductRequest, options).then((request) => request(this.axios, this.basePath));
+    public postNewProduct(requestParameters: ProductApiPostNewProductRequest, options?: RawAxiosRequestConfig) {
+        return ProductApiFp(this.configuration).postNewProduct(requestParameters.newProductRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2319,57 +2536,139 @@ export const RefillApiFactory = function (configuration?: Configuration, basePat
         /**
          * The refill is not fully removed but marked as disabled in the database. Only an admin can perform this action.  - **Path Parameters:**   - `id`: The unique ID of the refill in the database.  - **Responses:**   - `500`: Internal error, likely related to the database.   - `400`: The request format is invalid.   - `200`: The refill has been successfully disabled.
          * @summary Deletes a refill by its database ID.
-         * @param {string} id refill database id to delete refill for
+         * @param {RefillApiDeleteRefillRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteRefill(id: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteRefill(id, options).then((request) => request(axios, basePath));
+        deleteRefill(requestParameters: RefillApiDeleteRefillRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteRefill(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * The admin can change attributes such as the name, amont_in_euro, amont_in_epicoin of the refill.  Returns an error if the refill doesn\'t exist, if there is a validation issue, or if a database or S3 operation fails.
          * @summary Edit an existing refill by ID in the store.
-         * @param {string} id refill database id to edit refill for
-         * @param {EditRefillRequest} editRefillRequest 
+         * @param {RefillApiEditRefillRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        editRefill(id: string, editRefillRequest: EditRefillRequest, options?: any): AxiosPromise<void> {
-            return localVarFp.editRefill(id, editRefillRequest, options).then((request) => request(axios, basePath));
+        editRefill(requestParameters: RefillApiEditRefillRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.editRefill(requestParameters.id, requestParameters.editRefillRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled refill
          * @summary Handles the request to retrieve a paginated list of refills.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
-         * @param {number | null} [perPage] The number of items to return per page.
+         * @param {RefillApiGetAllRefillsRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllRefills(page?: number | null, perPage?: number | null, options?: any): AxiosPromise<RefillListResponse> {
-            return localVarFp.getAllRefills(page, perPage, options).then((request) => request(axios, basePath));
+        getAllRefills(requestParameters: RefillApiGetAllRefillsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<RefillListResponse> {
+            return localVarFp.getAllRefills(requestParameters.page, requestParameters.perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is disabled, only an admin can retrieve it.
          * @summary Handles the request to fetch a refill by its unique identifier.
-         * @param {string} id The database ID of the refill to retrieve.
+         * @param {RefillApiGetRefillRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getRefill(id: string, options?: any): AxiosPromise<RefillResponse> {
-            return localVarFp.getRefill(id, options).then((request) => request(axios, basePath));
+        getRefill(requestParameters: RefillApiGetRefillRequest, options?: RawAxiosRequestConfig): AxiosPromise<RefillResponse> {
+            return localVarFp.getRefill(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
          * This function allows an admin to create a new refill by sending a POST request to the `/refill` endpoint. The new refill is validated and stored in the database. The image associated with the refill is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the refill\'s ID.  Path: `/refill`  - **Request Body:** Expects a `NewRefill` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new refill, returns the new refill\'s ID as a string.
          * @summary Handler for creating a new refill.
-         * @param {NewRefillRequest} newRefillRequest 
+         * @param {RefillApiPostNewRefillRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        postNewRefill(newRefillRequest: NewRefillRequest, options?: any): AxiosPromise<string> {
-            return localVarFp.postNewRefill(newRefillRequest, options).then((request) => request(axios, basePath));
+        postNewRefill(requestParameters: RefillApiPostNewRefillRequest, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.postNewRefill(requestParameters.newRefillRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
+
+/**
+ * Request parameters for deleteRefill operation in RefillApi.
+ * @export
+ * @interface RefillApiDeleteRefillRequest
+ */
+export interface RefillApiDeleteRefillRequest {
+    /**
+     * refill database id to delete refill for
+     * @type {string}
+     * @memberof RefillApiDeleteRefill
+     */
+    readonly id: string
+}
+
+/**
+ * Request parameters for editRefill operation in RefillApi.
+ * @export
+ * @interface RefillApiEditRefillRequest
+ */
+export interface RefillApiEditRefillRequest {
+    /**
+     * refill database id to edit refill for
+     * @type {string}
+     * @memberof RefillApiEditRefill
+     */
+    readonly id: string
+
+    /**
+     * 
+     * @type {EditRefillRequest}
+     * @memberof RefillApiEditRefill
+     */
+    readonly editRefillRequest: EditRefillRequest
+}
+
+/**
+ * Request parameters for getAllRefills operation in RefillApi.
+ * @export
+ * @interface RefillApiGetAllRefillsRequest
+ */
+export interface RefillApiGetAllRefillsRequest {
+    /**
+     * The page number to retrieve, starting from 1.
+     * @type {number}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly page?: number | null
+
+    /**
+     * The number of items to return per page.
+     * @type {number}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly perPage?: number | null
+}
+
+/**
+ * Request parameters for getRefill operation in RefillApi.
+ * @export
+ * @interface RefillApiGetRefillRequest
+ */
+export interface RefillApiGetRefillRequest {
+    /**
+     * The database ID of the refill to retrieve.
+     * @type {string}
+     * @memberof RefillApiGetRefill
+     */
+    readonly id: string
+}
+
+/**
+ * Request parameters for postNewRefill operation in RefillApi.
+ * @export
+ * @interface RefillApiPostNewRefillRequest
+ */
+export interface RefillApiPostNewRefillRequest {
+    /**
+     * 
+     * @type {NewRefillRequest}
+     * @memberof RefillApiPostNewRefill
+     */
+    readonly newRefillRequest: NewRefillRequest
+}
 
 /**
  * RefillApi - object-oriented interface
@@ -2381,63 +2680,61 @@ export class RefillApi extends BaseAPI {
     /**
      * The refill is not fully removed but marked as disabled in the database. Only an admin can perform this action.  - **Path Parameters:**   - `id`: The unique ID of the refill in the database.  - **Responses:**   - `500`: Internal error, likely related to the database.   - `400`: The request format is invalid.   - `200`: The refill has been successfully disabled.
      * @summary Deletes a refill by its database ID.
-     * @param {string} id refill database id to delete refill for
+     * @param {RefillApiDeleteRefillRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RefillApi
      */
-    public deleteRefill(id: string, options?: RawAxiosRequestConfig) {
-        return RefillApiFp(this.configuration).deleteRefill(id, options).then((request) => request(this.axios, this.basePath));
+    public deleteRefill(requestParameters: RefillApiDeleteRefillRequest, options?: RawAxiosRequestConfig) {
+        return RefillApiFp(this.configuration).deleteRefill(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * The admin can change attributes such as the name, amont_in_euro, amont_in_epicoin of the refill.  Returns an error if the refill doesn\'t exist, if there is a validation issue, or if a database or S3 operation fails.
      * @summary Edit an existing refill by ID in the store.
-     * @param {string} id refill database id to edit refill for
-     * @param {EditRefillRequest} editRefillRequest 
+     * @param {RefillApiEditRefillRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RefillApi
      */
-    public editRefill(id: string, editRefillRequest: EditRefillRequest, options?: RawAxiosRequestConfig) {
-        return RefillApiFp(this.configuration).editRefill(id, editRefillRequest, options).then((request) => request(this.axios, this.basePath));
+    public editRefill(requestParameters: RefillApiEditRefillRequest, options?: RawAxiosRequestConfig) {
+        return RefillApiFp(this.configuration).editRefill(requestParameters.id, requestParameters.editRefillRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled refill
      * @summary Handles the request to retrieve a paginated list of refills.
-     * @param {number | null} [page] The page number to retrieve, starting from 1.
-     * @param {number | null} [perPage] The number of items to return per page.
+     * @param {RefillApiGetAllRefillsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RefillApi
      */
-    public getAllRefills(page?: number | null, perPage?: number | null, options?: RawAxiosRequestConfig) {
-        return RefillApiFp(this.configuration).getAllRefills(page, perPage, options).then((request) => request(this.axios, this.basePath));
+    public getAllRefills(requestParameters: RefillApiGetAllRefillsRequest = {}, options?: RawAxiosRequestConfig) {
+        return RefillApiFp(this.configuration).getAllRefills(requestParameters.page, requestParameters.perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is disabled, only an admin can retrieve it.
      * @summary Handles the request to fetch a refill by its unique identifier.
-     * @param {string} id The database ID of the refill to retrieve.
+     * @param {RefillApiGetRefillRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RefillApi
      */
-    public getRefill(id: string, options?: RawAxiosRequestConfig) {
-        return RefillApiFp(this.configuration).getRefill(id, options).then((request) => request(this.axios, this.basePath));
+    public getRefill(requestParameters: RefillApiGetRefillRequest, options?: RawAxiosRequestConfig) {
+        return RefillApiFp(this.configuration).getRefill(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * This function allows an admin to create a new refill by sending a POST request to the `/refill` endpoint. The new refill is validated and stored in the database. The image associated with the refill is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the refill\'s ID.  Path: `/refill`  - **Request Body:** Expects a `NewRefill` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new refill, returns the new refill\'s ID as a string.
      * @summary Handler for creating a new refill.
-     * @param {NewRefillRequest} newRefillRequest 
+     * @param {RefillApiPostNewRefillRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RefillApi
      */
-    public postNewRefill(newRefillRequest: NewRefillRequest, options?: RawAxiosRequestConfig) {
-        return RefillApiFp(this.configuration).postNewRefill(newRefillRequest, options).then((request) => request(this.axios, this.basePath));
+    public postNewRefill(requestParameters: RefillApiPostNewRefillRequest, options?: RawAxiosRequestConfig) {
+        return RefillApiFp(this.configuration).postNewRefill(requestParameters.newRefillRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -2763,24 +3060,22 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
         /**
          * Returns an error if the user doesn\'t exist, if there is a validation issue, or if a database.
          * @summary Edit an existing user by ID.
-         * @param {string} id user database id to edit user for
-         * @param {EditUserRequest} editUserRequest 
+         * @param {UserApiEditUserRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        editUser(id: string, editUserRequest: EditUserRequest, options?: any): AxiosPromise<void> {
-            return localVarFp.editUser(id, editUserRequest, options).then((request) => request(axios, basePath));
+        editUser(requestParameters: UserApiEditUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.editUser(requestParameters.id, requestParameters.editUserRequest, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of user per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of users.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view others users
          * @summary Handles the request to retrieve a paginated list of users.
-         * @param {number | null} [page] The page number to retrieve, starting from 1.
-         * @param {number | null} [perPage] The number of items to return per page.
+         * @param {UserApiGetAllUsersRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllUsers(page?: number | null, perPage?: number | null, options?: any): AxiosPromise<UserListResponse> {
-            return localVarFp.getAllUsers(page, perPage, options).then((request) => request(axios, basePath));
+        getAllUsers(requestParameters: UserApiGetAllUsersRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<UserListResponse> {
+            return localVarFp.getAllUsers(requestParameters.page, requestParameters.perPage, options).then((request) => request(axios, basePath));
         },
         /**
          * This function is responsible for handling login requests. When a user attempts to access the login route, they are redirected to the frontend base URL specified in the application\'s configuration (command-line arguments or environment variables).  
@@ -2788,7 +3083,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getLogin(options?: any): AxiosPromise<void> {
+        getLogin(options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.getLogin(options).then((request) => request(axios, basePath));
         },
         /**
@@ -2797,7 +3092,7 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getLogout(options?: any): AxiosPromise<void> {
+        getLogout(options?: RawAxiosRequestConfig): AxiosPromise<void> {
             return localVarFp.getLogout(options).then((request) => request(axios, basePath));
         },
         /**
@@ -2806,21 +3101,77 @@ export const UserApiFactory = function (configuration?: Configuration, basePath?
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getMe(options?: any): AxiosPromise<UserResponse> {
+        getMe(options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
             return localVarFp.getMe(options).then((request) => request(axios, basePath));
         },
         /**
          * - **Path Parameters**:   `id` (UUID): The database ID of the user to retrieve.  - **Response Codes**:   - `200 OK`: The user was successfully retrieved.   - `404 Not Found`: The user doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the user is disabled, only an admin can retrieve it.
          * @summary Handles the request to fetch a user by its unique identifier.
-         * @param {string} id The database ID of the user to retrieve.
+         * @param {UserApiGetUserRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getUser(id: string, options?: any): AxiosPromise<UserResponse> {
-            return localVarFp.getUser(id, options).then((request) => request(axios, basePath));
+        getUser(requestParameters: UserApiGetUserRequest, options?: RawAxiosRequestConfig): AxiosPromise<UserResponse> {
+            return localVarFp.getUser(requestParameters.id, options).then((request) => request(axios, basePath));
         },
     };
 };
+
+/**
+ * Request parameters for editUser operation in UserApi.
+ * @export
+ * @interface UserApiEditUserRequest
+ */
+export interface UserApiEditUserRequest {
+    /**
+     * user database id to edit user for
+     * @type {string}
+     * @memberof UserApiEditUser
+     */
+    readonly id: string
+
+    /**
+     * 
+     * @type {EditUserRequest}
+     * @memberof UserApiEditUser
+     */
+    readonly editUserRequest: EditUserRequest
+}
+
+/**
+ * Request parameters for getAllUsers operation in UserApi.
+ * @export
+ * @interface UserApiGetAllUsersRequest
+ */
+export interface UserApiGetAllUsersRequest {
+    /**
+     * The page number to retrieve, starting from 1.
+     * @type {number}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly page?: number | null
+
+    /**
+     * The number of items to return per page.
+     * @type {number}
+     * @memberof UserApiGetAllUsers
+     */
+    readonly perPage?: number | null
+}
+
+/**
+ * Request parameters for getUser operation in UserApi.
+ * @export
+ * @interface UserApiGetUserRequest
+ */
+export interface UserApiGetUserRequest {
+    /**
+     * The database ID of the user to retrieve.
+     * @type {string}
+     * @memberof UserApiGetUser
+     */
+    readonly id: string
+}
 
 /**
  * UserApi - object-oriented interface
@@ -2832,27 +3183,25 @@ export class UserApi extends BaseAPI {
     /**
      * Returns an error if the user doesn\'t exist, if there is a validation issue, or if a database.
      * @summary Edit an existing user by ID.
-     * @param {string} id user database id to edit user for
-     * @param {EditUserRequest} editUserRequest 
+     * @param {UserApiEditUserRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public editUser(id: string, editUserRequest: EditUserRequest, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).editUser(id, editUserRequest, options).then((request) => request(this.axios, this.basePath));
+    public editUser(requestParameters: UserApiEditUserRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).editUser(requestParameters.id, requestParameters.editUserRequest, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of user per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of users.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view others users
      * @summary Handles the request to retrieve a paginated list of users.
-     * @param {number | null} [page] The page number to retrieve, starting from 1.
-     * @param {number | null} [perPage] The number of items to return per page.
+     * @param {UserApiGetAllUsersRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getAllUsers(page?: number | null, perPage?: number | null, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getAllUsers(page, perPage, options).then((request) => request(this.axios, this.basePath));
+    public getAllUsers(requestParameters: UserApiGetAllUsersRequest = {}, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getAllUsers(requestParameters.page, requestParameters.perPage, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2891,13 +3240,13 @@ export class UserApi extends BaseAPI {
     /**
      * - **Path Parameters**:   `id` (UUID): The database ID of the user to retrieve.  - **Response Codes**:   - `200 OK`: The user was successfully retrieved.   - `404 Not Found`: The user doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the user is disabled, only an admin can retrieve it.
      * @summary Handles the request to fetch a user by its unique identifier.
-     * @param {string} id The database ID of the user to retrieve.
+     * @param {UserApiGetUserRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof UserApi
      */
-    public getUser(id: string, options?: RawAxiosRequestConfig) {
-        return UserApiFp(this.configuration).getUser(id, options).then((request) => request(this.axios, this.basePath));
+    public getUser(requestParameters: UserApiGetUserRequest, options?: RawAxiosRequestConfig) {
+        return UserApiFp(this.configuration).getUser(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
