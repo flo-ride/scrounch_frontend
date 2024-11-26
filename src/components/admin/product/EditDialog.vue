@@ -29,6 +29,11 @@
                 :label="$t('admin.product.edit.sma')"
             ></v-text-field>
 
+            <v-text-field
+                v-model="product.inventreeCode"
+                :label="$t('admin.product.edit.inventree')"
+            ></v-text-field>
+
             <p>{{ $t("admin.product.edit.price") }}</p>
             <v-number-input
                 v-model="product.sellPrice"
@@ -59,6 +64,7 @@
                 </template>
             </v-select>
 
+            <!-- TODO: Add RECIPE safety in case of this type of edit -->
             <v-select
                 v-model="product.unit"
                 :label="$t('admin.product.edit.unit')"

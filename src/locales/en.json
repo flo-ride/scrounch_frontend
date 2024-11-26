@@ -33,7 +33,8 @@
                 "disabled": "Disable",
                 "purchasable": "Purchasable",
                 "displayOrder": "Display order",
-                "sma": "SMA Code"
+                "sma": "SMA Code",
+                "sma": "Inventree Code"
             },
             "delete": {
                 "title": "Delete a product"
