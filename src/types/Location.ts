@@ -15,12 +15,14 @@ export class Location {
     id: string;
     name: string;
     category?: LocationCategory;
+    hidden: boolean;
     disabled: boolean;
     createdAt: Date;
 
     constructor(
         id: string,
         name: string,
+        hidden: boolean,
         disabled: boolean,
         created_at: Date,
         category?: LocationCategory,
@@ -28,6 +30,7 @@ export class Location {
         this.id = id;
         this.name = name;
         this.category = category;
+        this.hidden = hidden;
         this.disabled = disabled;
         this.createdAt = created_at;
     }
@@ -37,7 +40,7 @@ export class Location {
      * @returns A Location instance with default values.
      */
     static default(): Location {
-        return new Location("default-id", "Default Location", false, new Date(), undefined);
+        return new Location("default-id", "Default Location", false, false, new Date(), undefined);
     }
 
     /**
@@ -48,6 +51,7 @@ export class Location {
         return new Location(
             this.id,
             this.name,
+            this.hidden,
             this.disabled,
             new Date(this.createdAt),
             this.category,
@@ -63,6 +67,7 @@ export class Location {
         return new Location(
             response.id,
             response.name,
+            response.hidden ?? false,
             response.disabled,
             new Date(response.created_at),
             Location.convertResponseToCategory(
@@ -79,7 +84,8 @@ export class Location {
         return {
             name: this.name || null,
             category: this.category ? Location.convertCategoryToRequest(this.category) : null,
-            disabled: this.disabled ?? null,
+            hidden: this.hidden,
+            disabled: this.disabled,
         };
     }
 

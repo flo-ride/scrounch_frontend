@@ -26,6 +26,12 @@
             ></v-select>
 
             <v-switch
+                v-model="location.hidden"
+                :label="$t('admin.location.edit.hidden')"
+                required
+            ></v-switch>
+
+            <v-switch
                 v-model="location.disabled"
                 :label="$t('admin.location.edit.disabled')"
                 required
@@ -77,6 +83,16 @@ export default {
         },
     },
     watch: {
+        "location.disabled"(newValue: boolean) {
+            if (newValue == false) {
+                this.location.hidden = false;
+            }
+        },
+        "location.hidden"(newValue: boolean) {
+            if (newValue == true) {
+                this.location.disabled = true;
+            }
+        },
         item: {
             immediate: true,
             handler(item) {

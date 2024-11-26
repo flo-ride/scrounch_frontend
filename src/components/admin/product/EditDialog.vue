@@ -105,6 +105,12 @@
             ></v-switch>
 
             <v-switch
+                v-model="product.hidden"
+                :label="$t('admin.product.edit.hidden')"
+                required
+            ></v-switch>
+
+            <v-switch
                 v-model="product.disabled"
                 :label="$t('admin.product.edit.disabled')"
                 required
@@ -197,6 +203,17 @@ export default {
         },
     },
     watch: {
+        "product.purchasable"(newValue: boolean) {
+            console.log("purchasable ?");
+            if (newValue == false) {
+                this.product.hidden = true;
+            }
+        },
+        "product.hidden"(newValue: boolean) {
+            if (newValue == false) {
+                this.product.purchasable = true;
+            }
+        },
         item: {
             immediate: true,
             handler(item) {

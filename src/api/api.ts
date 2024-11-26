@@ -64,11 +64,17 @@ export interface EditLocationRequest {
      */
     'category'?: LocationCategoryRequest | null;
     /**
-     * Optional field to disable or enable the product.
+     * Optional field to disable or enable the location.
      * @type {boolean}
      * @memberof EditLocationRequest
      */
     'disabled'?: boolean | null;
+    /**
+     * Optional field to hide or show the location.
+     * @type {boolean}
+     * @memberof EditLocationRequest
+     */
+    'hidden'?: boolean | null;
     /**
      * The name of the location, subject to length validation.
      * @type {string}
@@ -96,6 +102,12 @@ export interface EditProductRequest {
      * @memberof EditProductRequest
      */
     'display_order'?: number | null;
+    /**
+     * Optional field to hide the product.
+     * @type {boolean}
+     * @memberof EditProductRequest
+     */
+    'hidden'?: boolean | null;
     /**
      * Optional image URL or path, which can also be set to `None`.
      * @type {string}
@@ -177,6 +189,12 @@ export interface EditRefillRequest {
      * @memberof EditRefillRequest
      */
     'disabled'?: boolean | null;
+    /**
+     * Optional hidden status for the refill.
+     * @type {boolean}
+     * @memberof EditRefillRequest
+     */
+    'hidden'?: boolean | null;
     /**
      * Optional new name for the refill.
      * @type {string}
@@ -388,6 +406,12 @@ export interface LocationResponse {
      */
     'disabled': boolean;
     /**
+     * Indicates whether the location is hidden.
+     * @type {boolean}
+     * @memberof LocationResponse
+     */
+    'hidden'?: boolean | null;
+    /**
      * Unique identifier of the location.
      * @type {string}
      * @memberof LocationResponse
@@ -417,6 +441,8 @@ export const LocationSortEnum = {
     CreatedAtDesc: 'created_at_desc',
     CategoryAsc: 'category_asc',
     CategoryDesc: 'category_desc',
+    HiddenAsc: 'hidden_asc',
+    HiddenDesc: 'hidden_desc',
     DisabledAsc: 'disabled_asc',
     DisabledDesc: 'disabled_desc'
 } as const;
@@ -452,6 +478,18 @@ export interface NewLocationRequest {
  */
 export interface NewProductRequest {
     /**
+     * If the product is disabled from user (can\'t create new order with it)
+     * @type {boolean}
+     * @memberof NewProductRequest
+     */
+    'disabled'?: boolean | null;
+    /**
+     * If the product is hidden from user, if true, it\'s automatically disable
+     * @type {boolean}
+     * @memberof NewProductRequest
+     */
+    'hidden'?: boolean | null;
+    /**
      * Optional image URL or path.
      * @type {string}
      * @memberof NewProductRequest
@@ -476,7 +514,7 @@ export interface NewProductRequest {
      */
     'name': string;
     /**
-     * If the product is purchasable or if it\'s just an ingredients
+     * If the product is purchasable or if it\'s just an ingredients, if it\'s not it\'s automatically hidden
      * @type {boolean}
      * @memberof NewProductRequest
      */
@@ -585,17 +623,23 @@ export interface ProductResponse {
      */
     'created_at': string;
     /**
-     * Optional flag indicating if the product is disabled.
+     * indicating if the product is disabled.
      * @type {boolean}
      * @memberof ProductResponse
      */
-    'disabled'?: boolean | null;
+    'disabled': boolean;
     /**
      * Display Order of the product.
      * @type {number}
      * @memberof ProductResponse
      */
     'display_order': number;
+    /**
+     * Is the product can be seen by simple user
+     * @type {boolean}
+     * @memberof ProductResponse
+     */
+    'hidden'?: boolean | null;
     /**
      * Unique identifier for the product.
      * @type {string}
@@ -631,7 +675,7 @@ export interface ProductResponse {
      * @type {boolean}
      * @memberof ProductResponse
      */
-    'purchasable': boolean;
+    'purchasable'?: boolean | null;
     /**
      * Price of the product.
      * @type {number}
@@ -678,12 +722,14 @@ export const ProductSortEnum = {
     SellPriceDesc: 'sell_price_desc',
     SellPriceCurrencyAsc: 'sell_price_currency_asc',
     SellPriceCurrencyDesc: 'sell_price_currency_desc',
-    PurchasableAsc: 'purchasable_asc',
-    PurchasableDesc: 'purchasable_desc',
     UnitAsc: 'unit_asc',
     UnitDesc: 'unit_desc',
     MaxQuantityPerCommandAsc: 'max_quantity_per_command_asc',
     MaxQuantityPerCommandDesc: 'max_quantity_per_command_desc',
+    PurchasableAsc: 'purchasable_asc',
+    PurchasableDesc: 'purchasable_desc',
+    HiddenAsc: 'hidden_asc',
+    HiddenDesc: 'hidden_desc',
     DisabledAsc: 'disabled_asc',
     DisabledDesc: 'disabled_desc',
     CreatedAtAsc: 'created_at_asc',
@@ -753,6 +799,12 @@ export interface RefillResponse {
      */
     'disabled': boolean;
     /**
+     * Indicates whether the refill is currently hidden.
+     * @type {boolean}
+     * @memberof RefillResponse
+     */
+    'hidden'?: boolean | null;
+    /**
      * Unique identifier for the refill.
      * @type {string}
      * @memberof RefillResponse
@@ -800,6 +852,8 @@ export const RefillSortEnum = {
     CreditDesc: 'credit_desc',
     CreditCurrencyAsc: 'credit_currency_asc',
     CreditCurrencyDesc: 'credit_currency_desc',
+    HiddenAsc: 'hidden_asc',
+    HiddenDesc: 'hidden_desc',
     DisabledAsc: 'disabled_asc',
     DisabledDesc: 'disabled_desc'
 } as const;
@@ -1078,13 +1132,15 @@ export const LocationApiAxiosParamCreator = function (configuration?: Configurat
          * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
          * @param {Array<LocationCategoryRequest>} [categoryEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
          * @param {Array<LocationCategoryRequest>} [categoryNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [hiddenEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [hiddenNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
          * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {Array<LocationSortEnum>} [sort] Used for sorting the output
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllLocations: async (page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, categoryEq?: Array<LocationCategoryRequest>, categoryNeq?: Array<LocationCategoryRequest>, disabledEq?: boolean | null, disabledNeq?: boolean | null, sort?: Array<LocationSortEnum>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllLocations: async (page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, categoryEq?: Array<LocationCategoryRequest>, categoryNeq?: Array<LocationCategoryRequest>, hiddenEq?: boolean | null, hiddenNeq?: boolean | null, disabledEq?: boolean | null, disabledNeq?: boolean | null, sort?: Array<LocationSortEnum>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/location`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1161,6 +1217,14 @@ export const LocationApiAxiosParamCreator = function (configuration?: Configurat
 
             if (categoryNeq) {
                 localVarQueryParameter['category_neq'] = categoryNeq;
+            }
+
+            if (hiddenEq !== undefined) {
+                localVarQueryParameter['hidden_eq'] = hiddenEq;
+            }
+
+            if (hiddenNeq !== undefined) {
+                localVarQueryParameter['hidden_neq'] = hiddenNeq;
             }
 
             if (disabledEq !== undefined) {
@@ -1314,14 +1378,16 @@ export const LocationApiFp = function(configuration?: Configuration) {
          * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
          * @param {Array<LocationCategoryRequest>} [categoryEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
          * @param {Array<LocationCategoryRequest>} [categoryNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [hiddenEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [hiddenNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
          * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {Array<LocationSortEnum>} [sort] Used for sorting the output
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllLocations(page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, categoryEq?: Array<LocationCategoryRequest>, categoryNeq?: Array<LocationCategoryRequest>, disabledEq?: boolean | null, disabledNeq?: boolean | null, sort?: Array<LocationSortEnum>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LocationListResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllLocations(page, perPage, idEq, idNeq, nameEq, nameNeq, createdAtEq, createdAtNeq, createdAtGt, createdAtLt, createdAtGte, createdAtLte, categoryEq, categoryNeq, disabledEq, disabledNeq, sort, options);
+        async getAllLocations(page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, categoryEq?: Array<LocationCategoryRequest>, categoryNeq?: Array<LocationCategoryRequest>, hiddenEq?: boolean | null, hiddenNeq?: boolean | null, disabledEq?: boolean | null, disabledNeq?: boolean | null, sort?: Array<LocationSortEnum>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<LocationListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllLocations(page, perPage, idEq, idNeq, nameEq, nameNeq, createdAtEq, createdAtNeq, createdAtGt, createdAtLt, createdAtGte, createdAtLte, categoryEq, categoryNeq, hiddenEq, hiddenNeq, disabledEq, disabledNeq, sort, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['LocationApi.getAllLocations']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1390,7 +1456,7 @@ export const LocationApiFactory = function (configuration?: Configuration, baseP
          * @throws {RequiredError}
          */
         getAllLocations(requestParameters: LocationApiGetAllLocationsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<LocationListResponse> {
-            return localVarFp.getAllLocations(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.categoryEq, requestParameters.categoryNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.sort, options).then((request) => request(axios, basePath));
+            return localVarFp.getAllLocations(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.categoryEq, requestParameters.categoryNeq, requestParameters.hiddenEq, requestParameters.hiddenNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.sort, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is disabled, only an admin can retrieve it.
@@ -1559,6 +1625,20 @@ export interface LocationApiGetAllLocationsRequest {
      * @type {boolean}
      * @memberof LocationApiGetAllLocations
      */
+    readonly hiddenEq?: boolean | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {boolean}
+     * @memberof LocationApiGetAllLocations
+     */
+    readonly hiddenNeq?: boolean | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {boolean}
+     * @memberof LocationApiGetAllLocations
+     */
     readonly disabledEq?: boolean | null
 
     /**
@@ -1644,7 +1724,7 @@ export class LocationApi extends BaseAPI {
      * @memberof LocationApi
      */
     public getAllLocations(requestParameters: LocationApiGetAllLocationsRequest = {}, options?: RawAxiosRequestConfig) {
-        return LocationApiFp(this.configuration).getAllLocations(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.categoryEq, requestParameters.categoryNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
+        return LocationApiFp(this.configuration).getAllLocations(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.categoryEq, requestParameters.categoryNeq, requestParameters.hiddenEq, requestParameters.hiddenNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -2184,12 +2264,14 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
          * @param {Array<string>} [sellPriceNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
          * @param {Array<CurrencyRequest>} [sellPriceCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
          * @param {Array<CurrencyRequest>} [sellPriceCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
-         * @param {boolean | null} [purchasableEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
-         * @param {boolean | null} [purchasableNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {Array<UnitRequest>} [unitEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
          * @param {Array<UnitRequest>} [unitNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
          * @param {Array<number>} [maxQuantityPerCommandEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
          * @param {Array<number>} [maxQuantityPerCommandNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [purchasableEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [purchasableNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {boolean | null} [hiddenEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [hiddenNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
          * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
@@ -2206,7 +2288,7 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllProducts: async (page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, imageEq?: Array<string>, imageNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, displayOrderEq?: Array<number>, displayOrderNeq?: Array<number>, displayOrderGt?: number | null, displayOrderLt?: number | null, displayOrderGte?: number | null, displayOrderLte?: number | null, sellPriceEq?: Array<string>, sellPriceNeq?: Array<string>, sellPriceCurrencyEq?: Array<CurrencyRequest>, sellPriceCurrencyNeq?: Array<CurrencyRequest>, purchasableEq?: boolean | null, purchasableNeq?: boolean | null, unitEq?: Array<UnitRequest>, unitNeq?: Array<UnitRequest>, maxQuantityPerCommandEq?: Array<number>, maxQuantityPerCommandNeq?: Array<number>, disabledEq?: boolean | null, disabledNeq?: boolean | null, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, smaCodeEq?: Array<string>, smaCodeNeq?: Array<string>, inventreeCodeEq?: Array<string>, inventreeCodeNeq?: Array<string>, sort?: Array<ProductSortEnum>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllProducts: async (page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, imageEq?: Array<string>, imageNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, displayOrderEq?: Array<number>, displayOrderNeq?: Array<number>, displayOrderGt?: number | null, displayOrderLt?: number | null, displayOrderGte?: number | null, displayOrderLte?: number | null, sellPriceEq?: Array<string>, sellPriceNeq?: Array<string>, sellPriceCurrencyEq?: Array<CurrencyRequest>, sellPriceCurrencyNeq?: Array<CurrencyRequest>, unitEq?: Array<UnitRequest>, unitNeq?: Array<UnitRequest>, maxQuantityPerCommandEq?: Array<number>, maxQuantityPerCommandNeq?: Array<number>, purchasableEq?: boolean | null, purchasableNeq?: boolean | null, hiddenEq?: boolean | null, hiddenNeq?: boolean | null, disabledEq?: boolean | null, disabledNeq?: boolean | null, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, smaCodeEq?: Array<string>, smaCodeNeq?: Array<string>, inventreeCodeEq?: Array<string>, inventreeCodeNeq?: Array<string>, sort?: Array<ProductSortEnum>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/product`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -2291,14 +2373,6 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
                 localVarQueryParameter['sell_price_currency_neq'] = sellPriceCurrencyNeq;
             }
 
-            if (purchasableEq !== undefined) {
-                localVarQueryParameter['purchasable_eq'] = purchasableEq;
-            }
-
-            if (purchasableNeq !== undefined) {
-                localVarQueryParameter['purchasable_neq'] = purchasableNeq;
-            }
-
             if (unitEq) {
                 localVarQueryParameter['unit_eq'] = unitEq;
             }
@@ -2313,6 +2387,22 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
 
             if (maxQuantityPerCommandNeq) {
                 localVarQueryParameter['max_quantity_per_command_neq'] = maxQuantityPerCommandNeq;
+            }
+
+            if (purchasableEq !== undefined) {
+                localVarQueryParameter['purchasable_eq'] = purchasableEq;
+            }
+
+            if (purchasableNeq !== undefined) {
+                localVarQueryParameter['purchasable_neq'] = purchasableNeq;
+            }
+
+            if (hiddenEq !== undefined) {
+                localVarQueryParameter['hidden_eq'] = hiddenEq;
+            }
+
+            if (hiddenNeq !== undefined) {
+                localVarQueryParameter['hidden_neq'] = hiddenNeq;
             }
 
             if (disabledEq !== undefined) {
@@ -2516,12 +2606,14 @@ export const ProductApiFp = function(configuration?: Configuration) {
          * @param {Array<string>} [sellPriceNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
          * @param {Array<CurrencyRequest>} [sellPriceCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
          * @param {Array<CurrencyRequest>} [sellPriceCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
-         * @param {boolean | null} [purchasableEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
-         * @param {boolean | null} [purchasableNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {Array<UnitRequest>} [unitEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
          * @param {Array<UnitRequest>} [unitNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
          * @param {Array<number>} [maxQuantityPerCommandEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
          * @param {Array<number>} [maxQuantityPerCommandNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [purchasableEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [purchasableNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {boolean | null} [hiddenEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [hiddenNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
          * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
@@ -2538,8 +2630,8 @@ export const ProductApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllProducts(page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, imageEq?: Array<string>, imageNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, displayOrderEq?: Array<number>, displayOrderNeq?: Array<number>, displayOrderGt?: number | null, displayOrderLt?: number | null, displayOrderGte?: number | null, displayOrderLte?: number | null, sellPriceEq?: Array<string>, sellPriceNeq?: Array<string>, sellPriceCurrencyEq?: Array<CurrencyRequest>, sellPriceCurrencyNeq?: Array<CurrencyRequest>, purchasableEq?: boolean | null, purchasableNeq?: boolean | null, unitEq?: Array<UnitRequest>, unitNeq?: Array<UnitRequest>, maxQuantityPerCommandEq?: Array<number>, maxQuantityPerCommandNeq?: Array<number>, disabledEq?: boolean | null, disabledNeq?: boolean | null, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, smaCodeEq?: Array<string>, smaCodeNeq?: Array<string>, inventreeCodeEq?: Array<string>, inventreeCodeNeq?: Array<string>, sort?: Array<ProductSortEnum>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductListResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllProducts(page, perPage, idEq, idNeq, imageEq, imageNeq, nameEq, nameNeq, displayOrderEq, displayOrderNeq, displayOrderGt, displayOrderLt, displayOrderGte, displayOrderLte, sellPriceEq, sellPriceNeq, sellPriceCurrencyEq, sellPriceCurrencyNeq, purchasableEq, purchasableNeq, unitEq, unitNeq, maxQuantityPerCommandEq, maxQuantityPerCommandNeq, disabledEq, disabledNeq, createdAtEq, createdAtNeq, createdAtGt, createdAtLt, createdAtGte, createdAtLte, smaCodeEq, smaCodeNeq, inventreeCodeEq, inventreeCodeNeq, sort, options);
+        async getAllProducts(page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, imageEq?: Array<string>, imageNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, displayOrderEq?: Array<number>, displayOrderNeq?: Array<number>, displayOrderGt?: number | null, displayOrderLt?: number | null, displayOrderGte?: number | null, displayOrderLte?: number | null, sellPriceEq?: Array<string>, sellPriceNeq?: Array<string>, sellPriceCurrencyEq?: Array<CurrencyRequest>, sellPriceCurrencyNeq?: Array<CurrencyRequest>, unitEq?: Array<UnitRequest>, unitNeq?: Array<UnitRequest>, maxQuantityPerCommandEq?: Array<number>, maxQuantityPerCommandNeq?: Array<number>, purchasableEq?: boolean | null, purchasableNeq?: boolean | null, hiddenEq?: boolean | null, hiddenNeq?: boolean | null, disabledEq?: boolean | null, disabledNeq?: boolean | null, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, smaCodeEq?: Array<string>, smaCodeNeq?: Array<string>, inventreeCodeEq?: Array<string>, inventreeCodeNeq?: Array<string>, sort?: Array<ProductSortEnum>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ProductListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllProducts(page, perPage, idEq, idNeq, imageEq, imageNeq, nameEq, nameNeq, displayOrderEq, displayOrderNeq, displayOrderGt, displayOrderLt, displayOrderGte, displayOrderLte, sellPriceEq, sellPriceNeq, sellPriceCurrencyEq, sellPriceCurrencyNeq, unitEq, unitNeq, maxQuantityPerCommandEq, maxQuantityPerCommandNeq, purchasableEq, purchasableNeq, hiddenEq, hiddenNeq, disabledEq, disabledNeq, createdAtEq, createdAtNeq, createdAtGt, createdAtLt, createdAtGte, createdAtLte, smaCodeEq, smaCodeNeq, inventreeCodeEq, inventreeCodeNeq, sort, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ProductApi.getAllProducts']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -2608,7 +2700,7 @@ export const ProductApiFactory = function (configuration?: Configuration, basePa
          * @throws {RequiredError}
          */
         getAllProducts(requestParameters: ProductApiGetAllProductsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<ProductListResponse> {
-            return localVarFp.getAllProducts(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.imageEq, requestParameters.imageNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.displayOrderEq, requestParameters.displayOrderNeq, requestParameters.displayOrderGt, requestParameters.displayOrderLt, requestParameters.displayOrderGte, requestParameters.displayOrderLte, requestParameters.sellPriceEq, requestParameters.sellPriceNeq, requestParameters.sellPriceCurrencyEq, requestParameters.sellPriceCurrencyNeq, requestParameters.purchasableEq, requestParameters.purchasableNeq, requestParameters.unitEq, requestParameters.unitNeq, requestParameters.maxQuantityPerCommandEq, requestParameters.maxQuantityPerCommandNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.smaCodeEq, requestParameters.smaCodeNeq, requestParameters.inventreeCodeEq, requestParameters.inventreeCodeNeq, requestParameters.sort, options).then((request) => request(axios, basePath));
+            return localVarFp.getAllProducts(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.imageEq, requestParameters.imageNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.displayOrderEq, requestParameters.displayOrderNeq, requestParameters.displayOrderGt, requestParameters.displayOrderLt, requestParameters.displayOrderGte, requestParameters.displayOrderLte, requestParameters.sellPriceEq, requestParameters.sellPriceNeq, requestParameters.sellPriceCurrencyEq, requestParameters.sellPriceCurrencyNeq, requestParameters.unitEq, requestParameters.unitNeq, requestParameters.maxQuantityPerCommandEq, requestParameters.maxQuantityPerCommandNeq, requestParameters.purchasableEq, requestParameters.purchasableNeq, requestParameters.hiddenEq, requestParameters.hiddenNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.smaCodeEq, requestParameters.smaCodeNeq, requestParameters.inventreeCodeEq, requestParameters.inventreeCodeNeq, requestParameters.sort, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is disabled, only an admin can retrieve it.
@@ -2801,20 +2893,6 @@ export interface ProductApiGetAllProductsRequest {
     readonly sellPriceCurrencyNeq?: Array<CurrencyRequest>
 
     /**
-     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
-     * @type {boolean}
-     * @memberof ProductApiGetAllProducts
-     */
-    readonly purchasableEq?: boolean | null
-
-    /**
-     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
-     * @type {boolean}
-     * @memberof ProductApiGetAllProducts
-     */
-    readonly purchasableNeq?: boolean | null
-
-    /**
      * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
      * @type {Array<UnitRequest>}
      * @memberof ProductApiGetAllProducts
@@ -2841,6 +2919,34 @@ export interface ProductApiGetAllProductsRequest {
      * @memberof ProductApiGetAllProducts
      */
     readonly maxQuantityPerCommandNeq?: Array<number>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {boolean}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly purchasableEq?: boolean | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {boolean}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly purchasableNeq?: boolean | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {boolean}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly hiddenEq?: boolean | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {boolean}
+     * @memberof ProductApiGetAllProducts
+     */
+    readonly hiddenNeq?: boolean | null
 
     /**
      * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
@@ -3002,7 +3108,7 @@ export class ProductApi extends BaseAPI {
      * @memberof ProductApi
      */
     public getAllProducts(requestParameters: ProductApiGetAllProductsRequest = {}, options?: RawAxiosRequestConfig) {
-        return ProductApiFp(this.configuration).getAllProducts(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.imageEq, requestParameters.imageNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.displayOrderEq, requestParameters.displayOrderNeq, requestParameters.displayOrderGt, requestParameters.displayOrderLt, requestParameters.displayOrderGte, requestParameters.displayOrderLte, requestParameters.sellPriceEq, requestParameters.sellPriceNeq, requestParameters.sellPriceCurrencyEq, requestParameters.sellPriceCurrencyNeq, requestParameters.purchasableEq, requestParameters.purchasableNeq, requestParameters.unitEq, requestParameters.unitNeq, requestParameters.maxQuantityPerCommandEq, requestParameters.maxQuantityPerCommandNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.smaCodeEq, requestParameters.smaCodeNeq, requestParameters.inventreeCodeEq, requestParameters.inventreeCodeNeq, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
+        return ProductApiFp(this.configuration).getAllProducts(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.imageEq, requestParameters.imageNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.displayOrderEq, requestParameters.displayOrderNeq, requestParameters.displayOrderGt, requestParameters.displayOrderLt, requestParameters.displayOrderGte, requestParameters.displayOrderLte, requestParameters.sellPriceEq, requestParameters.sellPriceNeq, requestParameters.sellPriceCurrencyEq, requestParameters.sellPriceCurrencyNeq, requestParameters.unitEq, requestParameters.unitNeq, requestParameters.maxQuantityPerCommandEq, requestParameters.maxQuantityPerCommandNeq, requestParameters.purchasableEq, requestParameters.purchasableNeq, requestParameters.hiddenEq, requestParameters.hiddenNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.smaCodeEq, requestParameters.smaCodeNeq, requestParameters.inventreeCodeEq, requestParameters.inventreeCodeNeq, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -3139,13 +3245,15 @@ export const RefillApiAxiosParamCreator = function (configuration?: Configuratio
          * @param {Array<string>} [creditNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
          * @param {Array<CurrencyRequest>} [creditCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
          * @param {Array<CurrencyRequest>} [creditCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [hiddenEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [hiddenNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
          * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {Array<RefillSortEnum>} [sort] Used for sorting the output
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllRefills: async (page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, priceEq?: Array<string>, priceNeq?: Array<string>, priceCurrencyEq?: Array<CurrencyRequest>, priceCurrencyNeq?: Array<CurrencyRequest>, creditEq?: Array<string>, creditNeq?: Array<string>, creditCurrencyEq?: Array<CurrencyRequest>, creditCurrencyNeq?: Array<CurrencyRequest>, disabledEq?: boolean | null, disabledNeq?: boolean | null, sort?: Array<RefillSortEnum>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getAllRefills: async (page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, priceEq?: Array<string>, priceNeq?: Array<string>, priceCurrencyEq?: Array<CurrencyRequest>, priceCurrencyNeq?: Array<CurrencyRequest>, creditEq?: Array<string>, creditNeq?: Array<string>, creditCurrencyEq?: Array<CurrencyRequest>, creditCurrencyNeq?: Array<CurrencyRequest>, hiddenEq?: boolean | null, hiddenNeq?: boolean | null, disabledEq?: boolean | null, disabledNeq?: boolean | null, sort?: Array<RefillSortEnum>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/refill`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -3246,6 +3354,14 @@ export const RefillApiAxiosParamCreator = function (configuration?: Configuratio
 
             if (creditCurrencyNeq) {
                 localVarQueryParameter['credit_currency_neq'] = creditCurrencyNeq;
+            }
+
+            if (hiddenEq !== undefined) {
+                localVarQueryParameter['hidden_eq'] = hiddenEq;
+            }
+
+            if (hiddenNeq !== undefined) {
+                localVarQueryParameter['hidden_neq'] = hiddenNeq;
             }
 
             if (disabledEq !== undefined) {
@@ -3405,14 +3521,16 @@ export const RefillApiFp = function(configuration?: Configuration) {
          * @param {Array<string>} [creditNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
          * @param {Array<CurrencyRequest>} [creditCurrencyEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
          * @param {Array<CurrencyRequest>} [creditCurrencyNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [hiddenEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [hiddenNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
          * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
          * @param {Array<RefillSortEnum>} [sort] Used for sorting the output
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllRefills(page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, priceEq?: Array<string>, priceNeq?: Array<string>, priceCurrencyEq?: Array<CurrencyRequest>, priceCurrencyNeq?: Array<CurrencyRequest>, creditEq?: Array<string>, creditNeq?: Array<string>, creditCurrencyEq?: Array<CurrencyRequest>, creditCurrencyNeq?: Array<CurrencyRequest>, disabledEq?: boolean | null, disabledNeq?: boolean | null, sort?: Array<RefillSortEnum>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RefillListResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllRefills(page, perPage, idEq, idNeq, nameEq, nameNeq, createdAtEq, createdAtNeq, createdAtGt, createdAtLt, createdAtGte, createdAtLte, priceEq, priceNeq, priceCurrencyEq, priceCurrencyNeq, creditEq, creditNeq, creditCurrencyEq, creditCurrencyNeq, disabledEq, disabledNeq, sort, options);
+        async getAllRefills(page?: number | null, perPage?: number | null, idEq?: Array<string>, idNeq?: Array<string>, nameEq?: Array<string>, nameNeq?: Array<string>, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, priceEq?: Array<string>, priceNeq?: Array<string>, priceCurrencyEq?: Array<CurrencyRequest>, priceCurrencyNeq?: Array<CurrencyRequest>, creditEq?: Array<string>, creditNeq?: Array<string>, creditCurrencyEq?: Array<CurrencyRequest>, creditCurrencyNeq?: Array<CurrencyRequest>, hiddenEq?: boolean | null, hiddenNeq?: boolean | null, disabledEq?: boolean | null, disabledNeq?: boolean | null, sort?: Array<RefillSortEnum>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RefillListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllRefills(page, perPage, idEq, idNeq, nameEq, nameNeq, createdAtEq, createdAtNeq, createdAtGt, createdAtLt, createdAtGte, createdAtLte, priceEq, priceNeq, priceCurrencyEq, priceCurrencyNeq, creditEq, creditNeq, creditCurrencyEq, creditCurrencyNeq, hiddenEq, hiddenNeq, disabledEq, disabledNeq, sort, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['RefillApi.getAllRefills']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -3481,7 +3599,7 @@ export const RefillApiFactory = function (configuration?: Configuration, basePat
          * @throws {RequiredError}
          */
         getAllRefills(requestParameters: RefillApiGetAllRefillsRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<RefillListResponse> {
-            return localVarFp.getAllRefills(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.priceEq, requestParameters.priceNeq, requestParameters.priceCurrencyEq, requestParameters.priceCurrencyNeq, requestParameters.creditEq, requestParameters.creditNeq, requestParameters.creditCurrencyEq, requestParameters.creditCurrencyNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.sort, options).then((request) => request(axios, basePath));
+            return localVarFp.getAllRefills(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.priceEq, requestParameters.priceNeq, requestParameters.priceCurrencyEq, requestParameters.priceCurrencyNeq, requestParameters.creditEq, requestParameters.creditNeq, requestParameters.creditCurrencyEq, requestParameters.creditCurrencyNeq, requestParameters.hiddenEq, requestParameters.hiddenNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.sort, options).then((request) => request(axios, basePath));
         },
         /**
          * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is disabled, only an admin can retrieve it.
@@ -3692,6 +3810,20 @@ export interface RefillApiGetAllRefillsRequest {
      * @type {boolean}
      * @memberof RefillApiGetAllRefills
      */
+    readonly hiddenEq?: boolean | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {boolean}
+     * @memberof RefillApiGetAllRefills
+     */
+    readonly hiddenNeq?: boolean | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {boolean}
+     * @memberof RefillApiGetAllRefills
+     */
     readonly disabledEq?: boolean | null
 
     /**
@@ -3777,7 +3909,7 @@ export class RefillApi extends BaseAPI {
      * @memberof RefillApi
      */
     public getAllRefills(requestParameters: RefillApiGetAllRefillsRequest = {}, options?: RawAxiosRequestConfig) {
-        return RefillApiFp(this.configuration).getAllRefills(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.priceEq, requestParameters.priceNeq, requestParameters.priceCurrencyEq, requestParameters.priceCurrencyNeq, requestParameters.creditEq, requestParameters.creditNeq, requestParameters.creditCurrencyEq, requestParameters.creditCurrencyNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
+        return RefillApiFp(this.configuration).getAllRefills(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.priceEq, requestParameters.priceNeq, requestParameters.priceCurrencyEq, requestParameters.priceCurrencyNeq, requestParameters.creditEq, requestParameters.creditNeq, requestParameters.creditCurrencyEq, requestParameters.creditCurrencyNeq, requestParameters.hiddenEq, requestParameters.hiddenNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

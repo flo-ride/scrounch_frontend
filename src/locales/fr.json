@@ -20,7 +20,9 @@
                 "price_currency": "Devise du Prix",
                 "unit": "Unité",
                 "max": "Max par commande",
-                "purchasable": "Achetable"
+                "purchasable": "Achetable",
+                "hidden": "Caché",
+                "disabled": "Désactivé"
             },
             "edit": {
                 "title": "Modifier un produit",
@@ -30,8 +32,9 @@
                 "price_currency": "Devise du Prix",
                 "unit": "Unité",
                 "max": "Max par commande",
-                "disabled": "Désactivé",
                 "purchasable": "Achetable",
+                "hidden": "Caché",
+                "disabled": "Désactivé",
                 "displayOrder": "Ordre d'affichage",
                 "sma": "SMA Code",
                 "inventree": "Inventree Code"
@@ -70,6 +73,7 @@
                 "name": "Nom du Refill",
                 "euro": "Prix en Euro",
                 "epicoin": "Prix en Epicoin",
+                "hidden": "Caché",
                 "disabled": "Désactivé"
             },
             "delete": {
@@ -86,6 +90,7 @@
             "edit": {
                 "title": "Modifier un lieux",
                 "name": "Nom du Lieux",
+                "hidden": "Caché",
                 "disabled": "Désactivé",
                 "category": "Catégories"
             },

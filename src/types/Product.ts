@@ -10,8 +10,9 @@ export class Product {
     sellPrice: number;
     sellPriceCurrency: Currency;
     maxQuantityPerCommand?: number;
-    purchasable: boolean;
     unit: Unit;
+    purchasable: boolean;
+    hidden: boolean;
     disabled: boolean;
     createdAt: Date;
     smaCode?: string;
@@ -31,6 +32,7 @@ export class Product {
 
         maxQuantityPerCommand?: number | null,
         purchasable?: boolean | null,
+        hidden?: boolean | null,
         disabled?: boolean | null,
         image?: string | null,
         smaCode?: string | null,
@@ -45,9 +47,10 @@ export class Product {
         this.image = image ?? undefined;
         this.maxQuantityPerCommand = maxQuantityPerCommand ?? undefined;
         this.disabled = disabled ?? false;
+        this.hidden = hidden ?? false;
         this.purchasable = purchasable ?? true;
         this.smaCode = smaCode ?? undefined;
-        this.inventreeCode = smaCode ?? undefined;
+        this.inventreeCode = inventreeCode ?? undefined;
         this.createdAt = createdAt;
     }
 
@@ -94,6 +97,7 @@ export class Product {
             new Date(this.createdAt), // Clone the Date to avoid shared reference
             this.maxQuantityPerCommand,
             this.purchasable,
+            this.hidden,
             this.disabled,
             this.image,
             this.smaCode,
@@ -117,7 +121,8 @@ export class Product {
             new Date(response.created_at),
             response.max_quantity_per_command ?? null,
             response.purchasable ?? true,
-            response.disabled ?? null,
+            response.hidden ?? false,
+            response.disabled ?? false,
             response.image ?? null,
             response.sma_code ?? null,
             response.inventree_code ?? null,
@@ -138,7 +143,8 @@ export class Product {
             image: this.image ?? null,
             max_quantity_per_command: this.maxQuantityPerCommand ?? null,
             purchasable: this.purchasable,
-            disabled: this.disabled ?? null,
+            hidden: this.hidden,
+            disabled: this.disabled,
             sma_code: this.smaCode ?? null,
             inventree_code: this.inventreeCode ?? null,
         };
@@ -159,6 +165,8 @@ export class Product {
             purchasable: this.purchasable,
             sma_code: this.smaCode ?? undefined,
             inventree_code: this.inventreeCode ?? undefined,
+            hidden: this.hidden,
+            disabled: this.disabled,
         };
     }
 }

@@ -8,6 +8,7 @@ export class Refill {
     name?: string | null;
     price: number;
     price_currency: Currency;
+    hidden: boolean;
     disabled: boolean;
     createdAt: Date;
 
@@ -17,6 +18,7 @@ export class Refill {
         credit_currency: Currency,
         price: number,
         price_currency: Currency,
+        hidden: boolean,
         disabled: boolean,
         createdAt: Date,
         name?: string | null,
@@ -26,6 +28,7 @@ export class Refill {
         this.credit_currency = credit_currency;
         this.price = price;
         this.price_currency = price_currency;
+        this.hidden = hidden;
         this.disabled = disabled;
         this.createdAt = createdAt;
         this.name = name || null;
@@ -43,6 +46,7 @@ export class Refill {
             0,
             new Currency(CurrencyValue.Euro),
             false,
+            false,
             new Date(),
         );
     }
@@ -58,6 +62,7 @@ export class Refill {
             this.credit_currency.clone(),
             this.price,
             this.price_currency.clone(),
+            this.hidden,
             this.disabled,
             new Date(this.createdAt),
             this.name,
@@ -76,6 +81,7 @@ export class Refill {
             Currency.fromResponse(response.credit_currency),
             response.price,
             Currency.fromResponse(response.price_currency),
+            response.hidden ?? false,
             response.disabled,
             new Date(response.created_at),
             response.name,
@@ -104,6 +110,7 @@ export class Refill {
         return {
             credit: this.credit,
             credit_currency: this.credit_currency ? this.credit_currency.toRequest() : null,
+            hidden: this.hidden,
             disabled: this.disabled,
             name: this.name,
             price: this.price,

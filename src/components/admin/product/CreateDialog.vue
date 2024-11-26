@@ -90,7 +90,19 @@
 
             <v-switch
                 v-model="product.purchasable"
-                :label="$t('admin.product.edit.purchasable')"
+                :label="$t('admin.product.add.purchasable')"
+                required
+            ></v-switch>
+
+            <v-switch
+                v-model="product.hidden"
+                :label="$t('admin.product.add.hidden')"
+                required
+            ></v-switch>
+
+            <v-switch
+                v-model="product.disabled"
+                :label="$t('admin.product.add.disabled')"
                 required
             ></v-switch>
         </template>
@@ -139,6 +151,18 @@ export default {
     }),
     props: {
         modelValue: Boolean,
+    },
+    watch: {
+        "product.purchasable"(newValue: boolean) {
+            if (newValue == false) {
+                this.product.hidden = true;
+            }
+        },
+        "product.hidden"(newValue: boolean) {
+            if (newValue == false) {
+                this.product.purchasable = true;
+            }
+        },
     },
     computed: {
         show: {

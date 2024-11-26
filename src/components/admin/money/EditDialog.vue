@@ -42,6 +42,12 @@
             ></v-number-input>
 
             <v-switch
+                v-model="refill.hidden"
+                :label="$t('admin.money.edit.hidden')"
+                required
+            ></v-switch>
+
+            <v-switch
                 v-model="refill.disabled"
                 :label="$t('admin.money.edit.disabled')"
                 required
@@ -85,6 +91,17 @@ export default {
         },
     },
     watch: {
+        "refill.disabled"(newValue: boolean) {
+            if (newValue == false) {
+                this.refill.hidden = false;
+            }
+        },
+        "refill.hidden"(newValue: boolean) {
+            if (newValue == true) {
+                this.refill.disabled = true;
+            }
+        },
+
         item: {
             immediate: true,
             handler(item) {

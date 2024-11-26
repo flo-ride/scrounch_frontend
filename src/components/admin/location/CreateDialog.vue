@@ -34,7 +34,7 @@ import { Location, LocationCategory } from "@/types/Location";
 export default {
     data: () => ({
         loading: false,
-        location: new Location("1", "", false, new Date(), undefined) as Location,
+        location: Location.default(),
         locationCategoryItems: [
             { name: "Dispenser", value: LocationCategory.Dispenser },
             { name: "Room", value: LocationCategory.Room },
