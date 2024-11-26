@@ -156,6 +156,7 @@ import CreateDialog from "@/components/admin/product/CreateDialog.vue";
 import EditDialog from "@/components/admin/product/EditDialog.vue";
 import DeleteDialog from "@/components/admin/product/DeleteDialog.vue";
 import { Product } from "@/types/Product";
+import { ProductSortEnum } from "@/api";
 
 export default {
     data() {
@@ -238,10 +239,65 @@ export default {
         },
     },
     methods: {
-        loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
+        loadItems({
+            page,
+            itemsPerPage,
+            sortBy,
+        }: {
+            page: number;
+            itemsPerPage: number;
+            sortBy?: any;
+        }): void {
             this.loading = true;
+
+            let sort: ProductSortEnum[] = [];
+            if (sortBy != undefined && sortBy.length) {
+                sort = sortBy.map(
+                    ({ key, order }: { key: string; order?: boolean | "asc" | "desc" }) => {
+                        if (order == undefined || order == false || order == "desc") {
+                            switch (key) {
+                                case "id":
+                                    return ProductSortEnum.IdDesc;
+                                case "name":
+                                    return ProductSortEnum.NameDesc;
+                                case "price":
+                                    return ProductSortEnum.SellPriceDesc;
+                                case "unit":
+                                    return ProductSortEnum.UnitDesc;
+                                case "max_quantity_per_command":
+                                    return ProductSortEnum.MaxQuantityPerCommandDesc;
+                                case "created_at":
+                                    return ProductSortEnum.CreatedAtDesc;
+                                default:
+                                    return ProductSortEnum.DisplayOrderDesc;
+                            }
+                        } else {
+                            switch (key) {
+                                case "id":
+                                    return ProductSortEnum.IdAsc;
+                                case "name":
+                                    return ProductSortEnum.NameAsc;
+                                case "price":
+                                    return ProductSortEnum.SellPriceAsc;
+                                case "unit":
+                                    return ProductSortEnum.UnitAsc;
+                                case "max_quantity_per_command":
+                                    return ProductSortEnum.MaxQuantityPerCommandAsc;
+                                case "created_at":
+                                    return ProductSortEnum.CreatedAtAsc;
+                                default:
+                                    return ProductSortEnum.DisplayOrderAsc;
+                            }
+                        }
+                    },
+                );
+            }
+
+            sort.push(ProductSortEnum.DisplayOrderDesc);
+            sort.push(ProductSortEnum.CreatedAtDesc);
+
             this.$productApi
-                .getAllProducts({ page: page - 1, perPage: itemsPerPage })
+                .getAllProducts({ page: page - 1, perPage: itemsPerPage, sort: sort })
                 .then((res) => {
                     this.serverItems = res.data.products.map((x) => Product.fromResponse(x));
                     this.totalItems = res.data.total_page * itemsPerPage;

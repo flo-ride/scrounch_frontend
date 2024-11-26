@@ -62,6 +62,7 @@ import CreateDialog from "@/components/admin/location/CreateDialog.vue";
 import EditDialog from "@/components/admin/location/EditDialog.vue";
 import DeleteDialog from "@/components/admin/location/DeleteDialog.vue";
 import { Location } from "@/types/Location";
+import { LocationSortEnum } from "@/api";
 
 export default {
     data() {
@@ -110,10 +111,57 @@ export default {
         };
     },
     methods: {
-        loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
+        loadItems({
+            page,
+            itemsPerPage,
+            sortBy,
+        }: {
+            page: number;
+            itemsPerPage: number;
+            sortBy?: any;
+        }): void {
+            this.loading = true;
+
+            let sort: LocationSortEnum[] = [];
+            if (sortBy != undefined && sortBy.length) {
+                sort = sortBy.map(
+                    ({ key, order }: { key: string; order?: boolean | "asc" | "desc" }) => {
+                        if (order == undefined || order == false || order == "desc") {
+                            switch (key) {
+                                case "id":
+                                    return LocationSortEnum.IdDesc;
+                                case "name":
+                                    return LocationSortEnum.NameDesc;
+                                case "category":
+                                    return LocationSortEnum.CategoryDesc;
+                                case "created_at":
+                                    return LocationSortEnum.CreatedAtDesc;
+                                default:
+                                    return LocationSortEnum.CreatedAtDesc;
+                            }
+                        } else {
+                            switch (key) {
+                                case "id":
+                                    return LocationSortEnum.IdAsc;
+                                case "name":
+                                    return LocationSortEnum.NameAsc;
+                                case "category":
+                                    return LocationSortEnum.CategoryAsc;
+                                case "created_at":
+                                    return LocationSortEnum.CreatedAtAsc;
+                                default:
+                                    return LocationSortEnum.CreatedAtAsc;
+                            }
+                        }
+                    },
+                );
+            }
+
+            sort.push(LocationSortEnum.CreatedAtDesc);
+
             this.loading = true;
             this.$locationApi
-                .getAllLocations({ page: page - 1, perPage: itemsPerPage })
+                .getAllLocations({ page: page - 1, perPage: itemsPerPage, sort: sort })
                 .then((res) => {
                     this.serverItems = res.data.locations.map((x) => Location.fromResponse(x));
                     this.totalItems = res.data.total_page * itemsPerPage;

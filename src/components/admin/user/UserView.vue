@@ -51,6 +51,7 @@
 <script lang="ts">
 import EditDialog from "@/components/admin/user/EditDialog.vue";
 import { User } from "@/types/User";
+import { UserSortEnum } from "@/api";
 
 export default {
     data() {
@@ -96,7 +97,7 @@ export default {
                 {
                     title: "Role",
                     key: "role",
-                    sortable: true,
+                    sortable: false,
                 },
                 {
                     title: "Actions",
@@ -107,13 +108,70 @@ export default {
         };
     },
     methods: {
-        loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
+        loadItems({
+            page,
+            itemsPerPage,
+            sortBy,
+        }: {
+            page: number;
+            itemsPerPage: number;
+            sortBy?: any;
+        }): void {
             this.loading = true;
-            this.$userApi.getAllUsers({ page: page - 1, perPage: itemsPerPage }).then((res) => {
-                this.serverItems = res.data.users.map((x) => User.fromResponse(x));
-                this.totalItems = res.data.total_page * itemsPerPage;
-                this.loading = false;
-            });
+
+            let sort: UserSortEnum[] = [];
+            if (sortBy != undefined && sortBy.length) {
+                sort = sortBy.map(
+                    ({ key, order }: { key: string; order?: boolean | "asc" | "desc" }) => {
+                        if (order == undefined || order == false || order == "desc") {
+                            switch (key) {
+                                case "id":
+                                    return UserSortEnum.IdDesc;
+                                case "name":
+                                    return UserSortEnum.NameDesc;
+                                case "email":
+                                    return UserSortEnum.EmailDesc;
+                                case "username":
+                                    return UserSortEnum.UsernameDesc;
+                                case "last_access_at":
+                                    return UserSortEnum.LastAccessAtDesc;
+                                case "created_at":
+                                    return UserSortEnum.CreatedAtDesc;
+                                default:
+                                    return UserSortEnum.CreatedAtDesc;
+                            }
+                        } else {
+                            switch (key) {
+                                case "id":
+                                    return UserSortEnum.IdAsc;
+                                case "name":
+                                    return UserSortEnum.NameAsc;
+                                case "email":
+                                    return UserSortEnum.EmailAsc;
+                                case "username":
+                                    return UserSortEnum.UsernameAsc;
+                                case "last_access_at":
+                                    return UserSortEnum.LastAccessAtAsc;
+                                case "created_at":
+                                    return UserSortEnum.CreatedAtAsc;
+                                default:
+                                    return UserSortEnum.CreatedAtAsc;
+                            }
+                        }
+                    },
+                );
+            }
+
+            sort.push(UserSortEnum.LastAccessAtDesc);
+            sort.push(UserSortEnum.CreatedAtDesc);
+
+            this.$userApi
+                .getAllUsers({ page: page - 1, perPage: itemsPerPage, sort: sort })
+                .then((res) => {
+                    this.serverItems = res.data.users.map((x) => User.fromResponse(x));
+                    this.totalItems = res.data.total_page * itemsPerPage;
+                    this.loading = false;
+                });
         },
         timeSinceLastConnection(lastConnectionString: string): string {
             const lastConnection = new Date(lastConnectionString);

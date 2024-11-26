@@ -52,6 +52,7 @@ import CreateDialog from "@/components/admin/money/CreateDialog.vue";
 import EditDialog from "@/components/admin/money/EditDialog.vue";
 import DeleteDialog from "@/components/admin/money/DeleteDialog.vue";
 import { Refill } from "@/types/Refill";
+import { RefillSortEnum } from "@/api";
 
 export default {
     data() {
@@ -100,13 +101,61 @@ export default {
         };
     },
     methods: {
-        loadItems({ page, itemsPerPage }: { page: number; itemsPerPage: number }): void {
+        loadItems({
+            page,
+            itemsPerPage,
+            sortBy,
+        }: {
+            page: number;
+            itemsPerPage: number;
+            sortBy?: any;
+        }): void {
             this.loading = true;
-            this.$refillApi.getAllRefills({ page: page - 1, perPage: itemsPerPage }).then((res) => {
-                this.serverItems = res.data.refills.map((x) => Refill.fromResponse(x));
-                this.totalItems = res.data.total_page * itemsPerPage;
-                this.loading = false;
-            });
+
+            let sort: RefillSortEnum[] = [];
+            if (sortBy != undefined && sortBy.length) {
+                sort = sortBy.map(
+                    ({ key, order }: { key: string; order?: boolean | "asc" | "desc" }) => {
+                        if (order == undefined || order == false || order == "desc") {
+                            switch (key) {
+                                case "id":
+                                    return RefillSortEnum.IdDesc;
+                                case "name":
+                                    return RefillSortEnum.NameDesc;
+                                case "conversion":
+                                    return RefillSortEnum.PriceDesc;
+                                case "created_at":
+                                    return RefillSortEnum.CreatedAtDesc;
+                                default:
+                                    return RefillSortEnum.CreatedAtDesc;
+                            }
+                        } else {
+                            switch (key) {
+                                case "id":
+                                    return RefillSortEnum.IdAsc;
+                                case "name":
+                                    return RefillSortEnum.NameAsc;
+                                case "conversion":
+                                    return RefillSortEnum.PriceAsc;
+                                case "created_at":
+                                    return RefillSortEnum.CreatedAtAsc;
+                                default:
+                                    return RefillSortEnum.CreatedAtAsc;
+                            }
+                        }
+                    },
+                );
+            }
+
+            sort.push(RefillSortEnum.CreatedAtDesc);
+
+            this.$refillApi
+                .getAllRefills({ page: page - 1, perPage: itemsPerPage, sort: sort })
+                .then((res) => {
+                    this.serverItems = res.data.refills.map((x) => Refill.fromResponse(x));
+                    this.totalItems = res.data.total_page * itemsPerPage;
+                    this.loading = false;
+                });
         },
         timeSinceCreation(creationTimeString: string) {
             const creationTime = new Date(creationTimeString);
