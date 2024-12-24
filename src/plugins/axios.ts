@@ -1,4 +1,4 @@
-import { LocationApi, MiscApi, ProductApi, RefillApi, UserApi } from "@/api";
+import { LocationApi, MiscApi, ProductApi, RecipeApi, RefillApi, UserApi } from "@/api";
 import axios from "axios";
 import type { App } from "vue";
 
@@ -30,6 +30,7 @@ export default {
             options.baseUrl,
             $axios,
         );
+        app.config.globalProperties.$recipeApi = new RecipeApi(undefined, options.baseUrl, $axios);
         // app.config.globalProperties.$axios = $axios;
     },
 };

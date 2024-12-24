@@ -10,6 +10,7 @@ import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { createVueI18nAdapter } from "vuetify/locale/adapters/vue-i18n";
 import { VNumberInput } from "vuetify/labs/components";
+import { VTreeview } from "vuetify/labs/VTreeview";
 
 // I18n
 import { createI18n, useI18n } from "vue-i18n";
@@ -22,7 +23,7 @@ import router from "./router";
 import axios from "./plugins/axios";
 
 import type { Router } from "vue-router";
-import { LocationApi, MiscApi, ProductApi, RefillApi, UserApi } from "./api";
+import { LocationApi, MiscApi, ProductApi, RecipeApi, RefillApi, UserApi } from "./api";
 
 const messages = {
     en: {
@@ -92,6 +93,7 @@ const vuetify = createVuetify({
     components: {
         components,
         VNumberInput,
+        VTreeview,
     },
     directives,
     theme: { defaultTheme: "dark" },
@@ -116,7 +118,9 @@ declare module "@vue/runtime-core" {
         $locationApi: LocationApi;
         $productApi: ProductApi;
         $refillApi: RefillApi;
+        $recipeApi: RecipeApi;
         $backendUrl: string;
+        $vuetify: typeof vuetify;
         $router: Router;
     }
 }

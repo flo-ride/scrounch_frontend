@@ -89,8 +89,8 @@
 
                     <template v-slot:item.price="{ item }">
                         <span
-                            >{{ item.sellPrice.toFixed(2) }}
-                            {{ $t("common.currency.symbol." + item.sellPriceCurrency.type) }}</span
+                            >{{ item.sellPrice?.toFixed(2) }}
+                            {{ $t("common.currency.symbol." + item.sellPriceCurrency?.type) }}</span
                         >
                     </template>
 

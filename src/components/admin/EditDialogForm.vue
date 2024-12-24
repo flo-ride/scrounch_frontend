@@ -1,37 +1,42 @@
 <template>
     <v-dialog v-model="show">
-        <v-card class="mx-auto pa-5" min-width="500">
-            <v-card-title class="d-flex justify-space-between align-center">
-                <div class="text-h5 text-medium-emphasis ps-2">{{ title }}</div>
-                <v-btn icon="fa-solid fa-xmark" variant="text" @click="show = false"></v-btn>
-            </v-card-title>
+        <template v-slot:activator="{ props: activatorProps }">
+            <slot name="activator" :activator="activatorProps"> </slot>
+        </template>
+        <template v-slot:default="{ isActive }">
+            <v-card class="mx-auto pa-5" min-width="500">
+                <v-card-title class="d-flex justify-space-between align-center">
+                    <div class="text-h5 text-medium-emphasis ps-2">{{ title }}</div>
+                    <v-btn icon="fa-solid fa-xmark" variant="text" @click="show = false"></v-btn>
+                </v-card-title>
 
-            <v-form v-model="valid" fast-fail ref="form">
-                <v-card-text>
-                    <slot name="form-content"></slot>
-                </v-card-text>
+                <v-form v-model="valid" fast-fail ref="form">
+                    <v-card-text>
+                        <slot name="form-content"></slot>
+                    </v-card-text>
 
-                <v-card-actions class="d-flex justify-end">
-                    <v-btn
-                        variant="flat"
-                        rounded="xl"
-                        :text="$t('common.cancel')"
-                        @click="show = false"
-                    ></v-btn>
-                    <v-btn
-                        :disabled="!valid || loading"
-                        :loading="loading"
-                        variant="flat"
-                        rounded="xl"
-                        prepend-icon="fa-solid fa-check"
-                        :text="$t('common.save')"
-                        :color="valid ? 'primary' : 'none'"
-                        @click="submitForm"
-                    >
-                    </v-btn>
-                </v-card-actions>
-            </v-form>
-        </v-card>
+                    <v-card-actions class="d-flex justify-end">
+                        <v-btn
+                            variant="flat"
+                            rounded="xl"
+                            :text="$t('common.cancel')"
+                            @click="show = false"
+                        ></v-btn>
+                        <v-btn
+                            :disabled="!valid || loading"
+                            :loading="loading"
+                            variant="flat"
+                            rounded="xl"
+                            prepend-icon="fa-solid fa-check"
+                            :text="$t('common.save')"
+                            :color="valid ? 'primary' : 'none'"
+                            @click="submitForm"
+                        >
+                        </v-btn>
+                    </v-card-actions>
+                </v-form>
+            </v-card>
+        </template>
     </v-dialog>
 
     <AlertError v-model="error" :title="errorTitle" :message="errorMessage" />

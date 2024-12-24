@@ -166,6 +166,37 @@ export interface EditProductRequest {
 
 
 /**
+ * Request structure for editing an existing recipe, allowing optional updates to fields.
+ * @export
+ * @interface EditRecipeRequest
+ */
+export interface EditRecipeRequest {
+    /**
+     * Optional field to disable or enable the recipe.
+     * @type {boolean}
+     * @memberof EditRecipeRequest
+     */
+    'disabled'?: boolean | null;
+    /**
+     * List of ingredients
+     * @type {Array<RecipeIngredientRequest>}
+     * @memberof EditRecipeRequest
+     */
+    'ingredients': Array<RecipeIngredientRequest>;
+    /**
+     * Name of the recipe, required and validated for length.
+     * @type {string}
+     * @memberof EditRecipeRequest
+     */
+    'name'?: string | null;
+    /**
+     * Id of the resulting product
+     * @type {string}
+     * @memberof EditRecipeRequest
+     */
+    'product'?: string | null;
+}
+/**
  * Structure representing a request to edit an existing refill entry.
  * @export
  * @interface EditRefillRequest
@@ -524,13 +555,13 @@ export interface NewProductRequest {
      * @type {number}
      * @memberof NewProductRequest
      */
-    'sell_price': number;
+    'sell_price'?: number | null;
     /**
      * Currency of the product.
      * @type {CurrencyRequest}
      * @memberof NewProductRequest
      */
-    'sell_price_currency': CurrencyRequest;
+    'sell_price_currency'?: CurrencyRequest | null;
     /**
      * Optional SMA code for product identification.
      * @type {string}
@@ -546,6 +577,31 @@ export interface NewProductRequest {
 }
 
 
+/**
+ * Request structure for creating a new recipe, including validation rules.
+ * @export
+ * @interface NewRecipeRequest
+ */
+export interface NewRecipeRequest {
+    /**
+     * List of ingredients
+     * @type {Array<RecipeIngredientRequest>}
+     * @memberof NewRecipeRequest
+     */
+    'ingredients': Array<RecipeIngredientRequest>;
+    /**
+     * Name of the recipe, required and validated for length.
+     * @type {string}
+     * @memberof NewRecipeRequest
+     */
+    'name'?: string | null;
+    /**
+     * Id of the resulting product
+     * @type {string}
+     * @memberof NewRecipeRequest
+     */
+    'product': string;
+}
 /**
  * Request structure for creating a new refill, including validation rules.
  * @export
@@ -681,13 +737,13 @@ export interface ProductResponse {
      * @type {number}
      * @memberof ProductResponse
      */
-    'sell_price': number;
+    'sell_price'?: number | null;
     /**
      * Currency of the product price.
      * @type {CurrencyResponse}
      * @memberof ProductResponse
      */
-    'sell_price_currency': CurrencyResponse;
+    'sell_price_currency'?: CurrencyResponse | null;
     /**
      * Optional SMA code associated with the product.
      * @type {string}
@@ -741,6 +797,140 @@ export const ProductSortEnum = {
 } as const;
 
 export type ProductSortEnum = typeof ProductSortEnum[keyof typeof ProductSortEnum];
+
+
+/**
+ * Request structure for creating a new recipe ingredient, including validation rules.
+ * @export
+ * @interface RecipeIngredientRequest
+ */
+export interface RecipeIngredientRequest {
+    /**
+     * Optional field to disable or enable the recipe.
+     * @type {boolean}
+     * @memberof RecipeIngredientRequest
+     */
+    'disabled'?: boolean | null;
+    /**
+     * Product id of the ingredient
+     * @type {string}
+     * @memberof RecipeIngredientRequest
+     */
+    'product': string;
+    /**
+     * Quantity of this product for the recipe
+     * @type {number}
+     * @memberof RecipeIngredientRequest
+     */
+    'quantity': number;
+}
+/**
+ * Response structure for a recipe ingredient, including its details.
+ * @export
+ * @interface RecipeIngredientResponse
+ */
+export interface RecipeIngredientResponse {
+    /**
+     * indicating if the ingredient is disabled.
+     * @type {boolean}
+     * @memberof RecipeIngredientResponse
+     */
+    'disabled': boolean;
+    /**
+     * Product use for this ingredient
+     * @type {string}
+     * @memberof RecipeIngredientResponse
+     */
+    'product': string;
+    /**
+     * Quantity of this ingredient
+     * @type {number}
+     * @memberof RecipeIngredientResponse
+     */
+    'quantity': number;
+}
+/**
+ * Response structure for a list of recipes with pagination details.
+ * @export
+ * @interface RecipeListResponse
+ */
+export interface RecipeListResponse {
+    /**
+     * Current page number.
+     * @type {number}
+     * @memberof RecipeListResponse
+     */
+    'current_page': number;
+    /**
+     * List of recipes on the current page.
+     * @type {Array<RecipeResponse>}
+     * @memberof RecipeListResponse
+     */
+    'recipes': Array<RecipeResponse>;
+    /**
+     * Total number of pages available.
+     * @type {number}
+     * @memberof RecipeListResponse
+     */
+    'total_page': number;
+}
+/**
+ * Response structure for a recipe, including its details.
+ * @export
+ * @interface RecipeResponse
+ */
+export interface RecipeResponse {
+    /**
+     * indicating if the recipe is disabled.
+     * @type {boolean}
+     * @memberof RecipeResponse
+     */
+    'disabled': boolean;
+    /**
+     * Unique identifier for the recipe.
+     * @type {string}
+     * @memberof RecipeResponse
+     */
+    'id': string;
+    /**
+     * List of ingredients
+     * @type {Array<RecipeIngredientResponse>}
+     * @memberof RecipeResponse
+     */
+    'ingredients': Array<RecipeIngredientResponse>;
+    /**
+     * Name of the recipe.
+     * @type {string}
+     * @memberof RecipeResponse
+     */
+    'name'?: string | null;
+    /**
+     * Resulting product of this recipe
+     * @type {string}
+     * @memberof RecipeResponse
+     */
+    'product': string;
+}
+/**
+ * Generated by DeriveToSortQuery macro for flo_orm
+ * @export
+ * @enum {string}
+ */
+
+export const RecipeSortEnum = {
+    IdAsc: 'id_asc',
+    IdDesc: 'id_desc',
+    ResultProductIdAsc: 'result_product_id_asc',
+    ResultProductIdDesc: 'result_product_id_desc',
+    NameAsc: 'name_asc',
+    NameDesc: 'name_desc',
+    DisabledAsc: 'disabled_asc',
+    DisabledDesc: 'disabled_desc',
+    CreatedAtAsc: 'created_at_asc',
+    CreatedAtDesc: 'created_at_desc'
+} as const;
+
+export type RecipeSortEnum = typeof RecipeSortEnum[keyof typeof RecipeSortEnum];
 
 
 /**
@@ -1116,7 +1306,7 @@ export const LocationApiAxiosParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled location
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view hidden location
          * @summary Handles the request to retrieve a paginated list of locations.
          * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
@@ -1251,7 +1441,7 @@ export const LocationApiAxiosParamCreator = function (configuration?: Configurat
             };
         },
         /**
-         * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is disabled, only an admin can retrieve it.
+         * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is hidden, only an admin can retrieve it.
          * @summary Handles the request to fetch a location by its unique identifier.
          * @param {string} id The database ID of the location to retrieve.
          * @param {*} [options] Override http request option.
@@ -1362,7 +1552,7 @@ export const LocationApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled location
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view hidden location
          * @summary Handles the request to retrieve a paginated list of locations.
          * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
@@ -1393,7 +1583,7 @@ export const LocationApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is disabled, only an admin can retrieve it.
+         * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is hidden, only an admin can retrieve it.
          * @summary Handles the request to fetch a location by its unique identifier.
          * @param {string} id The database ID of the location to retrieve.
          * @param {*} [options] Override http request option.
@@ -1449,7 +1639,7 @@ export const LocationApiFactory = function (configuration?: Configuration, baseP
             return localVarFp.editLocation(requestParameters.id, requestParameters.editLocationRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled location
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view hidden location
          * @summary Handles the request to retrieve a paginated list of locations.
          * @param {LocationApiGetAllLocationsRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -1459,7 +1649,7 @@ export const LocationApiFactory = function (configuration?: Configuration, baseP
             return localVarFp.getAllLocations(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.categoryEq, requestParameters.categoryNeq, requestParameters.hiddenEq, requestParameters.hiddenNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.sort, options).then((request) => request(axios, basePath));
         },
         /**
-         * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is disabled, only an admin can retrieve it.
+         * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is hidden, only an admin can retrieve it.
          * @summary Handles the request to fetch a location by its unique identifier.
          * @param {LocationApiGetLocationRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -1716,7 +1906,7 @@ export class LocationApi extends BaseAPI {
     }
 
     /**
-     * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled location
+     * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of location per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of locations.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view hidden location
      * @summary Handles the request to retrieve a paginated list of locations.
      * @param {LocationApiGetAllLocationsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -1728,7 +1918,7 @@ export class LocationApi extends BaseAPI {
     }
 
     /**
-     * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is disabled, only an admin can retrieve it.
+     * - **Path Parameters**:   `id` (UUID): The database ID of the location to retrieve.  - **Response Codes**:   - `200 OK`: The location was successfully retrieved.   - `404 Not Found`: The location doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the location is hidden, only an admin can retrieve it.
      * @summary Handles the request to fetch a location by its unique identifier.
      * @param {LocationApiGetLocationRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -2244,7 +2434,7 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not disabled.
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not hidden.
          * @summary Handles the request to retrieve a paginated list of products.
          * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
@@ -2477,7 +2667,7 @@ export const ProductApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
-         * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is disabled, only an admin can retrieve it.
+         * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is hidden, only an admin can retrieve it.
          * @summary Handles the request to fetch a product by its unique identifier.
          * @param {string} id The database ID of the product to retrieve.
          * @param {*} [options] Override http request option.
@@ -2586,7 +2776,7 @@ export const ProductApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not disabled.
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not hidden.
          * @summary Handles the request to retrieve a paginated list of products.
          * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
@@ -2637,7 +2827,7 @@ export const ProductApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is disabled, only an admin can retrieve it.
+         * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is hidden, only an admin can retrieve it.
          * @summary Handles the request to fetch a product by its unique identifier.
          * @param {string} id The database ID of the product to retrieve.
          * @param {*} [options] Override http request option.
@@ -2693,7 +2883,7 @@ export const ProductApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.editProduct(requestParameters.id, requestParameters.editProductRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not disabled.
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not hidden.
          * @summary Handles the request to retrieve a paginated list of products.
          * @param {ProductApiGetAllProductsRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -2703,7 +2893,7 @@ export const ProductApiFactory = function (configuration?: Configuration, basePa
             return localVarFp.getAllProducts(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.imageEq, requestParameters.imageNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.displayOrderEq, requestParameters.displayOrderNeq, requestParameters.displayOrderGt, requestParameters.displayOrderLt, requestParameters.displayOrderGte, requestParameters.displayOrderLte, requestParameters.sellPriceEq, requestParameters.sellPriceNeq, requestParameters.sellPriceCurrencyEq, requestParameters.sellPriceCurrencyNeq, requestParameters.unitEq, requestParameters.unitNeq, requestParameters.maxQuantityPerCommandEq, requestParameters.maxQuantityPerCommandNeq, requestParameters.purchasableEq, requestParameters.purchasableNeq, requestParameters.hiddenEq, requestParameters.hiddenNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.smaCodeEq, requestParameters.smaCodeNeq, requestParameters.inventreeCodeEq, requestParameters.inventreeCodeNeq, requestParameters.sort, options).then((request) => request(axios, basePath));
         },
         /**
-         * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is disabled, only an admin can retrieve it.
+         * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is hidden, only an admin can retrieve it.
          * @summary Handles the request to fetch a product by its unique identifier.
          * @param {ProductApiGetProductRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -3100,7 +3290,7 @@ export class ProductApi extends BaseAPI {
     }
 
     /**
-     * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not disabled.
+     * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of products per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of products.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see products that are not hidden.
      * @summary Handles the request to retrieve a paginated list of products.
      * @param {ProductApiGetAllProductsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -3112,7 +3302,7 @@ export class ProductApi extends BaseAPI {
     }
 
     /**
-     * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is disabled, only an admin can retrieve it.
+     * - **Path Parameters**:   `id` (UUID): The database ID of the product to retrieve.  - **Response Codes**:   - `200 OK`: The product was successfully retrieved.   - `404 Not Found`: The product doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the product is hidden, only an admin can retrieve it.
      * @summary Handles the request to fetch a product by its unique identifier.
      * @param {ProductApiGetProductRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -3133,6 +3323,699 @@ export class ProductApi extends BaseAPI {
      */
     public postNewProduct(requestParameters: ProductApiPostNewProductRequest, options?: RawAxiosRequestConfig) {
         return ProductApiFp(this.configuration).postNewProduct(requestParameters.newProductRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * RecipeApi - axios parameter creator
+ * @export
+ */
+export const RecipeApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * The recipe is not fully removed but marked as disabled in the database. Only an admin can perform this action.  - **Path Parameters:**   - `id`: The unique ID of the recipe in the database.  - **Responses:**   - `500`: Internal error, likely related to the database.   - `400`: The request format is invalid.   - `200`: The recipe has been successfully disabled.
+         * @summary Deletes a recipe by its database ID.
+         * @param {string} id Recipe database id to delete recipe for
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteRecipe: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('deleteRecipe', 'id', id)
+            const localVarPath = `/recipe/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication axum-oidc required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * The admin can change attributes such as the name, price, quantity, or image of the recipe. If the recipe image is changed, the old image will be deleted from S3 storage.  Returns an error if the recipe doesn\'t exist, if there is a validation issue, or if a database or S3 operation fails.
+         * @summary Edit an existing recipe by ID in the store.
+         * @param {string} id Recipe database id to edit recipe for
+         * @param {EditRecipeRequest} editRecipeRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        editRecipe: async (id: string, editRecipeRequest: EditRecipeRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('editRecipe', 'id', id)
+            // verify required parameter 'editRecipeRequest' is not null or undefined
+            assertParamExists('editRecipe', 'editRecipeRequest', editRecipeRequest)
+            const localVarPath = `/recipe/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication axum-oidc required
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(editRecipeRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of recipes per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of recipes.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see recipes that are not hidden.
+         * @summary Handles the request to retrieve a paginated list of recipes.
+         * @param {number | null} [page] The page number to retrieve, starting from 0.
+         * @param {number | null} [perPage] The number of items to return per page.
+         * @param {string | null} [idEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {string | null} [idNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {string | null} [resultProductIdEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {string | null} [resultProductIdNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {Array<string>} [nameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [nameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [createdAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [createdAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [createdAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [createdAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<RecipeSortEnum>} [sort] Used for sorting the output
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllRecipes: async (page?: number | null, perPage?: number | null, idEq?: string | null, idNeq?: string | null, resultProductIdEq?: string | null, resultProductIdNeq?: string | null, nameEq?: Array<string>, nameNeq?: Array<string>, disabledEq?: boolean | null, disabledNeq?: boolean | null, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, sort?: Array<RecipeSortEnum>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/recipe`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (page !== undefined) {
+                localVarQueryParameter['page'] = page;
+            }
+
+            if (perPage !== undefined) {
+                localVarQueryParameter['per_page'] = perPage;
+            }
+
+            if (idEq !== undefined) {
+                localVarQueryParameter['id_eq'] = idEq;
+            }
+
+            if (idNeq !== undefined) {
+                localVarQueryParameter['id_neq'] = idNeq;
+            }
+
+            if (resultProductIdEq !== undefined) {
+                localVarQueryParameter['result_product_id_eq'] = resultProductIdEq;
+            }
+
+            if (resultProductIdNeq !== undefined) {
+                localVarQueryParameter['result_product_id_neq'] = resultProductIdNeq;
+            }
+
+            if (nameEq) {
+                localVarQueryParameter['name_eq'] = nameEq;
+            }
+
+            if (nameNeq) {
+                localVarQueryParameter['name_neq'] = nameNeq;
+            }
+
+            if (disabledEq !== undefined) {
+                localVarQueryParameter['disabled_eq'] = disabledEq;
+            }
+
+            if (disabledNeq !== undefined) {
+                localVarQueryParameter['disabled_neq'] = disabledNeq;
+            }
+
+            if (createdAtEq) {
+                localVarQueryParameter['created_at_eq'] = createdAtEq;
+            }
+
+            if (createdAtNeq) {
+                localVarQueryParameter['created_at_neq'] = createdAtNeq;
+            }
+
+            if (createdAtGt !== undefined) {
+                localVarQueryParameter['created_at_gt'] = (createdAtGt as any instanceof Date) ?
+                    (createdAtGt as any).toISOString() :
+                    createdAtGt;
+            }
+
+            if (createdAtLt !== undefined) {
+                localVarQueryParameter['created_at_lt'] = (createdAtLt as any instanceof Date) ?
+                    (createdAtLt as any).toISOString() :
+                    createdAtLt;
+            }
+
+            if (createdAtGte !== undefined) {
+                localVarQueryParameter['created_at_gte'] = (createdAtGte as any instanceof Date) ?
+                    (createdAtGte as any).toISOString() :
+                    createdAtGte;
+            }
+
+            if (createdAtLte !== undefined) {
+                localVarQueryParameter['created_at_lte'] = (createdAtLte as any instanceof Date) ?
+                    (createdAtLte as any).toISOString() :
+                    createdAtLte;
+            }
+
+            if (sort) {
+                localVarQueryParameter['sort'] = sort;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * - **Path Parameters**:   `id` (UUID): The database ID of the recipe to retrieve.  - **Response Codes**:   - `200 OK`: The recipe was successfully retrieved.   - `404 Not Found`: The recipe doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the recipe is hidden, only an admin can retrieve it.
+         * @summary Handles the request to fetch a recipe by its unique identifier.
+         * @param {string} id The database ID of the recipe to retrieve.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRecipe: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'id' is not null or undefined
+            assertParamExists('getRecipe', 'id', id)
+            const localVarPath = `/recipe/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication axum-oidc required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * This function allows an admin to create a new recipe by sending a POST request to the `/recipe` endpoint. The new recipe is validated and stored in the database. The image associated with the recipe is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the recipe\'s ID.  Path: `/recipe`  - **Request Body:** Expects a `NewRecipe` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new recipe, returns the new recipe\'s ID as a string.
+         * @summary Handler for creating a new recipe.
+         * @param {NewRecipeRequest} newRecipeRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postNewRecipe: async (newRecipeRequest: NewRecipeRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'newRecipeRequest' is not null or undefined
+            assertParamExists('postNewRecipe', 'newRecipeRequest', newRecipeRequest)
+            const localVarPath = `/recipe`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(newRecipeRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * RecipeApi - functional programming interface
+ * @export
+ */
+export const RecipeApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = RecipeApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * The recipe is not fully removed but marked as disabled in the database. Only an admin can perform this action.  - **Path Parameters:**   - `id`: The unique ID of the recipe in the database.  - **Responses:**   - `500`: Internal error, likely related to the database.   - `400`: The request format is invalid.   - `200`: The recipe has been successfully disabled.
+         * @summary Deletes a recipe by its database ID.
+         * @param {string} id Recipe database id to delete recipe for
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteRecipe(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteRecipe(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RecipeApi.deleteRecipe']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * The admin can change attributes such as the name, price, quantity, or image of the recipe. If the recipe image is changed, the old image will be deleted from S3 storage.  Returns an error if the recipe doesn\'t exist, if there is a validation issue, or if a database or S3 operation fails.
+         * @summary Edit an existing recipe by ID in the store.
+         * @param {string} id Recipe database id to edit recipe for
+         * @param {EditRecipeRequest} editRecipeRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async editRecipe(id: string, editRecipeRequest: EditRecipeRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.editRecipe(id, editRecipeRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RecipeApi.editRecipe']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of recipes per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of recipes.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see recipes that are not hidden.
+         * @summary Handles the request to retrieve a paginated list of recipes.
+         * @param {number | null} [page] The page number to retrieve, starting from 0.
+         * @param {number | null} [perPage] The number of items to return per page.
+         * @param {string | null} [idEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {string | null} [idNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {string | null} [resultProductIdEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {string | null} [resultProductIdNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {Array<string>} [nameEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [nameNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {boolean | null} [disabledEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+         * @param {boolean | null} [disabledNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+         * @param {Array<string>} [createdAtEq] Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+         * @param {Array<string>} [createdAtNeq] Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+         * @param {string | null} [createdAtGt] Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+         * @param {string | null} [createdAtLt] Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+         * @param {string | null} [createdAtGte] Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+         * @param {string | null} [createdAtLte] Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+         * @param {Array<RecipeSortEnum>} [sort] Used for sorting the output
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllRecipes(page?: number | null, perPage?: number | null, idEq?: string | null, idNeq?: string | null, resultProductIdEq?: string | null, resultProductIdNeq?: string | null, nameEq?: Array<string>, nameNeq?: Array<string>, disabledEq?: boolean | null, disabledNeq?: boolean | null, createdAtEq?: Array<string>, createdAtNeq?: Array<string>, createdAtGt?: string | null, createdAtLt?: string | null, createdAtGte?: string | null, createdAtLte?: string | null, sort?: Array<RecipeSortEnum>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllRecipes(page, perPage, idEq, idNeq, resultProductIdEq, resultProductIdNeq, nameEq, nameNeq, disabledEq, disabledNeq, createdAtEq, createdAtNeq, createdAtGt, createdAtLt, createdAtGte, createdAtLte, sort, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RecipeApi.getAllRecipes']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * - **Path Parameters**:   `id` (UUID): The database ID of the recipe to retrieve.  - **Response Codes**:   - `200 OK`: The recipe was successfully retrieved.   - `404 Not Found`: The recipe doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the recipe is hidden, only an admin can retrieve it.
+         * @summary Handles the request to fetch a recipe by its unique identifier.
+         * @param {string} id The database ID of the recipe to retrieve.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getRecipe(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<RecipeResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getRecipe(id, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RecipeApi.getRecipe']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * This function allows an admin to create a new recipe by sending a POST request to the `/recipe` endpoint. The new recipe is validated and stored in the database. The image associated with the recipe is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the recipe\'s ID.  Path: `/recipe`  - **Request Body:** Expects a `NewRecipe` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new recipe, returns the new recipe\'s ID as a string.
+         * @summary Handler for creating a new recipe.
+         * @param {NewRecipeRequest} newRecipeRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postNewRecipe(newRecipeRequest: NewRecipeRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<string>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postNewRecipe(newRecipeRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RecipeApi.postNewRecipe']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * RecipeApi - factory interface
+ * @export
+ */
+export const RecipeApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RecipeApiFp(configuration)
+    return {
+        /**
+         * The recipe is not fully removed but marked as disabled in the database. Only an admin can perform this action.  - **Path Parameters:**   - `id`: The unique ID of the recipe in the database.  - **Responses:**   - `500`: Internal error, likely related to the database.   - `400`: The request format is invalid.   - `200`: The recipe has been successfully disabled.
+         * @summary Deletes a recipe by its database ID.
+         * @param {RecipeApiDeleteRecipeRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteRecipe(requestParameters: RecipeApiDeleteRecipeRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteRecipe(requestParameters.id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * The admin can change attributes such as the name, price, quantity, or image of the recipe. If the recipe image is changed, the old image will be deleted from S3 storage.  Returns an error if the recipe doesn\'t exist, if there is a validation issue, or if a database or S3 operation fails.
+         * @summary Edit an existing recipe by ID in the store.
+         * @param {RecipeApiEditRecipeRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        editRecipe(requestParameters: RecipeApiEditRecipeRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.editRecipe(requestParameters.id, requestParameters.editRecipeRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of recipes per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of recipes.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see recipes that are not hidden.
+         * @summary Handles the request to retrieve a paginated list of recipes.
+         * @param {RecipeApiGetAllRecipesRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllRecipes(requestParameters: RecipeApiGetAllRecipesRequest = {}, options?: RawAxiosRequestConfig): AxiosPromise<RecipeListResponse> {
+            return localVarFp.getAllRecipes(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.resultProductIdEq, requestParameters.resultProductIdNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.sort, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * - **Path Parameters**:   `id` (UUID): The database ID of the recipe to retrieve.  - **Response Codes**:   - `200 OK`: The recipe was successfully retrieved.   - `404 Not Found`: The recipe doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the recipe is hidden, only an admin can retrieve it.
+         * @summary Handles the request to fetch a recipe by its unique identifier.
+         * @param {RecipeApiGetRecipeRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getRecipe(requestParameters: RecipeApiGetRecipeRequest, options?: RawAxiosRequestConfig): AxiosPromise<RecipeResponse> {
+            return localVarFp.getRecipe(requestParameters.id, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * This function allows an admin to create a new recipe by sending a POST request to the `/recipe` endpoint. The new recipe is validated and stored in the database. The image associated with the recipe is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the recipe\'s ID.  Path: `/recipe`  - **Request Body:** Expects a `NewRecipe` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new recipe, returns the new recipe\'s ID as a string.
+         * @summary Handler for creating a new recipe.
+         * @param {RecipeApiPostNewRecipeRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postNewRecipe(requestParameters: RecipeApiPostNewRecipeRequest, options?: RawAxiosRequestConfig): AxiosPromise<string> {
+            return localVarFp.postNewRecipe(requestParameters.newRecipeRequest, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * Request parameters for deleteRecipe operation in RecipeApi.
+ * @export
+ * @interface RecipeApiDeleteRecipeRequest
+ */
+export interface RecipeApiDeleteRecipeRequest {
+    /**
+     * Recipe database id to delete recipe for
+     * @type {string}
+     * @memberof RecipeApiDeleteRecipe
+     */
+    readonly id: string
+}
+
+/**
+ * Request parameters for editRecipe operation in RecipeApi.
+ * @export
+ * @interface RecipeApiEditRecipeRequest
+ */
+export interface RecipeApiEditRecipeRequest {
+    /**
+     * Recipe database id to edit recipe for
+     * @type {string}
+     * @memberof RecipeApiEditRecipe
+     */
+    readonly id: string
+
+    /**
+     * 
+     * @type {EditRecipeRequest}
+     * @memberof RecipeApiEditRecipe
+     */
+    readonly editRecipeRequest: EditRecipeRequest
+}
+
+/**
+ * Request parameters for getAllRecipes operation in RecipeApi.
+ * @export
+ * @interface RecipeApiGetAllRecipesRequest
+ */
+export interface RecipeApiGetAllRecipesRequest {
+    /**
+     * The page number to retrieve, starting from 0.
+     * @type {number}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly page?: number | null
+
+    /**
+     * The number of items to return per page.
+     * @type {number}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly perPage?: number | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {string}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly idEq?: string | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {string}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly idNeq?: string | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {string}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly resultProductIdEq?: string | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {string}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly resultProductIdNeq?: string | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly nameEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly nameNeq?: Array<string>
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches the provided values.
+     * @type {boolean}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly disabledEq?: boolean | null
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches the provided values.
+     * @type {boolean}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly disabledNeq?: boolean | null
+
+    /**
+     * Field to filter for equality, allowing multiple values. This creates a condition where the column matches any of the provided values.
+     * @type {Array<string>}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly createdAtEq?: Array<string>
+
+    /**
+     * Field to filter for inequality, allowing multiple values. This excludes any results where the column matches one of the provided values.
+     * @type {Array<string>}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly createdAtNeq?: Array<string>
+
+    /**
+     * Field to filter for #field_type greater than the specified value. Useful for range-based queries (e.g., prices above a threshold).
+     * @type {string}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly createdAtGt?: string | null
+
+    /**
+     * Field to filter for #field_type less than the specified value. Useful for range-based queries (e.g., dates before a threshold).
+     * @type {string}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly createdAtLt?: string | null
+
+    /**
+     * Field to filter for #field_type greater than or equal to the specified value. Similar to &#x60;gt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly createdAtGte?: string | null
+
+    /**
+     * Field to filter for #field_type less than or equal to the specified value. Similar to &#x60;lt&#x60;, but includes the boundary value in the results.
+     * @type {string}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly createdAtLte?: string | null
+
+    /**
+     * Used for sorting the output
+     * @type {Array<RecipeSortEnum>}
+     * @memberof RecipeApiGetAllRecipes
+     */
+    readonly sort?: Array<RecipeSortEnum>
+}
+
+/**
+ * Request parameters for getRecipe operation in RecipeApi.
+ * @export
+ * @interface RecipeApiGetRecipeRequest
+ */
+export interface RecipeApiGetRecipeRequest {
+    /**
+     * The database ID of the recipe to retrieve.
+     * @type {string}
+     * @memberof RecipeApiGetRecipe
+     */
+    readonly id: string
+}
+
+/**
+ * Request parameters for postNewRecipe operation in RecipeApi.
+ * @export
+ * @interface RecipeApiPostNewRecipeRequest
+ */
+export interface RecipeApiPostNewRecipeRequest {
+    /**
+     * 
+     * @type {NewRecipeRequest}
+     * @memberof RecipeApiPostNewRecipe
+     */
+    readonly newRecipeRequest: NewRecipeRequest
+}
+
+/**
+ * RecipeApi - object-oriented interface
+ * @export
+ * @class RecipeApi
+ * @extends {BaseAPI}
+ */
+export class RecipeApi extends BaseAPI {
+    /**
+     * The recipe is not fully removed but marked as disabled in the database. Only an admin can perform this action.  - **Path Parameters:**   - `id`: The unique ID of the recipe in the database.  - **Responses:**   - `500`: Internal error, likely related to the database.   - `400`: The request format is invalid.   - `200`: The recipe has been successfully disabled.
+     * @summary Deletes a recipe by its database ID.
+     * @param {RecipeApiDeleteRecipeRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RecipeApi
+     */
+    public deleteRecipe(requestParameters: RecipeApiDeleteRecipeRequest, options?: RawAxiosRequestConfig) {
+        return RecipeApiFp(this.configuration).deleteRecipe(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * The admin can change attributes such as the name, price, quantity, or image of the recipe. If the recipe image is changed, the old image will be deleted from S3 storage.  Returns an error if the recipe doesn\'t exist, if there is a validation issue, or if a database or S3 operation fails.
+     * @summary Edit an existing recipe by ID in the store.
+     * @param {RecipeApiEditRecipeRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RecipeApi
+     */
+    public editRecipe(requestParameters: RecipeApiEditRecipeRequest, options?: RawAxiosRequestConfig) {
+        return RecipeApiFp(this.configuration).editRecipe(requestParameters.id, requestParameters.editRecipeRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of recipes per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of recipes.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see recipes that are not hidden.
+     * @summary Handles the request to retrieve a paginated list of recipes.
+     * @param {RecipeApiGetAllRecipesRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RecipeApi
+     */
+    public getAllRecipes(requestParameters: RecipeApiGetAllRecipesRequest = {}, options?: RawAxiosRequestConfig) {
+        return RecipeApiFp(this.configuration).getAllRecipes(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.resultProductIdEq, requestParameters.resultProductIdNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.sort, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * - **Path Parameters**:   `id` (UUID): The database ID of the recipe to retrieve.  - **Response Codes**:   - `200 OK`: The recipe was successfully retrieved.   - `404 Not Found`: The recipe doesn\'t exist, or is disabled and the requester is not an admin.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the recipe is hidden, only an admin can retrieve it.
+     * @summary Handles the request to fetch a recipe by its unique identifier.
+     * @param {RecipeApiGetRecipeRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RecipeApi
+     */
+    public getRecipe(requestParameters: RecipeApiGetRecipeRequest, options?: RawAxiosRequestConfig) {
+        return RecipeApiFp(this.configuration).getRecipe(requestParameters.id, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * This function allows an admin to create a new recipe by sending a POST request to the `/recipe` endpoint. The new recipe is validated and stored in the database. The image associated with the recipe is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the recipe\'s ID.  Path: `/recipe`  - **Request Body:** Expects a `NewRecipe` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new recipe, returns the new recipe\'s ID as a string.
+     * @summary Handler for creating a new recipe.
+     * @param {RecipeApiPostNewRecipeRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RecipeApi
+     */
+    public postNewRecipe(requestParameters: RecipeApiPostNewRecipeRequest, options?: RawAxiosRequestConfig) {
+        return RecipeApiFp(this.configuration).postNewRecipe(requestParameters.newRecipeRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -3223,7 +4106,7 @@ export const RefillApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
-         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled refill
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view hidden refill
          * @summary Handles the request to retrieve a paginated list of refills.
          * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
@@ -3388,7 +4271,7 @@ export const RefillApiAxiosParamCreator = function (configuration?: Configuratio
             };
         },
         /**
-         * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is disabled, only an admin can retrieve it.
+         * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is hidden, only an admin can retrieve it.
          * @summary Handles the request to fetch a refill by its unique identifier.
          * @param {string} id The database ID of the refill to retrieve.
          * @param {*} [options] Override http request option.
@@ -3499,7 +4382,7 @@ export const RefillApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled refill
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view hidden refill
          * @summary Handles the request to retrieve a paginated list of refills.
          * @param {number | null} [page] The page number to retrieve, starting from 0.
          * @param {number | null} [perPage] The number of items to return per page.
@@ -3536,7 +4419,7 @@ export const RefillApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
-         * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is disabled, only an admin can retrieve it.
+         * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is hidden, only an admin can retrieve it.
          * @summary Handles the request to fetch a refill by its unique identifier.
          * @param {string} id The database ID of the refill to retrieve.
          * @param {*} [options] Override http request option.
@@ -3592,7 +4475,7 @@ export const RefillApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.editRefill(requestParameters.id, requestParameters.editRefillRequest, options).then((request) => request(axios, basePath));
         },
         /**
-         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled refill
+         * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view hidden refill
          * @summary Handles the request to retrieve a paginated list of refills.
          * @param {RefillApiGetAllRefillsRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -3602,7 +4485,7 @@ export const RefillApiFactory = function (configuration?: Configuration, basePat
             return localVarFp.getAllRefills(requestParameters.page, requestParameters.perPage, requestParameters.idEq, requestParameters.idNeq, requestParameters.nameEq, requestParameters.nameNeq, requestParameters.createdAtEq, requestParameters.createdAtNeq, requestParameters.createdAtGt, requestParameters.createdAtLt, requestParameters.createdAtGte, requestParameters.createdAtLte, requestParameters.priceEq, requestParameters.priceNeq, requestParameters.priceCurrencyEq, requestParameters.priceCurrencyNeq, requestParameters.creditEq, requestParameters.creditNeq, requestParameters.creditCurrencyEq, requestParameters.creditCurrencyNeq, requestParameters.hiddenEq, requestParameters.hiddenNeq, requestParameters.disabledEq, requestParameters.disabledNeq, requestParameters.sort, options).then((request) => request(axios, basePath));
         },
         /**
-         * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is disabled, only an admin can retrieve it.
+         * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is hidden, only an admin can retrieve it.
          * @summary Handles the request to fetch a refill by its unique identifier.
          * @param {RefillApiGetRefillRequest} requestParameters Request parameters.
          * @param {*} [options] Override http request option.
@@ -3901,7 +4784,7 @@ export class RefillApi extends BaseAPI {
     }
 
     /**
-     * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view disabled refill
+     * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of refill per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of refills.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Only Admin can view hidden refill
      * @summary Handles the request to retrieve a paginated list of refills.
      * @param {RefillApiGetAllRefillsRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.
@@ -3913,7 +4796,7 @@ export class RefillApi extends BaseAPI {
     }
 
     /**
-     * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is disabled, only an admin can retrieve it.
+     * - **Path Parameters**:   `id` (UUID): The database ID of the refill to retrieve.  - **Response Codes**:   - `200 OK`: The refill was successfully retrieved.   - `404 Not Found`: The refill doesn\'t exist.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   If the refill is hidden, only an admin can retrieve it.
      * @summary Handles the request to fetch a refill by its unique identifier.
      * @param {RefillApiGetRefillRequest} requestParameters Request parameters.
      * @param {*} [options] Override http request option.

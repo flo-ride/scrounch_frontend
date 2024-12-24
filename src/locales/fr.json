@@ -37,7 +37,12 @@
                 "disabled": "Désactivé",
                 "displayOrder": "Ordre d'affichage",
                 "sma": "SMA Code",
-                "inventree": "Inventree Code"
+                "inventree": "Inventree Code",
+                "recipe": {
+                    "recipe": "Recettes",
+                    "title": "Recettes du produit",
+                    "empty": "Pas de recettes"
+                }
             },
             "delete": {
                 "title": "Supprimé un produit"
@@ -45,6 +50,16 @@
             "maxPerCommand": "Quantité maximale par Commande",
             "sma": "Codes Sales (SMA)",
             "creationDate": "Date de création"
+        },
+        "recipe": {
+            "add": {
+                "title": "Crée une Recette",
+                "name": "Nom de la Recette",
+                "product": "Produit en Sortie",
+                "ingredient_product": "Ingrédient",
+                "ingredient_quantity": "Quantité",
+                "ingredient_disabled": "Désactivé"
+            }
         },
         "user": {
             "toolbarTitle": "Utilisateurs",
@@ -120,13 +135,14 @@
     "common": {
         "add": "Ajouter",
         "cancel": "Annuler",
+        "edit": "Modifier",
         "none": "Aucun",
         "import": "Importer",
         "notSpecified": "Non spécifié",
         "disable": "Désactivé",
         "enable": "Activé",
-        "save": "Sauvegardé",
-        "delete": "Supprimé",
+        "save": "Sauvegarder",
+        "delete": "Supprimer",
         "unit": {
             "meter": "Mètre",
             "liter": "Litre",

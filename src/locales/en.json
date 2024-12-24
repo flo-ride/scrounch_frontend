@@ -37,7 +37,12 @@
                 "disabled": "Disable",
                 "displayOrder": "Display order",
                 "sma": "SMA Code",
-                "sma": "Inventree Code"
+                "inventree": "Inventree Code",
+                "recipe": {
+                    "recipe": "Recipes",
+                    "title": "Recipes of product",
+                    "empty": "No recipe"
+                }
             },
             "delete": {
                 "title": "Delete a product"
@@ -45,6 +50,16 @@
             "maxPerCommand": "Max quantity per Command",
             "sma": "Sales code (SMA)",
             "creationDate": "Creation Date"
+        },
+        "recipe": {
+            "add": {
+                "title": "Add a Recipe",
+                "name": "Name of the Recipe",
+                "product": "Resulting Product",
+                "ingredient_product": "Ingredient",
+                "ingredient_quantity": "Quantity",
+                "ingredient_disabled": "Disable"
+            }
         },
         "user": {
             "toolbarTitle": "Users",
@@ -120,6 +135,7 @@
     "common": {
         "add": "Add",
         "cancel": "Cancel",
+        "edit": "Edit",
         "none": "None",
         "import": "Import",
         "notSpecified": "Not Specified",

@@ -1,5 +1,5 @@
 import type { EditProductRequest, NewProductRequest, ProductResponse } from "@/api";
-import { Currency } from "@/types/Currency";
+import { Currency, CurrencyValue } from "@/types/Currency";
 import { Unit } from "@/types/Unit";
 
 export class Product {
@@ -7,8 +7,8 @@ export class Product {
     name: string;
     image?: string;
     displayOrder: number;
-    sellPrice: number;
-    sellPriceCurrency: Currency;
+    sellPrice: number | undefined;
+    sellPriceCurrency: Currency | undefined;
     maxQuantityPerCommand?: number;
     unit: Unit;
     purchasable: boolean;
@@ -23,12 +23,12 @@ export class Product {
         name: string,
         display_order: number,
 
-        sell_price: number,
-        sell_price_currency: Currency,
-
         unit: Unit,
 
         createdAt: Date,
+
+        sell_price?: number,
+        sell_price_currency?: Currency,
 
         maxQuantityPerCommand?: number | null,
         purchasable?: boolean | null,
@@ -65,12 +65,12 @@ export class Product {
 
             0,
 
-            0.0,
-            Currency.default(),
-
             Unit.default(),
 
             new Date(),
+
+            0.0,
+            Currency.default(),
 
             null,
             true,
@@ -91,10 +91,10 @@ export class Product {
             this.id,
             this.name,
             this.displayOrder,
-            this.sellPrice,
-            this.sellPriceCurrency.clone(), // Ensure CurrencyResponse is cloned
             this.unit.clone(),
             new Date(this.createdAt), // Clone the Date to avoid shared reference
+            this.sellPrice,
+            this.sellPriceCurrency?.clone(), // Ensure CurrencyResponse is cloned
             this.maxQuantityPerCommand,
             this.purchasable,
             this.hidden,
@@ -115,10 +115,10 @@ export class Product {
             response.id,
             response.name,
             response.display_order,
-            response.sell_price,
-            Currency.fromResponse(response.sell_price_currency),
             Unit.fromResponse(response.unit),
             new Date(response.created_at),
+            response.sell_price ?? undefined,
+            Currency.fromResponse(response.sell_price_currency ?? CurrencyValue.Euro),
             response.max_quantity_per_command ?? null,
             response.purchasable ?? true,
             response.hidden ?? false,
@@ -137,7 +137,7 @@ export class Product {
         return {
             name: this.name ?? null,
             sell_price: this.sellPrice ?? null,
-            sell_price_currency: this.sellPriceCurrency.toRequest(),
+            sell_price_currency: this.sellPriceCurrency?.toRequest(),
             display_order: this.displayOrder,
             unit: this.unit.toRequest(),
             image: this.image ?? null,
@@ -158,7 +158,7 @@ export class Product {
         return {
             name: this.name,
             sell_price: this.sellPrice,
-            sell_price_currency: this.sellPriceCurrency.toRequest(),
+            sell_price_currency: this.sellPriceCurrency?.toRequest(),
             unit: this.unit.toRequest(),
             image: this.image ?? null,
             max_quantity_per_command: this.maxQuantityPerCommand ?? null,

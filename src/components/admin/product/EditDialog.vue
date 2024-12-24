@@ -8,125 +8,145 @@
         @submit="updateItem"
     >
         <template #form-content>
-            <v-file-input
-                v-model="productImage"
-                :label="$t('admin.product.edit.image')"
-                accept="image/*"
-                :rules="imageRules"
-                prepend-icon=""
-            ></v-file-input>
+            <v-container min-width="70vw">
+                <v-row>
+                    <v-col>
+                        <v-img :src="imageSrcUrl(item.image)" max-height="400" cover></v-img>
+                        <v-file-input
+                            v-model="productImage"
+                            :label="$t('admin.product.edit.image')"
+                            accept="image/*"
+                            :rules="imageRules"
+                            prepend-icon=""
+                        ></v-file-input>
 
-            <v-text-field
-                v-model="product.name"
-                :label="$t('admin.product.edit.name')"
-                :rules="nameRules"
-                :counter="32"
-                required
-            ></v-text-field>
+                        <v-text-field
+                            v-model="product.name"
+                            :label="$t('admin.product.edit.name')"
+                            :rules="nameRules"
+                            :counter="32"
+                            required
+                        ></v-text-field>
 
-            <v-text-field
-                v-model="product.smaCode"
-                :label="$t('admin.product.edit.sma')"
-            ></v-text-field>
+                        <v-text-field
+                            v-model="product.smaCode"
+                            :label="$t('admin.product.edit.sma')"
+                        ></v-text-field>
 
-            <v-text-field
-                v-model="product.inventreeCode"
-                :label="$t('admin.product.edit.inventree')"
-            ></v-text-field>
+                        <v-text-field
+                            v-model="product.inventreeCode"
+                            :label="$t('admin.product.edit.inventree')"
+                        ></v-text-field>
+                    </v-col>
 
-            <p>{{ $t("admin.product.edit.price") }}</p>
-            <v-number-input
-                v-model="product.sellPrice"
-                controlVariant="split"
-                :min="0.0"
-                :max="10000.0"
-                :step="0.01"
-                :hideInput="false"
-                :inset="false"
-                required
-            ></v-number-input>
+                    <v-col>
+                        <p>{{ $t("admin.product.edit.price") }}</p>
+                        <v-number-input
+                            v-model="product.sellPrice"
+                            controlVariant="split"
+                            :min="0.0"
+                            :max="10000.0"
+                            :step="0.01"
+                            :hideInput="false"
+                            :inset="false"
+                            required
+                        ></v-number-input>
 
-            <v-select
-                v-model="product.sellPriceCurrency"
-                :label="$t('admin.product.edit.price_currency')"
-                :items="sellPriceCurrencyItems"
-                required
-            >
-                <template v-slot:selection="data">
-                    {{ $t("common.currency." + data.item.value.type) }}
-                    ({{ $t("common.currency.symbol." + data.item.value.type) }})
-                </template>
-                <template v-slot:item="data">
-                    <v-list-item v-bind="data.props">
-                        {{ $t("common.currency." + data.item.value.type) }}
-                        ({{ $t("common.currency.symbol." + data.item.value.type) }})
-                    </v-list-item>
-                </template>
-            </v-select>
+                        <v-select
+                            v-model="product.sellPriceCurrency"
+                            :label="$t('admin.product.edit.price_currency')"
+                            :items="sellPriceCurrencyItems"
+                            required
+                        >
+                            <template v-slot:selection="data">
+                                {{ $t("common.currency." + data.item.value.type) }}
+                                ({{ $t("common.currency.symbol." + data.item.value.type) }})
+                            </template>
+                            <template v-slot:item="data">
+                                <v-list-item v-bind="data.props">
+                                    {{ $t("common.currency." + data.item.value.type) }}
+                                    ({{ $t("common.currency.symbol." + data.item.value.type) }})
+                                </v-list-item>
+                            </template>
+                        </v-select>
 
-            <!-- TODO: Add RECIPE safety in case of this type of edit -->
-            <v-select
-                v-model="product.unit"
-                :label="$t('admin.product.edit.unit')"
-                :items="unitItems"
-                required
-            >
-                <template v-slot:selection="data">
-                    {{ $t("common.unit." + data.item.value.type) }}
-                    ({{ $t("common.unit.symbol." + data.item.value.type) }})
-                </template>
-                <template v-slot:item="data">
-                    <v-list-item v-bind="data.props">
-                        {{ $t("common.unit." + data.item.value.type) }}
-                        ({{ $t("common.unit.symbol." + data.item.value.type) }})
-                    </v-list-item>
-                </template>
-            </v-select>
+                        <!-- TODO: Add RECIPE safety in case of this type of edit -->
+                        <v-select
+                            v-model="product.unit"
+                            :label="$t('admin.product.edit.unit')"
+                            :items="unitItems"
+                            required
+                        >
+                            <template v-slot:selection="data">
+                                {{ $t("common.unit." + data.item.value.type) }}
+                                ({{ $t("common.unit.symbol." + data.item.value.type) }})
+                            </template>
+                            <template v-slot:item="data">
+                                <v-list-item v-bind="data.props">
+                                    {{ $t("common.unit." + data.item.value.type) }}
+                                    ({{ $t("common.unit.symbol." + data.item.value.type) }})
+                                </v-list-item>
+                            </template>
+                        </v-select>
 
-            <p :class="product.maxQuantityPerCommand != 0 ? '' : 'text-disabled'">
-                {{ $t("admin.product.edit.max") }}{{ product.maxQuantityPerCommand != 0 ? ": " : ""
-                }}{{ displayProductMax }}
-            </p>
-            <v-slider
-                v-model="product.maxQuantityPerCommand"
-                type="number"
-                show-ticks="always"
-                :ticks="tickLabels"
-                step="1"
-                :max="10"
-                :min="0"
-                required
-            ></v-slider>
+                        <p :class="product.maxQuantityPerCommand != 0 ? '' : 'text-disabled'">
+                            {{ $t("admin.product.edit.max")
+                            }}{{ product.maxQuantityPerCommand != 0 ? ": " : ""
+                            }}{{ displayProductMax }}
+                        </p>
+                        <v-slider
+                            v-model="product.maxQuantityPerCommand"
+                            type="number"
+                            show-ticks="always"
+                            :ticks="tickLabels"
+                            step="1"
+                            :max="10"
+                            :min="0"
+                            required
+                        ></v-slider>
 
-            <v-switch
-                v-model="product.purchasable"
-                :label="$t('admin.product.edit.purchasable')"
-                required
-            ></v-switch>
+                        <v-row>
+                            <v-col cols="4">
+                                <v-checkbox
+                                    v-model="product.purchasable"
+                                    :label="$t('admin.product.edit.purchasable')"
+                                    required
+                                ></v-checkbox>
+                            </v-col>
 
-            <v-switch
-                v-model="product.hidden"
-                :label="$t('admin.product.edit.hidden')"
-                required
-            ></v-switch>
+                            <v-col cols="4">
+                                <v-checkbox
+                                    v-model="product.hidden"
+                                    :label="$t('admin.product.edit.hidden')"
+                                    required
+                                ></v-checkbox>
+                            </v-col>
 
-            <v-switch
-                v-model="product.disabled"
-                :label="$t('admin.product.edit.disabled')"
-                required
-            ></v-switch>
+                            <v-col cols="4">
+                                <v-checkbox
+                                    v-model="product.disabled"
+                                    :label="$t('admin.product.edit.disabled')"
+                                    required
+                                ></v-checkbox>
+                            </v-col>
+                        </v-row>
 
-            <p>{{ $t("admin.product.edit.displayOrder") }}</p>
-            <v-number-input
-                v-model="product.displayOrder"
-                controlVariant="split"
-                :min="0"
-                :max="999"
-                :step="1"
-                :hideInput="false"
-                :inset="false"
-                required
-            ></v-number-input>
+                        <p>{{ $t("admin.product.edit.displayOrder") }}</p>
+                        <v-number-input
+                            v-model="product.displayOrder"
+                            controlVariant="split"
+                            :min="0"
+                            :max="999"
+                            :step="1"
+                            :hideInput="false"
+                            :inset="false"
+                            required
+                        ></v-number-input>
+
+                        <RecipeView v-model="show_recipe" :product="product" />
+                    </v-col>
+                </v-row>
+            </v-container>
         </template>
     </EditDialogForm>
 </template>
@@ -137,10 +157,12 @@ import EditDialogForm from "@/components/admin/EditDialogForm.vue";
 import { Currency, CurrencyValue } from "@/types/Currency";
 import { Product } from "@/types/Product";
 import { Unit, UnitValue } from "@/types/Unit";
+import RecipeView from "@/components/admin/recipe/RecipeView.vue";
 
 export default {
     data: () => ({
         loading: false,
+        show_recipe: false,
         product: Product.default() as Product,
         productImage: undefined as File | undefined,
         tickLabels: {
@@ -222,6 +244,11 @@ export default {
         },
     },
     methods: {
+        imageSrcUrl: (imageName: string | undefined) => {
+            // @ts-ignore
+            let backendUrl = window.env.BACKEND_URL;
+            return `${backendUrl}/download/${imageName}?type=product`;
+        },
         async updateItem() {
             this.loading = true;
 
@@ -279,6 +306,7 @@ export default {
     },
     components: {
         EditDialogForm,
+        RecipeView,
     },
 };
 </script>
