@@ -206,6 +206,8 @@ export default {
             }
         },
         customFilter(_itemTitle: string, queryText: string, item: any) {
+            if (item.raw.value == this.recipe.result_product_id) return false;
+
             const textOne = item.raw.title.toLowerCase();
             const searchText = queryText.toLowerCase();
 
