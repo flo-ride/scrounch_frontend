@@ -1,4 +1,12 @@
-import { LocationApi, MiscApi, ProductApi, RecipeApi, RefillApi, UserApi } from "@/api";
+import {
+    LocationApi,
+    MiscApi,
+    ProductApi,
+    RecipeApi,
+    RefillApi,
+    UserApi,
+    WarehouseApi,
+} from "@/api";
 import axios from "axios";
 import type { App } from "vue";
 
@@ -20,6 +28,11 @@ export default {
         app.config.globalProperties.$miscApi = new MiscApi(undefined, options.baseUrl, $axios);
         app.config.globalProperties.$userApi = new UserApi(undefined, options.baseUrl, $axios);
         app.config.globalProperties.$refillApi = new RefillApi(undefined, options.baseUrl, $axios);
+        app.config.globalProperties.$warehouseApi = new WarehouseApi(
+            undefined,
+            options.baseUrl,
+            $axios,
+        );
         app.config.globalProperties.$productApi = new ProductApi(
             undefined,
             options.baseUrl,

@@ -23,7 +23,15 @@ import router from "./router";
 import axios from "./plugins/axios";
 
 import type { Router } from "vue-router";
-import { LocationApi, MiscApi, ProductApi, RecipeApi, RefillApi, UserApi } from "./api";
+import {
+    LocationApi,
+    MiscApi,
+    ProductApi,
+    RecipeApi,
+    RefillApi,
+    UserApi,
+    WarehouseApi,
+} from "./api";
 
 const messages = {
     en: {
@@ -119,6 +127,7 @@ declare module "@vue/runtime-core" {
         $productApi: ProductApi;
         $refillApi: RefillApi;
         $recipeApi: RecipeApi;
+        $warehouseApi: WarehouseApi;
         $backendUrl: string;
         $vuetify: typeof vuetify;
         $router: Router;
