@@ -13,6 +13,10 @@
                 <v-icon icon="fa-solid fa-truck"></v-icon>
                 {{ $t("admin.delivery.toolbarTitle") }}
             </v-tab>
+            <v-tab value="warehouse">
+                <v-icon icon="fa-solid fa-warehouse"></v-icon>
+                {{ $t("admin.warehouse.toolbarTitle") }}
+            </v-tab>
             <v-tab value="order">
                 <v-icon icon="fa-solid fa-basket-shopping"></v-icon>
                 {{ $t("admin.order.toolbarTitle") }}
@@ -52,6 +56,10 @@
                 <div class="d-flex justify-center align-center">TODO</div>
             </v-tabs-window-item>
 
+            <v-tabs-window-item value="warehouse">
+                <WarehouseView />
+            </v-tabs-window-item>
+
             <v-tabs-window-item value="order">
                 <div class="d-flex justify-center align-center">TODO</div>
             </v-tabs-window-item>
@@ -85,6 +93,7 @@ import ImportView from "@/components/admin/import/ImportView.vue";
 import UserView from "@/components/admin/user/UserView.vue";
 import LocationView from "@/components/admin/location/LocationView.vue";
 import MoneyView from "@/components/admin/money/MoneyView.vue";
+import WarehouseView from "@/components/admin/warehouse/WarehouseView.vue";
 import { useUserStore } from "@/stores/user";
 
 export default {
@@ -102,6 +111,7 @@ export default {
         UserView,
         LocationView,
         MoneyView,
+        WarehouseView,
     },
     mounted() {
         if (this.userStore.user?.isAdmin != true) {
