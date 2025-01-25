@@ -5,7 +5,6 @@ import type {
     RecipeIngredientResponse,
     RecipeResponse,
 } from "@/api";
-import { Unit } from "@/types/Unit";
 
 export class RecipeIngredient {
     product_id: string;
