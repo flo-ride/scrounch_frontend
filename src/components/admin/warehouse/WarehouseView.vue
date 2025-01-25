@@ -1,0 +1,145 @@
+<template>
+    <div>
+        <v-row>
+            <v-col cols="6" offset="3">
+                <CreateDialog v-model="createItem" @is-done="refresh" />
+            </v-col>
+            <v-col cols="3"> </v-col>
+            <v-col cols="1" offset="5" v-if="items.length != 0">
+                <EditDialog v-model="editItem" :item="selectedWarehouse" @is-done="refresh" />
+            </v-col>
+            <v-col cols="1" v-if="items.length != 0">
+                <DeleteDialog v-model="deleteItem" :item="selectedWarehouse" @is-done="refresh" />
+            </v-col>
+            <v-col cols="10" offset="1">
+                <div
+                    key="title"
+                    class="text-h6 font-weight-light pa-4 text-center"
+                    v-if="items.length == 0"
+                >
+                    {{ $t("admin.warehouse.empty") }}
+                </div>
+
+                <v-treeview
+                    min-width="200"
+                    rounded="lg"
+                    v-else
+                    :items="items"
+                    activatable
+                    active-strategy="single-independent"
+                    transition
+                    v-model:activated="active"
+                >
+                    <template v-slot:prepend="{ item }">
+                        <v-icon>
+                            {{ item.type == "warehouse" ? "fa-solid fa-warehouse" : "" }}
+                        </v-icon>
+                    </template>
+                </v-treeview>
+            </v-col>
+            <v-col cols="12">
+                <v-pagination v-model="page" :length="totalPage" :total-visible="3"></v-pagination>
+            </v-col>
+        </v-row>
+    </div>
+</template>
+
+<script lang="ts">
+import CreateDialog from "@/components/admin/warehouse/CreateDialog.vue";
+import EditDialog from "@/components/admin/warehouse/EditDialog.vue";
+import DeleteDialog from "@/components/admin/warehouse/DeleteDialog.vue";
+import { Warehouse } from "@/types/Warehouse";
+
+export default {
+    data() {
+        return {
+            page: 1,
+            totalPage: 1,
+
+            createItem: false,
+            loading: false,
+            editItem: false,
+            deleteItem: false,
+            items: [] as { value: string; title: string; type: string }[],
+            warehouses: [] as Warehouse[],
+            totalItems: 0,
+            itemsPerPage: 5,
+            search: "",
+            active: [],
+        };
+    },
+    watch: {
+        page(newPage, _oldPage) {
+            this.loadWarehouse({ page: newPage, itemsPerPage: this.itemsPerPage });
+        },
+    },
+    computed: {
+        selectedWarehouse() {
+            if (!this.active.length) return undefined;
+            const warehouse = this.warehouses.find((recipe) => recipe.id == this.active[0]);
+
+            return warehouse;
+        },
+    },
+    methods: {
+        loadWarehouse({
+            page,
+            itemsPerPage,
+        }: {
+            page: number;
+            itemsPerPage: number;
+            sortBy?: any;
+        }): void {
+            this.loading = true;
+
+            this.loading = true;
+            this.$warehouseApi
+                .getAllWarehouses({ page: page - 1, perPage: itemsPerPage })
+                .then((res) => {
+                    this.page = page;
+                    this.totalPage = res.data.total_page;
+                    this.totalItems = res.data.total_page * itemsPerPage;
+                    this.warehouses = res.data.warehouses.map((x) => Warehouse.fromResponse(x));
+                    this.items = this.warehouses.map((warehouse) => {
+                        return {
+                            title: warehouse.name,
+                            value: warehouse.id,
+                            type: "warehouse",
+                        };
+                    });
+                    this.loading = false;
+
+                    if (res.data.warehouses.length == 0 && this.page > 1) {
+                        this.page -= 1;
+                        this.totalPage -= 1;
+                        this.refresh();
+                    }
+                });
+        },
+        timeSinceCreation(creationTimeString: string) {
+            const creationTime = new Date(creationTimeString);
+
+            return creationTime.toLocaleString("fr-FR");
+        },
+        updateWarehouse(warehouse: Warehouse) {
+            this.editItem = true;
+            this.selectedWarehouse = warehouse;
+        },
+        deleteWarehouse(warehouse: Warehouse) {
+            this.deleteItem = true;
+            this.selectedWarehouse = warehouse;
+        },
+        refresh() {
+            this.loadWarehouse({ page: this.page, itemsPerPage: this.itemsPerPage });
+        },
+    },
+    components: {
+        CreateDialog,
+        EditDialog,
+        DeleteDialog,
+    },
+    mounted() {
+        this.loadWarehouse({ page: 1, itemsPerPage: this.itemsPerPage });
+    },
+};
+</script>
