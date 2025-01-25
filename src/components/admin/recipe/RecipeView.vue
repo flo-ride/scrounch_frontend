@@ -139,7 +139,7 @@ export default {
             if (this.product == undefined) return;
             this.loading = true;
             this.$recipeApi
-                .getAllRecipes({ resultProductIdEq: this.product.id })
+                .getAllRecipes({ resultProductIdEq: [this.product.id] })
                 .then(async (response) => {
                     let recipes = response.data.recipes.map((x) => Recipe.fromResponse(x));
                     let ingredientIds: string[] = [];
