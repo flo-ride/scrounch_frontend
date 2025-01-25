@@ -61,6 +61,21 @@
                 "ingredient_disabled": "Disable"
             }
         },
+        "warehouse": {
+            "toolbarTitle": "Warehouse",
+            "empty": "No Warehouse",
+            "add": {
+                "title": "Add a Warehouse",
+                "name": "Name of the Warehouse",
+                "parent": "Warehouse's parent"
+            },
+            "edit": {
+                "title": "Edit a Warehouse",
+                "name": "Name of the Warehouse",
+                "disabled": "Disabled",
+                "parent": "Warehouse's parent"
+            }
+        },
         "user": {
             "toolbarTitle": "Users",
             "edit": {

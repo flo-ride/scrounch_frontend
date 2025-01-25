@@ -61,6 +61,21 @@
                 "ingredient_disabled": "Désactivé"
             }
         },
+        "warehouse": {
+            "toolbarTitle": "Entrepôt",
+            "empty": "Pas d'Entrepôts",
+            "add": {
+                "title": "Crée une Entrepôt",
+                "name": "Nom de l'Entrepôt",
+                "parent": "Entrepôt Parent"
+            },
+            "edit": {
+                "title": "Modifier une Entrepôt",
+                "name": "Nom de l'Entrepôt",
+                "disabled": "Désactivé",
+                "parent": "Entrepôt Parent"
+            }
+        },
         "user": {
             "toolbarTitle": "Utilisateurs",
             "edit": {
