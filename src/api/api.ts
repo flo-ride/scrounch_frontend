@@ -663,6 +663,19 @@ export interface NewRefillRequest {
 /**
  * Request structure for creating a new warehouse, including validation rules.
  * @export
+ * @interface NewWarehouseProductRequest
+ */
+export interface NewWarehouseProductRequest {
+    /**
+     * Name of the warehouse, required and validated for length.
+     * @type {string}
+     * @memberof NewWarehouseProductRequest
+     */
+    'quantity': string;
+}
+/**
+ * Request structure for creating a new warehouse, including validation rules.
+ * @export
  * @interface NewWarehouseRequest
  */
 export interface NewWarehouseRequest {
@@ -1282,6 +1295,56 @@ export interface WarehouseListResponse {
      * @memberof WarehouseListResponse
      */
     'warehouses': Array<WarehouseResponse>;
+}
+/**
+ * Represent a link between a Warehouse and a Product
+ * @export
+ * @interface WarehouseProductResponse
+ */
+export interface WarehouseProductResponse {
+    /**
+     * The timestamp indicating when the link was created.
+     * @type {string}
+     * @memberof WarehouseProductResponse
+     */
+    'created_at': string;
+    /**
+     * The product of this Warehouse
+     * @type {ProductResponse}
+     * @memberof WarehouseProductResponse
+     */
+    'product': ProductResponse;
+    /**
+     * The product quantity in this warehouse
+     * @type {string}
+     * @memberof WarehouseProductResponse
+     */
+    'quantity': string;
+}
+/**
+ * Represent the lists of products for this Warehouse
+ * @export
+ * @interface WarehouseProductsListResponse
+ */
+export interface WarehouseProductsListResponse {
+    /**
+     * Current page number.
+     * @type {number}
+     * @memberof WarehouseProductsListResponse
+     */
+    'current_page': number;
+    /**
+     * The lists of products for this Warehouse
+     * @type {Array<WarehouseProductResponse>}
+     * @memberof WarehouseProductsListResponse
+     */
+    'products': Array<WarehouseProductResponse>;
+    /**
+     * Total number of pages available.
+     * @type {number}
+     * @memberof WarehouseProductsListResponse
+     */
+    'total_page': number;
 }
 /**
  * Response structure for a warehouse, including its details.
@@ -5978,6 +6041,42 @@ export const WarehouseApiAxiosParamCreator = function (configuration?: Configura
             };
         },
         /**
+         * # Parameters - `warehouse_id`: The unique identifier of the warehouse. - `pagination`: Query parameters for pagination, including `page` and `per_page`. - `filter`: Query parameters for filtering the products (e.g., by category, availability). - `sort`: Query parameters for sorting the products (e.g., by price or name). - `conn`: The database connection used to query the data.  # Returns - `200 OK`: A paginated list of products for the warehouse, including the current page and total pages. - `500 Internal Server Error`: An internal error occurs, possibly related to the database. - `400 Bad Request`: Invalid query parameters (pagination, filtering, or sorting).
+         * @summary Fetches all warehouse products with pagination, filtering, and sorting options.
+         * @param {string} warehouseId The database ID of the warehouse to retrieve.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllWarehouseProducts: async (warehouseId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'warehouseId' is not null or undefined
+            assertParamExists('getAllWarehouseProducts', 'warehouseId', warehouseId)
+            const localVarPath = `/warehouse/{warehouse_id}/product`
+                .replace(`{${"warehouse_id"}}`, encodeURIComponent(String(warehouseId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication axum-oidc required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of warehouses per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of warehouses.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see warehouses that are not hidden.
          * @summary Handles the request to retrieve a paginated list of warehouses.
          * @param {number | null} [page] The page number to retrieve, starting from 0.
@@ -6127,6 +6226,46 @@ export const WarehouseApiAxiosParamCreator = function (configuration?: Configura
             };
         },
         /**
+         * This endpoint allows an administrator to fetch details about a product stored in a specified warehouse. If the warehouse or product does not exist, or if the warehouse is disabled and the requester lacks administrative privileges, an appropriate error response is returned.
+         * @summary Retrieves a specific product from a warehouse.
+         * @param {string} warehouseId The database ID of the warehouse to retrieve.
+         * @param {string} productId The database ID of the product to retrieve.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getWarehouseProduct: async (warehouseId: string, productId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'warehouseId' is not null or undefined
+            assertParamExists('getWarehouseProduct', 'warehouseId', warehouseId)
+            // verify required parameter 'productId' is not null or undefined
+            assertParamExists('getWarehouseProduct', 'productId', productId)
+            const localVarPath = `/warehouse/{warehouse_id}/product/{product_id}`
+                .replace(`{${"warehouse_id"}}`, encodeURIComponent(String(warehouseId)))
+                .replace(`{${"product_id"}}`, encodeURIComponent(String(productId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication axum-oidc required
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * This function allows an admin to create a new warehouse by sending a POST request to the `/warehouse` endpoint. The new warehouse is validated and stored in the database. The image associated with the warehouse is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the warehouse\'s ID.  Path: `/warehouse`  - **Request Body:** Expects a `NewWarehouse` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new warehouse, returns the new warehouse\'s ID as a string.
          * @summary Handler for creating a new warehouse.
          * @param {NewWarehouseRequest} newWarehouseRequest 
@@ -6156,6 +6295,50 @@ export const WarehouseApiAxiosParamCreator = function (configuration?: Configura
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(newWarehouseRequest, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * This endpoint allows an administrator to associate a product with a warehouse. It verifies the existence of both the warehouse and the product before proceeding with the creation. The function returns a `201 Created` response upon success, or an appropriate error response if the request is invalid or an internal error occurs.
+         * @summary Handles the creation of a new warehouse product.
+         * @param {string} warehouseId The database ID of the warehouse to retrieve.
+         * @param {string} productId The database ID of the product to retrieve.
+         * @param {NewWarehouseProductRequest} newWarehouseProductRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postNewWarehouseProduct: async (warehouseId: string, productId: string, newWarehouseProductRequest: NewWarehouseProductRequest, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'warehouseId' is not null or undefined
+            assertParamExists('postNewWarehouseProduct', 'warehouseId', warehouseId)
+            // verify required parameter 'productId' is not null or undefined
+            assertParamExists('postNewWarehouseProduct', 'productId', productId)
+            // verify required parameter 'newWarehouseProductRequest' is not null or undefined
+            assertParamExists('postNewWarehouseProduct', 'newWarehouseProductRequest', newWarehouseProductRequest)
+            const localVarPath = `/warehouse/{warehouse_id}/product/{product_id}`
+                .replace(`{${"warehouse_id"}}`, encodeURIComponent(String(warehouseId)))
+                .replace(`{${"product_id"}}`, encodeURIComponent(String(productId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(newWarehouseProductRequest, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -6200,6 +6383,19 @@ export const WarehouseApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * # Parameters - `warehouse_id`: The unique identifier of the warehouse. - `pagination`: Query parameters for pagination, including `page` and `per_page`. - `filter`: Query parameters for filtering the products (e.g., by category, availability). - `sort`: Query parameters for sorting the products (e.g., by price or name). - `conn`: The database connection used to query the data.  # Returns - `200 OK`: A paginated list of products for the warehouse, including the current page and total pages. - `500 Internal Server Error`: An internal error occurs, possibly related to the database. - `400 Bad Request`: Invalid query parameters (pagination, filtering, or sorting).
+         * @summary Fetches all warehouse products with pagination, filtering, and sorting options.
+         * @param {string} warehouseId The database ID of the warehouse to retrieve.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAllWarehouseProducts(warehouseId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<WarehouseProductsListResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAllWarehouseProducts(warehouseId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WarehouseApi.getAllWarehouseProducts']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of warehouses per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of warehouses.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see warehouses that are not hidden.
          * @summary Handles the request to retrieve a paginated list of warehouses.
          * @param {number | null} [page] The page number to retrieve, starting from 0.
@@ -6240,6 +6436,20 @@ export const WarehouseApiFp = function(configuration?: Configuration) {
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
+         * This endpoint allows an administrator to fetch details about a product stored in a specified warehouse. If the warehouse or product does not exist, or if the warehouse is disabled and the requester lacks administrative privileges, an appropriate error response is returned.
+         * @summary Retrieves a specific product from a warehouse.
+         * @param {string} warehouseId The database ID of the warehouse to retrieve.
+         * @param {string} productId The database ID of the product to retrieve.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getWarehouseProduct(warehouseId: string, productId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<WarehouseProductResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getWarehouseProduct(warehouseId, productId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WarehouseApi.getWarehouseProduct']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
          * This function allows an admin to create a new warehouse by sending a POST request to the `/warehouse` endpoint. The new warehouse is validated and stored in the database. The image associated with the warehouse is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the warehouse\'s ID.  Path: `/warehouse`  - **Request Body:** Expects a `NewWarehouse` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new warehouse, returns the new warehouse\'s ID as a string.
          * @summary Handler for creating a new warehouse.
          * @param {NewWarehouseRequest} newWarehouseRequest 
@@ -6250,6 +6460,21 @@ export const WarehouseApiFp = function(configuration?: Configuration) {
             const localVarAxiosArgs = await localVarAxiosParamCreator.postNewWarehouse(newWarehouseRequest, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['WarehouseApi.postNewWarehouse']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * This endpoint allows an administrator to associate a product with a warehouse. It verifies the existence of both the warehouse and the product before proceeding with the creation. The function returns a `201 Created` response upon success, or an appropriate error response if the request is invalid or an internal error occurs.
+         * @summary Handles the creation of a new warehouse product.
+         * @param {string} warehouseId The database ID of the warehouse to retrieve.
+         * @param {string} productId The database ID of the product to retrieve.
+         * @param {NewWarehouseProductRequest} newWarehouseProductRequest 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async postNewWarehouseProduct(warehouseId: string, productId: string, newWarehouseProductRequest: NewWarehouseProductRequest, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.postNewWarehouseProduct(warehouseId, productId, newWarehouseProductRequest, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['WarehouseApi.postNewWarehouseProduct']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
@@ -6283,6 +6508,16 @@ export const WarehouseApiFactory = function (configuration?: Configuration, base
             return localVarFp.editWarehouse(requestParameters.id, requestParameters.editWarehouseRequest, options).then((request) => request(axios, basePath));
         },
         /**
+         * # Parameters - `warehouse_id`: The unique identifier of the warehouse. - `pagination`: Query parameters for pagination, including `page` and `per_page`. - `filter`: Query parameters for filtering the products (e.g., by category, availability). - `sort`: Query parameters for sorting the products (e.g., by price or name). - `conn`: The database connection used to query the data.  # Returns - `200 OK`: A paginated list of products for the warehouse, including the current page and total pages. - `500 Internal Server Error`: An internal error occurs, possibly related to the database. - `400 Bad Request`: Invalid query parameters (pagination, filtering, or sorting).
+         * @summary Fetches all warehouse products with pagination, filtering, and sorting options.
+         * @param {WarehouseApiGetAllWarehouseProductsRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAllWarehouseProducts(requestParameters: WarehouseApiGetAllWarehouseProductsRequest, options?: RawAxiosRequestConfig): AxiosPromise<WarehouseProductsListResponse> {
+            return localVarFp.getAllWarehouseProducts(requestParameters.warehouseId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of warehouses per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of warehouses.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see warehouses that are not hidden.
          * @summary Handles the request to retrieve a paginated list of warehouses.
          * @param {WarehouseApiGetAllWarehousesRequest} requestParameters Request parameters.
@@ -6303,6 +6538,16 @@ export const WarehouseApiFactory = function (configuration?: Configuration, base
             return localVarFp.getWarehouse(requestParameters.id, options).then((request) => request(axios, basePath));
         },
         /**
+         * This endpoint allows an administrator to fetch details about a product stored in a specified warehouse. If the warehouse or product does not exist, or if the warehouse is disabled and the requester lacks administrative privileges, an appropriate error response is returned.
+         * @summary Retrieves a specific product from a warehouse.
+         * @param {WarehouseApiGetWarehouseProductRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getWarehouseProduct(requestParameters: WarehouseApiGetWarehouseProductRequest, options?: RawAxiosRequestConfig): AxiosPromise<WarehouseProductResponse> {
+            return localVarFp.getWarehouseProduct(requestParameters.warehouseId, requestParameters.productId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * This function allows an admin to create a new warehouse by sending a POST request to the `/warehouse` endpoint. The new warehouse is validated and stored in the database. The image associated with the warehouse is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the warehouse\'s ID.  Path: `/warehouse`  - **Request Body:** Expects a `NewWarehouse` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new warehouse, returns the new warehouse\'s ID as a string.
          * @summary Handler for creating a new warehouse.
          * @param {WarehouseApiPostNewWarehouseRequest} requestParameters Request parameters.
@@ -6311,6 +6556,16 @@ export const WarehouseApiFactory = function (configuration?: Configuration, base
          */
         postNewWarehouse(requestParameters: WarehouseApiPostNewWarehouseRequest, options?: RawAxiosRequestConfig): AxiosPromise<string> {
             return localVarFp.postNewWarehouse(requestParameters.newWarehouseRequest, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * This endpoint allows an administrator to associate a product with a warehouse. It verifies the existence of both the warehouse and the product before proceeding with the creation. The function returns a `201 Created` response upon success, or an appropriate error response if the request is invalid or an internal error occurs.
+         * @summary Handles the creation of a new warehouse product.
+         * @param {WarehouseApiPostNewWarehouseProductRequest} requestParameters Request parameters.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        postNewWarehouseProduct(requestParameters: WarehouseApiPostNewWarehouseProductRequest, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.postNewWarehouseProduct(requestParameters.warehouseId, requestParameters.productId, requestParameters.newWarehouseProductRequest, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -6348,6 +6603,20 @@ export interface WarehouseApiEditWarehouseRequest {
      * @memberof WarehouseApiEditWarehouse
      */
     readonly editWarehouseRequest: EditWarehouseRequest
+}
+
+/**
+ * Request parameters for getAllWarehouseProducts operation in WarehouseApi.
+ * @export
+ * @interface WarehouseApiGetAllWarehouseProductsRequest
+ */
+export interface WarehouseApiGetAllWarehouseProductsRequest {
+    /**
+     * The database ID of the warehouse to retrieve.
+     * @type {string}
+     * @memberof WarehouseApiGetAllWarehouseProducts
+     */
+    readonly warehouseId: string
 }
 
 /**
@@ -6477,6 +6746,27 @@ export interface WarehouseApiGetWarehouseRequest {
 }
 
 /**
+ * Request parameters for getWarehouseProduct operation in WarehouseApi.
+ * @export
+ * @interface WarehouseApiGetWarehouseProductRequest
+ */
+export interface WarehouseApiGetWarehouseProductRequest {
+    /**
+     * The database ID of the warehouse to retrieve.
+     * @type {string}
+     * @memberof WarehouseApiGetWarehouseProduct
+     */
+    readonly warehouseId: string
+
+    /**
+     * The database ID of the product to retrieve.
+     * @type {string}
+     * @memberof WarehouseApiGetWarehouseProduct
+     */
+    readonly productId: string
+}
+
+/**
  * Request parameters for postNewWarehouse operation in WarehouseApi.
  * @export
  * @interface WarehouseApiPostNewWarehouseRequest
@@ -6488,6 +6778,34 @@ export interface WarehouseApiPostNewWarehouseRequest {
      * @memberof WarehouseApiPostNewWarehouse
      */
     readonly newWarehouseRequest: NewWarehouseRequest
+}
+
+/**
+ * Request parameters for postNewWarehouseProduct operation in WarehouseApi.
+ * @export
+ * @interface WarehouseApiPostNewWarehouseProductRequest
+ */
+export interface WarehouseApiPostNewWarehouseProductRequest {
+    /**
+     * The database ID of the warehouse to retrieve.
+     * @type {string}
+     * @memberof WarehouseApiPostNewWarehouseProduct
+     */
+    readonly warehouseId: string
+
+    /**
+     * The database ID of the product to retrieve.
+     * @type {string}
+     * @memberof WarehouseApiPostNewWarehouseProduct
+     */
+    readonly productId: string
+
+    /**
+     * 
+     * @type {NewWarehouseProductRequest}
+     * @memberof WarehouseApiPostNewWarehouseProduct
+     */
+    readonly newWarehouseProductRequest: NewWarehouseProductRequest
 }
 
 /**
@@ -6522,6 +6840,18 @@ export class WarehouseApi extends BaseAPI {
     }
 
     /**
+     * # Parameters - `warehouse_id`: The unique identifier of the warehouse. - `pagination`: Query parameters for pagination, including `page` and `per_page`. - `filter`: Query parameters for filtering the products (e.g., by category, availability). - `sort`: Query parameters for sorting the products (e.g., by price or name). - `conn`: The database connection used to query the data.  # Returns - `200 OK`: A paginated list of products for the warehouse, including the current page and total pages. - `500 Internal Server Error`: An internal error occurs, possibly related to the database. - `400 Bad Request`: Invalid query parameters (pagination, filtering, or sorting).
+     * @summary Fetches all warehouse products with pagination, filtering, and sorting options.
+     * @param {WarehouseApiGetAllWarehouseProductsRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WarehouseApi
+     */
+    public getAllWarehouseProducts(requestParameters: WarehouseApiGetAllWarehouseProductsRequest, options?: RawAxiosRequestConfig) {
+        return WarehouseApiFp(this.configuration).getAllWarehouseProducts(requestParameters.warehouseId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * - **Query Parameters**:   - `page` (Optional, u64): The page index, default is 0.   - `per_page` (Optional, u64): The number of warehouses per page, default is 20.  - **Response Codes**:   - `200 OK`: Successfully retrieved a list of warehouses.   - `400 Bad Request`: The request is improperly formatted.   - `500 Internal Server Error`: An internal error, most likely related to the database, occurred.  - **Permissions**:   Non-admin users will only see warehouses that are not hidden.
      * @summary Handles the request to retrieve a paginated list of warehouses.
      * @param {WarehouseApiGetAllWarehousesRequest} requestParameters Request parameters.
@@ -6546,6 +6876,18 @@ export class WarehouseApi extends BaseAPI {
     }
 
     /**
+     * This endpoint allows an administrator to fetch details about a product stored in a specified warehouse. If the warehouse or product does not exist, or if the warehouse is disabled and the requester lacks administrative privileges, an appropriate error response is returned.
+     * @summary Retrieves a specific product from a warehouse.
+     * @param {WarehouseApiGetWarehouseProductRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WarehouseApi
+     */
+    public getWarehouseProduct(requestParameters: WarehouseApiGetWarehouseProductRequest, options?: RawAxiosRequestConfig) {
+        return WarehouseApiFp(this.configuration).getWarehouseProduct(requestParameters.warehouseId, requestParameters.productId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
      * This function allows an admin to create a new warehouse by sending a POST request to the `/warehouse` endpoint. The new warehouse is validated and stored in the database. The image associated with the warehouse is checked in S3 storage.  - **Admin privileges** are required to access this route. - Returns a `201 Created` status upon successful creation along with the warehouse\'s ID.  Path: `/warehouse`  - **Request Body:** Expects a `NewWarehouse` JSON object. - **Responses:**     - 500: Internal server error (likely database related).     - 400: Bad request (invalid input data).     - 201: Successfully created a new warehouse, returns the new warehouse\'s ID as a string.
      * @summary Handler for creating a new warehouse.
      * @param {WarehouseApiPostNewWarehouseRequest} requestParameters Request parameters.
@@ -6555,6 +6897,18 @@ export class WarehouseApi extends BaseAPI {
      */
     public postNewWarehouse(requestParameters: WarehouseApiPostNewWarehouseRequest, options?: RawAxiosRequestConfig) {
         return WarehouseApiFp(this.configuration).postNewWarehouse(requestParameters.newWarehouseRequest, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * This endpoint allows an administrator to associate a product with a warehouse. It verifies the existence of both the warehouse and the product before proceeding with the creation. The function returns a `201 Created` response upon success, or an appropriate error response if the request is invalid or an internal error occurs.
+     * @summary Handles the creation of a new warehouse product.
+     * @param {WarehouseApiPostNewWarehouseProductRequest} requestParameters Request parameters.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof WarehouseApi
+     */
+    public postNewWarehouseProduct(requestParameters: WarehouseApiPostNewWarehouseProductRequest, options?: RawAxiosRequestConfig) {
+        return WarehouseApiFp(this.configuration).postNewWarehouseProduct(requestParameters.warehouseId, requestParameters.productId, requestParameters.newWarehouseProductRequest, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
