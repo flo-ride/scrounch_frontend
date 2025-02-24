@@ -74,6 +74,12 @@
                 "name": "Name of the Warehouse",
                 "disabled": "Disabled",
                 "parent": "Warehouse's parent"
+            },
+            "product": {
+                "add": {
+                    "product": "Product",
+                    "quantity": "Quantity"
+                }
             }
         },
         "user": {

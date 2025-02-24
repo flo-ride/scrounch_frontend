@@ -74,6 +74,12 @@
                 "name": "Nom de l'Entrepôt",
                 "disabled": "Désactivé",
                 "parent": "Entrepôt Parent"
+            },
+            "product": {
+                "add": {
+                    "product": "Produit",
+                    "quantity": "Quantité"
+                }
             }
         },
         "user": {
