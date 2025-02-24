@@ -1,16 +1,28 @@
 <template>
     <div>
-        <v-row>
+        <v-row align="center">
             <v-col cols="6" offset="3">
                 <CreateDialog v-model="createItem" @is-done="refresh" />
             </v-col>
             <v-col cols="3"> </v-col>
-            <v-col cols="1" offset="5" v-if="items.length != 0">
-                <EditDialog v-model="editItem" :item="selectedWarehouse" @is-done="refresh" />
+        </v-row>
+        <v-row>
+            <v-col cols="6" offset="3">
+                <div class="d-flex justify-center align-center">
+                    <CreateDialogProduct
+                        v-model="addItem"
+                        :item="selectedWarehouse"
+                        @is-done="refresh"
+                    />
+                    <EditDialog v-model="editItem" :item="selectedWarehouse" @is-done="refresh" />
+                    <DeleteDialog
+                        v-model="deleteItem"
+                        :item="selectedWarehouse"
+                        @is-done="refresh"
+                    />
+                </div>
             </v-col>
-            <v-col cols="1" v-if="items.length != 0">
-                <DeleteDialog v-model="deleteItem" :item="selectedWarehouse" @is-done="refresh" />
-            </v-col>
+            <v-col cols="1"> </v-col>
             <v-col cols="10" offset="1">
                 <div
                     key="title"
@@ -45,6 +57,7 @@
 </template>
 
 <script lang="ts">
+import CreateDialogProduct from "@/components/admin/warehouse/product/CreateDialog.vue";
 import CreateDialog from "@/components/admin/warehouse/CreateDialog.vue";
 import EditDialog from "@/components/admin/warehouse/EditDialog.vue";
 import DeleteDialog from "@/components/admin/warehouse/DeleteDialog.vue";
@@ -58,8 +71,11 @@ export default {
 
             createItem: false,
             loading: false,
+
+            addItem: false,
             editItem: false,
             deleteItem: false,
+
             items: [] as { value: string; title: string; type: string }[],
             warehouses: [] as Warehouse[],
             totalItems: 0,
@@ -134,6 +150,7 @@ export default {
         },
     },
     components: {
+        CreateDialogProduct,
         CreateDialog,
         EditDialog,
         DeleteDialog,
