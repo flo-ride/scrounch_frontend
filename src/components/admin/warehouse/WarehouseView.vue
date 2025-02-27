@@ -37,6 +37,7 @@
                     rounded="lg"
                     v-else
                     :items="items"
+                    :load-children="fetchWarehouse"
                     activatable
                     active-strategy="single-independent"
                     transition
@@ -44,7 +45,13 @@
                 >
                     <template v-slot:prepend="{ item }">
                         <v-icon>
-                            {{ item.type == "warehouse" ? "fa-solid fa-warehouse" : "" }}
+                            {{
+                                item.type == "warehouse"
+                                    ? "fa-solid fa-warehouse"
+                                    : item.type == "product"
+                                      ? "fa-solid fa-carrot"
+                                      : ""
+                            }}
                         </v-icon>
                     </template>
                 </v-treeview>
@@ -62,6 +69,7 @@ import CreateDialog from "@/components/admin/warehouse/CreateDialog.vue";
 import EditDialog from "@/components/admin/warehouse/EditDialog.vue";
 import DeleteDialog from "@/components/admin/warehouse/DeleteDialog.vue";
 import { Warehouse } from "@/types/Warehouse";
+import { WarehouseProduct } from "@/types/WarehouseProduct";
 
 export default {
     data() {
@@ -98,6 +106,27 @@ export default {
         },
     },
     methods: {
+        async fetchWarehouse(item: any) {
+            this.$warehouseApi
+                .getAllWarehouseProducts({
+                    warehouseId: item.value,
+                    perPage: 1000, // TODO: Should an dynamic loading with an infinite scroller maybe ?
+                })
+                .then((res) =>
+                    res.data.products.map((product) => WarehouseProduct.fromResponse(product)),
+                )
+                .then((products) =>
+                    products.map((product) => {
+                        return {
+                            title: `${product.product.name} × ${product.quantity}`,
+                            value: product.product.id,
+                            type: "product",
+                        };
+                    }),
+                )
+                .then((product) => item.children.push(...product))
+                .catch((err) => console.warn(err));
+        },
         loadWarehouse({
             page,
             itemsPerPage,
@@ -121,6 +150,7 @@ export default {
                             title: warehouse.name,
                             value: warehouse.id,
                             type: "warehouse",
+                            children: [],
                         };
                     });
                     this.loading = false;
