@@ -28,11 +28,12 @@
             ></v-autocomplete>
 
             <v-number-input
-                class="ma-2"
+                class="mt-2 mb-0 pb-0"
                 min-width="120"
                 v-model="warehouseProduct.quantity"
                 :min="0.0"
                 :max="10000.0"
+                :suffix="getProductUnit(warehouseProduct)"
                 :step="1"
                 :label="$t('admin.warehouse.product.add.quantity')"
                 :hideInput="false"
@@ -40,6 +41,35 @@
                 :inset="false"
                 required
             ></v-number-input>
+        </template>
+        <template v-slot:actions="{ valid, isActive, submitForm }">
+            <v-container class="flex-column">
+                <div class="mb-5 mt-0 pt-0" v-if="isAlreadyInside">
+                    <v-alert
+                        type="error"
+                        text="Sorry but this product is already present inside the Warehouse"
+                    >
+                    </v-alert>
+                </div>
+                <div class="d-flex justify-end">
+                    <v-btn
+                        variant="flat"
+                        rounded="xl"
+                        :text="$t('common.cancel')"
+                        @click="isActive.value = false"
+                    ></v-btn>
+                    <v-btn
+                        :disabled="isAlreadyInside || !valid || loading"
+                        :loading="loading"
+                        variant="flat"
+                        rounded="xl"
+                        prepend-icon="fa-solid fa-check"
+                        :text="$t('common.add')"
+                        :color="valid ? 'primary' : 'none'"
+                        @click="submitForm"
+                    ></v-btn>
+                </div>
+            </v-container>
         </template>
     </CreateDialogForm>
 </template>
@@ -53,16 +83,10 @@ import { WarehouseProduct } from "@/types/WarehouseProduct";
 export default {
     data: () => ({
         loading: false,
+        isAlreadyInside: false,
         productItems: [] as any[],
         warehouseProduct: WarehouseProduct.default(),
-        nameRules: [
-            (value: String) =>
-                value?.length > 32 ? "Name must not be longer than 32 characters" : true,
-        ],
         productRules: [(value: String) => (value?.length == 0 ? "Product mut be present" : true)],
-        ingredientRules: [
-            (value: String) => (value?.length == 0 ? "Ingredient mut be present" : true),
-        ],
     }),
     props: {
         modelValue: Boolean,
@@ -83,6 +107,8 @@ export default {
         },
 
         itemProduct(item: WarehouseProduct): Product | undefined {
+            if (item == undefined || item.product == undefined || item.product.id == undefined)
+                return;
             return this.productItems.find((x) => x.value == item.product.id);
         },
     },
@@ -93,11 +119,29 @@ export default {
                 this.warehouseProduct.product.id = item;
             },
         },
+        "warehouseProduct.product.id"(item: string | undefined) {
+            if (item == undefined) return;
+            this.$warehouseApi
+                .getWarehouseProduct({
+                    warehouseId: this.item.id,
+                    productId: item,
+                })
+                .then((_response) => {
+                    this.isAlreadyInside = true;
+                })
+                .catch((error) => {
+                    if (error.response.status == 404) {
+                        this.isAlreadyInside = false;
+                    } else {
+                        console.warn(error);
+                    }
+                });
+        },
     },
     emits: ["isDone", "update:modelValue"],
     methods: {
         getProductUnit(item: WarehouseProduct): string {
-            if (item == undefined || item.product.id.length == 0) {
+            if (item == undefined || item.product.id == undefined || item.product.id.length == 0) {
                 return "";
             } else {
                 let product = this.productItems.find((x) => x.value == item.product.id);

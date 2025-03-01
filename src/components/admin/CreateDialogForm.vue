@@ -32,7 +32,12 @@
                     </v-card-text>
 
                     <v-card-actions class="d-flex justify-end">
-                        <slot name="actions" :valid="valid">
+                        <slot
+                            name="actions"
+                            :valid="valid"
+                            :isActive="isActive"
+                            :submitForm="submitForm"
+                        >
                             <v-btn
                                 variant="flat"
                                 rounded="xl"
