@@ -146,7 +146,9 @@ app.use(router);
 app.use(axios, {
     baseUrl: api_url,
 });
-app.use(VueQueryPlugin);
+app.use(VueQueryPlugin, {
+    enableDevtoolsV6Plugin: true,
+});
 
 app.config.globalProperties.$backendUrl = api_url;
 
