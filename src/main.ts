@@ -33,6 +33,8 @@ import {
     WarehouseApi,
 } from "./api";
 
+import { VueQueryPlugin } from "@tanstack/vue-query";
+
 const messages = {
     en: {
         ...en,
@@ -144,6 +146,7 @@ app.use(router);
 app.use(axios, {
     baseUrl: api_url,
 });
+app.use(VueQueryPlugin);
 
 app.config.globalProperties.$backendUrl = api_url;
 
