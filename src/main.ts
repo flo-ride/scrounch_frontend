@@ -17,6 +17,7 @@ import { createI18n, useI18n } from "vue-i18n";
 
 import en from "@/locales/en.json";
 import fr from "@/locales/fr.json";
+import { en as enVuetify, fr as frVuetify } from "vuetify/locale";
 
 import App from "./App.vue";
 import router from "./router";
@@ -39,53 +40,13 @@ const messages = {
     en: {
         ...en,
         $vuetify: {
-            ...en,
-            input: {
-                clear: "Clear",
-            },
-            open: "Open",
-            close: "Close",
-            loading: "Loading content...",
-            dataIterator: {
-                rowsPerPageText: "Items per page:",
-                pageText: "{0}-{1} of {2}",
-            },
-            dataFooter: {
-                itemsPerPageText: "Items per Page",
-                pageText: "Page {0}",
-                itemsPerPageAll: "All",
-                firstPage: "Fist page",
-                lastPage: "Last page",
-                nextPage: "Next page",
-                prevPage: "Previous page",
-            },
-            noDataText: "No Data",
+            ...enVuetify,
         },
     },
     fr: {
         ...fr,
         $vuetify: {
-            ...fr,
-            input: {
-                clear: "Effacer",
-            },
-            open: "Ouvrir",
-            close: "Fermer",
-            loading: "Chargement du contenu...",
-            dataIterator: {
-                rowsPerPageText: "Éléments par pages:",
-                pageText: "{0}-{1} sur {2}",
-            },
-            dataFooter: {
-                itemsPerPageText: "Items par Page",
-                pageText: "Page {0}",
-                itemsPerPageAll: "Tout",
-                firstPage: "Premiere page",
-                lastPage: "Derniere page",
-                nextPage: "Page suivante",
-                prevPage: "Page précedente",
-            },
-            noDataText: "Pas de données",
+            ...frVuetify,
         },
     },
 };
