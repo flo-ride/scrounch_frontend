@@ -2,18 +2,18 @@ import type { EditRefillRequest, NewRefillRequest, RefillResponse } from "@/api"
 import { Currency, CurrencyValue } from "@/types/Currency"; // Ensure the import path is correct
 
 export class Refill {
-    id: string;
+    id: string | null;
     credit: number;
-    credit_currency: Currency;
-    name?: string | null;
+    creditCurrency: Currency;
+    name: string | null;
     price: number;
-    price_currency: Currency;
+    priceCurrency: Currency;
     hidden: boolean;
     disabled: boolean;
     createdAt: Date;
 
     constructor(
-        id: string,
+        id: string | null,
         credit: number,
         credit_currency: Currency,
         price: number,
@@ -25,9 +25,9 @@ export class Refill {
     ) {
         this.id = id;
         this.credit = credit;
-        this.credit_currency = credit_currency;
+        this.creditCurrency = credit_currency;
         this.price = price;
-        this.price_currency = price_currency;
+        this.priceCurrency = price_currency;
         this.hidden = hidden;
         this.disabled = disabled;
         this.createdAt = createdAt;
@@ -40,10 +40,10 @@ export class Refill {
      */
     static default(): Refill {
         return new Refill(
-            "default-id",
-            0,
-            new Currency(CurrencyValue.Euro),
-            0,
+            null,
+            100,
+            new Currency(CurrencyValue.Epicoin),
+            1,
             new Currency(CurrencyValue.Euro),
             false,
             false,
@@ -59,9 +59,9 @@ export class Refill {
         return new Refill(
             this.id,
             this.credit,
-            this.credit_currency.clone(),
+            this.creditCurrency.clone(),
             this.price,
-            this.price_currency.clone(),
+            this.priceCurrency.clone(),
             this.hidden,
             this.disabled,
             new Date(this.createdAt),
@@ -95,9 +95,9 @@ export class Refill {
     toNewRequest(): NewRefillRequest {
         return {
             credit: this.credit,
-            credit_currency: this.credit_currency.toRequest(),
+            credit_currency: this.creditCurrency.toRequest(),
             price: this.price,
-            price_currency: this.price_currency.toRequest(),
+            price_currency: this.priceCurrency.toRequest(),
             name: this.name,
         };
     }
@@ -109,12 +109,12 @@ export class Refill {
     toEditRequest(): EditRefillRequest {
         return {
             credit: this.credit,
-            credit_currency: this.credit_currency ? this.credit_currency.toRequest() : null,
+            credit_currency: this.creditCurrency ? this.creditCurrency.toRequest() : null,
             hidden: this.hidden,
             disabled: this.disabled,
             name: this.name,
             price: this.price,
-            price_currency: this.price_currency ? this.price_currency.toRequest() : null,
+            price_currency: this.priceCurrency ? this.priceCurrency.toRequest() : null,
         };
     }
 }

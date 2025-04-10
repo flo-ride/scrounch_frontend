@@ -12,24 +12,24 @@ export enum LocationCategory {
 }
 
 export class Location {
-    id: string;
+    id: string | null;
     name: string;
-    category?: LocationCategory;
+    category: LocationCategory | null;
     hidden: boolean;
     disabled: boolean;
     createdAt: Date;
 
     constructor(
-        id: string,
+        id: string | null,
         name: string,
         hidden: boolean,
         disabled: boolean,
         created_at: Date,
-        category?: LocationCategory,
+        category: LocationCategory | null,
     ) {
         this.id = id;
         this.name = name;
-        this.category = category;
+        this.category = category ?? null;
         this.hidden = hidden;
         this.disabled = disabled;
         this.createdAt = created_at;
@@ -40,7 +40,7 @@ export class Location {
      * @returns A Location instance with default values.
      */
     static default(): Location {
-        return new Location("default-id", "Default Location", false, false, new Date(), undefined);
+        return new Location(null, "", false, false, new Date(), null);
     }
 
     /**
@@ -70,9 +70,7 @@ export class Location {
             response.hidden ?? false,
             response.disabled,
             new Date(response.created_at),
-            Location.convertResponseToCategory(
-                response.category != null ? response.category : undefined,
-            ),
+            Location.convertResponseToCategory(response.category ?? null),
         );
     }
 
@@ -110,9 +108,9 @@ export class Location {
      * @returns A LocationCategory enum value.
      */
     private static convertResponseToCategory(
-        responseCategory?: LocationCategoryResponse,
-    ): LocationCategory | undefined {
-        if (!responseCategory) return undefined;
+        responseCategory: LocationCategoryResponse | null,
+    ): LocationCategory | null {
+        if (!responseCategory) return null;
 
         const mapping: Record<LocationCategoryResponse, LocationCategory> = {
             [LocationCategoryResponse.Room]: LocationCategory.Room,

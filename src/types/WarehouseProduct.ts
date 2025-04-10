@@ -2,11 +2,21 @@ import type { NewWarehouseProductRequest, WarehouseProductResponse } from "@/api
 import { Product } from "./Product";
 
 export class WarehouseProduct {
-    product: Product;
+    warehouseId: string | null;
+    productId: string | null;
+    product: Product | null;
     quantity: number;
     createdAt: Date;
 
-    constructor(product: Product, quantity: number, createdAt: Date) {
+    constructor(
+        warehouseId: string | null,
+        productId: string | null,
+        product: Product | null,
+        quantity: number,
+        createdAt: Date,
+    ) {
+        this.warehouseId = warehouseId;
+        this.productId = productId;
         this.product = product;
         this.quantity = quantity;
         this.createdAt = createdAt;
@@ -17,7 +27,7 @@ export class WarehouseProduct {
      * @returns A Warehouse instance with default values.
      */
     static default(): WarehouseProduct {
-        return new WarehouseProduct(Product.default(), 0, new Date());
+        return new WarehouseProduct(null, null, null, 0, new Date());
     }
 
     /**
@@ -25,7 +35,13 @@ export class WarehouseProduct {
      * @returns A new Warehouse instance with the same properties.
      */
     clone(): WarehouseProduct {
-        return new WarehouseProduct(this.product.clone(), this.quantity, new Date(this.createdAt));
+        return new WarehouseProduct(
+            this.warehouseId,
+            this.productId,
+            this.product ? this.product.clone() : null,
+            this.quantity,
+            new Date(this.createdAt),
+        );
     }
 
     /**
@@ -35,6 +51,8 @@ export class WarehouseProduct {
      */
     static fromResponse(response: WarehouseProductResponse): WarehouseProduct {
         return new WarehouseProduct(
+            null,
+            response.product.id,
             Product.fromResponse(response.product),
             Number(response.quantity),
             new Date(response.created_at),

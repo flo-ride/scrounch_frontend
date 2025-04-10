@@ -1,3 +1,22 @@
+<script setup lang="ts">
+import { inject, watch } from "vue";
+
+import { UserApi } from "@/api";
+import { useRouter } from "vue-router";
+import { useQueryMe } from "@/query/user";
+const router = useRouter();
+const userApi = inject("userApi", new UserApi());
+const { data } = useQueryMe(userApi);
+
+const tryToEscape = () => {
+    alert("Ha ! Tu croyais vraiment pouvoir revenir ? 😈");
+};
+
+watch(data, (data) => {
+    if (!data || !data.isBanned) router.push("/");
+});
+</script>
+
 <template>
     <v-container class="d-flex flex-column align-center justify-center text-center ban-page" fluid>
         <v-row>
@@ -35,25 +54,6 @@
         </v-row>
     </v-container>
 </template>
-
-<script lang="ts">
-import { useUserStore } from "@/stores/user";
-export default {
-    methods: {
-        tryToEscape() {
-            alert("Ha ! Tu croyais vraiment pouvoir revenir ? 😈");
-        },
-    },
-    computed: {
-        userStore: () => useUserStore(),
-    },
-    mounted() {
-        if (this.userStore.user?.isBanned != true) {
-            this.$router.push("/");
-        }
-    },
-};
-</script>
 
 <style scoped>
 @keyframes rainbow {

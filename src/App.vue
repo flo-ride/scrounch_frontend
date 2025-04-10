@@ -1,7 +1,31 @@
+<script setup lang="ts">
+import MainToolbarVue from "@/components/MainToolbar.vue";
+import { inject, watch } from "vue";
+import { MiscApi, UserApi } from "@/api";
+import { useRouter } from "vue-router";
+import { useQueryStatus } from "@/query/misc";
+import { useQueryMe } from "./query/user";
+
+const router = useRouter();
+const userApi = inject("userApi", new UserApi());
+const miscApi = inject("miscApi", new MiscApi());
+const { isSuccess, isError } = useQueryStatus(miscApi);
+const { data } = useQueryMe(userApi);
+
+watch(isError, () => {
+    router.push("/unavailable");
+});
+
+watch(data, (data) => {
+    if (!data) return;
+    if (data.isBanned) router.push("/ban");
+});
+</script>
+
 <template>
     <v-app>
         <header>
-            <div v-if="serverIsUp && userStore.user?.isBanned != true">
+            <div v-if="isSuccess && !data?.isBanned">
                 <MainToolbarVue />
             </div>
         </header>
@@ -10,63 +34,3 @@
         </v-main>
     </v-app>
 </template>
-
-<script lang="ts">
-import { useUserStore } from "@/stores/user";
-import MainToolbarVue from "@/components/MainToolbar.vue";
-import { User } from "./types/User";
-
-export default {
-    data() {
-        return {
-            serverIsUp: true,
-        };
-    },
-    computed: {
-        userStore: () => useUserStore(),
-    },
-    methods: {
-        isBackendUp() {
-            this.$miscApi
-                .getStatus()
-                .then((res) => {
-                    if (res.status != 200 || res.data != "UP") {
-                        this.serverIsUp = false;
-                        this.$router.push("/unavailable");
-                    }
-                })
-                .catch((_err) => {
-                    this.serverIsUp = false;
-                    this.$router.push("/unavailable");
-                });
-        },
-        isLoggedIn() {
-            this.$userApi
-                .getMe()
-                .then((res) => {
-                    if (res.status == 200) {
-                        this.userStore.connected = true;
-                        this.userStore.user = User.fromResponse(res.data);
-
-                        if (this.userStore.user?.isBanned) {
-                            this.$router.push("/ban");
-                        }
-                    } else {
-                        this.userStore.connected = false;
-                        this.userStore.user = undefined;
-                    }
-                })
-                .catch((err) => {
-                    console.error(err);
-                });
-        },
-    },
-    components: {
-        MainToolbarVue,
-    },
-    mounted() {
-        this.isBackendUp();
-        this.isLoggedIn();
-    },
-};
-</script>

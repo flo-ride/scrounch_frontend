@@ -1,3 +1,52 @@
+<script setup lang="ts">
+import { useTheme } from "vuetify";
+import { computed, inject } from "vue";
+import { useI18n } from "vue-i18n";
+import { useQueryMe } from "@/query/user";
+import { UserApi } from "@/api";
+
+const userApi = inject("userApi", new UserApi());
+const apiUrl = inject("apiUrl", "http://localhost:3000");
+
+const { isLoading, data } = useQueryMe(userApi);
+
+const theme = useTheme();
+const { locale } = useI18n({
+    useScope: "global",
+});
+
+const login = () => {
+    if (data.value && data.value.id) return;
+    window.location.href = `${apiUrl}/login`;
+};
+
+const logout = () => {
+    if (!data.value || !data.value.id) return;
+    window.location.href = `${apiUrl}/logout`;
+};
+
+const nameInitials = computed(() => {
+    if (!data.value || !data.value.name) return "";
+    return data.value.name
+        ?.split(" ")
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase();
+});
+
+const themeIsDark = computed(() => {
+    return theme.global.current.value.dark;
+});
+
+const toggleLanguage = () => {
+    locale.value = locale.value === "fr" ? "en" : "fr";
+};
+
+const toggleTheme = () => {
+    theme.global.name.value = themeIsDark.value ? "light" : "dark";
+};
+</script>
+
 <template>
     <v-app-bar>
         <template v-slot:prepend>
@@ -27,17 +76,16 @@
         <template v-slot:append>
             <v-btn icon="fa-solid fa-language" @click="toggleLanguage"> </v-btn>
             <v-btn
-                :icon="themeName == `dark` ? `fa-solid fa-sun` : `fa-solid fa-moon`"
+                :icon="themeIsDark ? `fa-solid fa-sun` : `fa-solid fa-moon`"
                 @click="toggleTheme"
             >
             </v-btn>
             <v-btn
-                v-if="!userStore.connected"
+                v-if="!data || !data.id"
                 @click="login"
                 variant="tonal"
-                prepend-icon="fa-brands fa-microsoft"
-                :loading="loginLoading"
-                :disabled="loginLoading"
+                :loading="isLoading"
+                :disabled="isLoading"
                 icon="fa-solid fa-right-to-bracket"
             >
             </v-btn>
@@ -48,15 +96,15 @@
                     </v-avatar>
                 </template>
                 <v-list>
-                    <v-list-item @click="">
+                    <v-list-item>
                         <v-icon> fa-solid fa-user </v-icon>
                         {{ $t("toolbar.account") }}
                     </v-list-item>
-                    <v-list-item @click="">
+                    <v-list-item>
                         <v-icon> fa-solid fa-file-invoice </v-icon>
                         {{ $t("toolbar.previous") }}
                     </v-list-item>
-                    <v-list-item v-if="userStore.user?.isAdmin" @click="$router.push('/admin')">
+                    <v-list-item v-if="data.isAdmin" @click="$router.push('/admin')">
                         <v-icon> fa-solid fa-gear </v-icon>
                         {{ $t("toolbar.admin") }}
                     </v-list-item>
@@ -70,70 +118,3 @@
         </template>
     </v-app-bar>
 </template>
-
-<script lang="ts">
-import { useUserStore } from "@/stores/user";
-import { useTheme } from "vuetify";
-import { defineComponent } from "vue";
-import { useI18n } from "vue-i18n";
-
-export default defineComponent({
-    data() {
-        return {
-            loginLoading: false,
-        };
-    },
-    methods: {
-        async login() {
-            this.loginLoading = true;
-            let res = await this.$userApi.getMe();
-            if (res.status != 200) {
-                window.location.href = `${this.$backendUrl}/login`;
-            }
-            this.loginLoading = false;
-        },
-        async logout() {
-            let res = await this.$userApi.getMe();
-            if (res.status == 200) {
-                window.location.href = `${this.$backendUrl}/logout`;
-            }
-        },
-
-        toggleLanguage() {
-            // @ts-ignore
-            this.$i18n.locale = this.$i18n.locale === "fr" ? "en" : "fr";
-        },
-        toggleTheme() {
-            // @ts-ignore
-            this.$vuetify.theme.global.name = this.$vuetify.theme.global.current.dark
-                ? "light"
-                : "dark";
-        },
-    },
-    computed: {
-        userStore: () => useUserStore(),
-        nameInitials() {
-            return this.userStore.user?.name
-                ?.split(" ")
-                .map((w: String) => w[0])
-                .join("")
-                .toUpperCase();
-        },
-        themeName(): string {
-            // @ts-ignore
-            return this.$vuetify.theme.global.name;
-        },
-    },
-    setup() {
-        const theme = useTheme();
-        const { t } = useI18n({
-            inheritLocale: true,
-        });
-
-        return {
-            t,
-            theme,
-        };
-    },
-});
-</script>

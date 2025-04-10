@@ -9,8 +9,7 @@ import "@fortawesome/fontawesome-free/css/all.css";
 import * as components from "vuetify/components";
 import * as directives from "vuetify/directives";
 import { createVueI18nAdapter } from "vuetify/locale/adapters/vue-i18n";
-import { VNumberInput } from "vuetify/labs/components";
-import { VTreeview } from "vuetify/labs/VTreeview";
+import { VNumberInput, VFileUpload, VTreeview } from "vuetify/labs/components";
 
 // I18n
 import { createI18n, useI18n } from "vue-i18n";
@@ -64,6 +63,7 @@ const vuetify = createVuetify({
     components: {
         components,
         VNumberInput,
+        VFileUpload,
         VTreeview,
     },
     directives,
@@ -98,19 +98,19 @@ declare module "@vue/runtime-core" {
 }
 
 // @ts-ignore
-let api_url = window.env.BACKEND_URL || "http://localhost:3000";
+let apiUrl = window.env.BACKEND_URL || "http://localhost:3000";
 
 app.use(i18n);
 app.use(vuetify);
 app.use(createPinia());
 app.use(router);
 app.use(axios, {
-    baseUrl: api_url,
+    baseUrl: apiUrl,
 });
 app.use(VueQueryPlugin, {
     enableDevtoolsV6Plugin: true,
 });
 
-app.config.globalProperties.$backendUrl = api_url;
+app.config.globalProperties.$backendUrl = apiUrl;
 
 app.mount("#app");

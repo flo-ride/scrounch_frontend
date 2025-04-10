@@ -6,34 +6,85 @@ const router = createRouter({
     routes: [
         {
             path: "/",
-            name: "home",
+            name: "Home",
             component: HomeView,
         },
         {
             path: "/about",
-            name: "about",
-            component: () => import("../views/AboutView.vue"),
+            name: "About",
+            component: () => import("@/views/AboutView.vue"),
         },
         {
             path: "/admin",
-            name: "admin",
-            component: () => import("../views/admin/AdminView.vue"),
+            name: "Admin",
+            component: () => import("@/views/admin/AdminView.vue"),
             children: [
                 {
                     path: "product",
-                    component: () => import("../views/admin/product/ProductView.vue"),
+                    component: () => import("@/views/admin/product/ProductView.vue"),
+                    alias: "",
+                    children: [
+                        {
+                            alias: "",
+                            path: "grid",
+                            component: () => import("@/views/admin/product/ProductGridView.vue"),
+                        },
+                        {
+                            path: "list",
+                            component: () => import("@/views/admin/product/ProductListView.vue"),
+                        },
+                    ],
+                },
+                {
+                    path: "product/new",
+                    component: () => import("@/views/admin/product/ProductCreateView.vue"),
+                },
+                {
+                    path: "product/:id",
+                    component: () => import("@/views/admin/product/ProductDetailView.vue"),
+                    props: true,
+                },
+                {
+                    path: "product/:id/recipe",
+                    component: () => import("@/views/admin/recipe/RecipeView.vue"),
+                    props: true,
+                },
+                {
+                    path: "product/:id/recipe/new",
+                    component: () => import("@/views/admin/recipe/RecipeCreateView.vue"),
+                    props: true,
+                },
+                {
+                    path: "recipe/:id",
+                    component: () => import("@/views/admin/recipe/RecipeDetailView.vue"),
+                    props: true,
                 },
                 {
                     path: "user",
-                    component: () => import("../views/admin/UserView.vue"),
+                    component: () => import("@/views/admin/user/UserView.vue"),
+                    children: [],
+                },
+                {
+                    path: "user/:id",
+                    component: () => import("@/views/admin/user/UserDetailView.vue"),
+                    props: true,
+                },
+                {
+                    path: "warehouse",
+                    component: () => import("@/views/admin/warehouse/WarehouseView.vue"),
+                },
+                {
+                    path: "warehouse/new",
+                    component: () => import("@/views/admin/warehouse/WarehouseCreateView.vue"),
+                },
+                {
+                    path: "warehouse/:id",
+                    component: () => import("@/views/admin/warehouse/WarehouseDetailView.vue"),
+                    props: true,
                 },
                 {
                     path: "delivery",
                     component: () => import("../views/admin/TodoView.vue"),
-                },
-                {
-                    path: "warehouse",
-                    component: () => import("../views/admin/WarehouseView.vue"),
                 },
                 {
                     path: "order",
@@ -41,11 +92,29 @@ const router = createRouter({
                 },
                 {
                     path: "money",
-                    component: () => import("../views/admin/MoneyView.vue"),
+                    component: () => import("@/views/admin/money/MoneyView.vue"),
+                },
+                {
+                    path: "refill/new",
+                    component: () => import("@/views/admin/refill/RefillCreateView.vue"),
+                },
+                {
+                    path: "refill/:id",
+                    component: () => import("@/views/admin/refill/RefillDetailView.vue"),
+                    props: true,
                 },
                 {
                     path: "location",
-                    component: () => import("../views/admin/LocationView.vue"),
+                    component: () => import("@/views/admin/location/LocationView.vue"),
+                },
+                {
+                    path: "location/new",
+                    component: () => import("@/views/admin/location/LocationCreateView.vue"),
+                },
+                {
+                    path: "location/:id",
+                    component: () => import("@/views/admin/location/LocationDetailView.vue"),
+                    props: true,
                 },
                 {
                     path: "announcement",
@@ -63,12 +132,12 @@ const router = createRouter({
         },
         {
             path: "/unavailable",
-            name: "unavailable",
+            name: "Unavailable",
             component: () => import("../views/UnavailableView.vue"),
         },
         {
             path: "/ban",
-            name: "ban",
+            name: "Ban",
             component: () => import("../views/BanView.vue"),
         },
     ],

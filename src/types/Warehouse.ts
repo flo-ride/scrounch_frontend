@@ -1,12 +1,12 @@
 import type { EditWarehouseRequest, NewWarehouseRequest, WarehouseResponse } from "@/api";
 
 export class Warehouse {
-    id: string;
+    id: string | null;
     name: string;
     disabled: boolean;
     createdAt: Date;
 
-    constructor(id: string, name: string, disabled: boolean, createdAt: Date) {
+    constructor(id: string | null, name: string, disabled: boolean, createdAt: Date) {
         this.id = id;
         this.name = name;
         this.disabled = disabled;
@@ -18,7 +18,7 @@ export class Warehouse {
      * @returns A Warehouse instance with default values.
      */
     static default(): Warehouse {
-        return new Warehouse("", "New Warehouse", false, new Date());
+        return new Warehouse(null, "", false, new Date());
     }
 
     /**

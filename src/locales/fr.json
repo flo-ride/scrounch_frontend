@@ -12,20 +12,16 @@
     "admin": {
         "product": {
             "toolbarTitle": "Produits",
-            "add": {
-                "title": "Crée un produit",
+            "category": {
+                "product": "Produit",
+                "recipe": "Recettes",
                 "image": "Image",
-                "name": "Nom du Produit",
+                "identity": "Identité",
                 "price": "Prix",
-                "price_currency": "Devise du Prix",
-                "unit": "Unité",
-                "max": "Max par commande",
-                "purchasable": "Achetable",
-                "hidden": "Caché",
-                "disabled": "Désactivé"
+                "properties": "Propriété",
+                "display": "Affichage"
             },
-            "edit": {
-                "title": "Modifier un produit",
+            "field": {
                 "image": "Image",
                 "name": "Nom du Produit",
                 "price": "Prix",
@@ -38,6 +34,15 @@
                 "displayOrder": "Ordre d'affichage",
                 "sma": "SMA Code",
                 "inventree": "Inventree Code",
+                "maxPerCommand": "Quantité maximale par Commande",
+                "sma": "Codes Sales (SMA)",
+                "creationDate": "Date de création"
+            },
+            "add": {
+                "title": "Crée un produit"
+            },
+            "edit": {
+                "title": "Modifier un produit",
                 "recipe": {
                     "recipe": "Recettes",
                     "title": "Recettes du produit",
@@ -46,27 +51,42 @@
             },
             "delete": {
                 "title": "Supprimé un produit"
-            },
-            "maxPerCommand": "Quantité maximale par Commande",
-            "sma": "Codes Sales (SMA)",
-            "creationDate": "Date de création"
+            }
         },
         "recipe": {
+            "category": {
+                "identity": "Identité",
+                "ingredients": "Ingrédients"
+            },
+            "field": {
+                "name": "Nom de la Recette",
+                "output": "Produit en Sortie",
+                "ingredient": {
+                    "product": "Produit",
+                    "quantity": "Quantité",
+                    "disabled": "Désactivé"
+                }
+            },
             "add": {
                 "title": "Crée une Recette",
-                "name": "Nom de la Recette",
-                "product": "Produit en Sortie",
-                "ingredient_product": "Ingrédient",
-                "ingredient_quantity": "Quantité",
-                "ingredient_disabled": "Désactivé"
+                "ingredient": "Ajouter un Ingrédient"
             }
         },
         "warehouse": {
             "toolbarTitle": "Entrepôt",
             "empty": "Pas d'Entrepôts",
+            "category": {
+                "identity": "Identité",
+                "properties": "Propriété"
+            },
+            "field": {
+                "name": "Nom",
+                "parent": "Parent de l'Entrepôt",
+                "createdAt": "Crée le",
+                "disabled": "Désactivé"
+            },
             "add": {
                 "title": "Crée une Entrepôt",
-                "name": "Nom de l'Entrepôt",
                 "parent": "Entrepôt Parent"
             },
             "edit": {
@@ -84,10 +104,21 @@
         },
         "user": {
             "toolbarTitle": "Utilisateurs",
+            "category": {
+                "identity": "Identité",
+                "rights": "Droits"
+            },
+            "field": {
+                "name": "Nom",
+                "email": "Email",
+                "username": "Username",
+                "isAdmin": "L'Utilisateur est  un Administrateur",
+                "isBanned": "L'Utilisateur est Banni",
+                "createdAt": "Crée le",
+                "lastAccess": "Dernière Connexion"
+            },
             "edit": {
-                "title": "Modifier un Utilisateur",
-                "isAdmin": "L'Utilisateur est t'il un Administrateur ?",
-                "isBanned": "L'Utilisateur est t'il Banni ?"
+                "title": "Modifier un Utilisateur"
             }
         },
         "delivery": {
@@ -117,6 +148,16 @@
             }
         },
         "location": {
+            "category": {
+                "identity": "Identité",
+                "properties": "Propriétés"
+            },
+            "field": {
+                "name": "Nom du Lieux",
+                "hidden": "Caché",
+                "disabled": "Désactivé",
+                "category": "Catégories"
+            },
             "toolbarTitle": "Lieux",
             "add": {
                 "title": "Crée un lieux",
@@ -124,11 +165,7 @@
                 "category": "Catégories"
             },
             "edit": {
-                "title": "Modifier un lieux",
-                "name": "Nom du Lieux",
-                "hidden": "Caché",
-                "disabled": "Désactivé",
-                "category": "Catégories"
+                "title": "Modifier un lieux"
             },
             "delete": {
                 "title": "Supprimé un lieux"

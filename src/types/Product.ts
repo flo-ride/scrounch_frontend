@@ -3,23 +3,24 @@ import { Currency, CurrencyValue } from "@/types/Currency";
 import { Unit } from "@/types/Unit";
 
 export class Product {
-    id: string;
+    id: string | null;
     name: string;
-    image?: string;
+    image: string | null;
+    imageFile: File | undefined;
     displayOrder: number;
-    sellPrice: number | undefined;
-    sellPriceCurrency: Currency | undefined;
-    maxQuantityPerCommand?: number;
+    sellPrice: number | null;
+    sellPriceCurrency: Currency | null;
+    maxQuantityPerCommand: number;
     unit: Unit;
     purchasable: boolean;
     hidden: boolean;
     disabled: boolean;
     createdAt: Date;
-    smaCode?: string;
-    inventreeCode?: string;
+    smaCode: string | null;
+    inventreeCode: string | null;
 
     constructor(
-        id: string,
+        id: string | null,
         name: string,
         display_order: number,
 
@@ -27,16 +28,17 @@ export class Product {
 
         createdAt: Date,
 
-        sell_price?: number,
-        sell_price_currency?: Currency,
+        sell_price: number | null,
+        sell_price_currency: Currency | null,
 
-        maxQuantityPerCommand?: number | null,
-        purchasable?: boolean | null,
-        hidden?: boolean | null,
-        disabled?: boolean | null,
-        image?: string | null,
-        smaCode?: string | null,
-        inventreeCode?: string | null,
+        maxQuantityPerCommand: number,
+        purchasable: boolean,
+        hidden: boolean | null,
+        disabled: boolean | null,
+        image: string | null,
+        imageFile: File | undefined,
+        smaCode: string | null,
+        inventreeCode: string | null,
     ) {
         this.id = id;
         this.name = name;
@@ -44,13 +46,14 @@ export class Product {
         this.sellPrice = sell_price;
         this.sellPriceCurrency = sell_price_currency;
         this.unit = unit;
-        this.image = image ?? undefined;
-        this.maxQuantityPerCommand = maxQuantityPerCommand ?? undefined;
+        this.image = image;
+        this.imageFile = imageFile;
+        this.maxQuantityPerCommand = maxQuantityPerCommand;
         this.disabled = disabled ?? false;
         this.hidden = hidden ?? false;
         this.purchasable = purchasable ?? true;
-        this.smaCode = smaCode ?? undefined;
-        this.inventreeCode = inventreeCode ?? undefined;
+        this.smaCode = smaCode ?? null;
+        this.inventreeCode = inventreeCode ?? null;
         this.createdAt = createdAt;
     }
 
@@ -60,8 +63,8 @@ export class Product {
      */
     static default(): Product {
         return new Product(
-            "default-id",
-            "Default Product",
+            null,
+            "",
 
             0,
 
@@ -72,11 +75,14 @@ export class Product {
             0.0,
             Currency.default(),
 
-            null,
+            0,
             true,
 
             false,
 
+            null,
+            null,
+            undefined,
             null,
             null,
         );
@@ -94,12 +100,13 @@ export class Product {
             this.unit.clone(),
             new Date(this.createdAt), // Clone the Date to avoid shared reference
             this.sellPrice,
-            this.sellPriceCurrency?.clone(), // Ensure CurrencyResponse is cloned
+            !this.sellPriceCurrency ? null : this.sellPriceCurrency.clone(), // Ensure CurrencyResponse is cloned
             this.maxQuantityPerCommand,
             this.purchasable,
             this.hidden,
             this.disabled,
             this.image,
+            this.imageFile,
             this.smaCode,
             this.inventreeCode,
         );
@@ -117,13 +124,14 @@ export class Product {
             response.display_order,
             Unit.fromResponse(response.unit),
             new Date(response.created_at),
-            response.sell_price ?? undefined,
+            response.sell_price ?? null,
             Currency.fromResponse(response.sell_price_currency ?? CurrencyValue.Euro),
-            response.max_quantity_per_command ?? null,
+            response.max_quantity_per_command ?? 0,
             response.purchasable ?? true,
             response.hidden ?? false,
             response.disabled ?? false,
             response.image ?? null,
+            undefined,
             response.sma_code ?? null,
             response.inventree_code ?? null,
         );
@@ -163,8 +171,8 @@ export class Product {
             image: this.image ?? null,
             max_quantity_per_command: this.maxQuantityPerCommand ?? null,
             purchasable: this.purchasable,
-            sma_code: this.smaCode ?? undefined,
-            inventree_code: this.inventreeCode ?? undefined,
+            sma_code: this.smaCode ?? null,
+            inventree_code: this.inventreeCode ?? null,
             hidden: this.hidden,
             disabled: this.disabled,
         };

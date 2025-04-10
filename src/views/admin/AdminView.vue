@@ -1,5 +1,23 @@
+<script setup lang="ts">
+import { UserApi } from "@/api";
+import { useQueryMe } from "@/query/user";
+import { inject, ref, watch } from "vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const userApi = inject("userApi", new UserApi());
+const { data, isSuccess } = useQueryMe(userApi);
+
+watch(isSuccess, () => {
+    if (data.value?.isAdmin) return;
+    router.push("/");
+});
+
+const select = ref("product");
+</script>
+
 <template>
-    <v-tabs v-model="select" align-tabs="center" stacked>
+    <v-tabs v-model="select" align-tabs="center" stacked class="position-sticky">
         <v-tab value="product" to="/admin/product">
             <v-icon icon="fa-solid fa-mug-hot"></v-icon>
             {{ $t("admin.product.toolbarTitle") }}
@@ -44,23 +62,3 @@
     <v-divider></v-divider>
     <router-view></router-view>
 </template>
-
-<script lang="ts">
-import { useUserStore } from "@/stores/user";
-
-export default {
-    data() {
-        return {
-            select: String,
-        };
-    },
-    computed: {
-        userStore: () => useUserStore(),
-    },
-    beforeMounted() {
-        if (this.userStore.user?.isAdmin != true) {
-            this.$router.push("/");
-        }
-    },
-};
-</script>

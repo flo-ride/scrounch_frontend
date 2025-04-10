@@ -1,24 +1,24 @@
 import type { EditUserRequest, UserResponse } from "@/api";
 
 export class User {
-    id: string;
-    email?: string;
-    name?: string;
-    username?: string;
+    id: string | null;
+    email: string | null;
+    name: string | null;
+    username: string | null;
     isAdmin: boolean;
     isBanned: boolean;
     createdAt: Date;
     lastAccessAt: Date;
 
     constructor(
-        id: string,
+        id: string | null,
         is_admin: boolean,
         is_banned: boolean,
         created_at: Date,
         last_access_at: Date,
-        email?: string,
-        name?: string,
-        username?: string,
+        email: string | null,
+        name: string | null,
+        username: string | null,
     ) {
         this.id = id;
         this.isAdmin = is_admin;
@@ -32,7 +32,7 @@ export class User {
 
     static default(): User {
         return new User(
-            "default-id",
+            null,
             false,
             false,
             new Date(),
@@ -72,9 +72,9 @@ export class User {
             response.is_banned,
             new Date(response.created_at),
             new Date(response.last_access_at),
-            response.email ?? undefined,
-            response.name ?? undefined,
-            response.username ?? undefined,
+            response.email ?? null,
+            response.name ?? null,
+            response.username ?? null,
         );
     }
 

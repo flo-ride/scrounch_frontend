@@ -7,11 +7,11 @@ import type {
 } from "@/api";
 
 export class RecipeIngredient {
-    product_id: string;
+    product_id: string | null;
     quantity: number;
     disabled: boolean;
 
-    constructor(product_id: string, quantity: number, disabled?: boolean) {
+    constructor(product_id: string | null, quantity: number, disabled?: boolean) {
         this.product_id = product_id;
         this.quantity = quantity;
         this.disabled = disabled ?? false;
@@ -50,27 +50,27 @@ export class RecipeIngredient {
         return {
             disabled: this.disabled,
             quantity: this.quantity,
-            product: this.product_id,
+            product: this.product_id ?? "",
         };
     }
 }
 
 export class Recipe {
-    id: string;
-    name?: string;
+    id: string | null;
+    name: string | null;
     result_product_id: string;
     ingredients: RecipeIngredient[];
     disabled: boolean;
 
     constructor(
-        id: string,
+        id: string | null,
         result_product_id: string,
         ingredients: RecipeIngredient[],
-        name?: string,
+        name?: string | null,
         disabled?: boolean,
     ) {
         this.id = id;
-        this.name = name;
+        this.name = name ?? null;
         this.result_product_id = result_product_id;
         this.ingredients = ingredients;
         this.disabled = disabled ?? false;

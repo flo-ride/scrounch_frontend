@@ -12,20 +12,16 @@
     "admin": {
         "product": {
             "toolbarTitle": "Products",
-            "add": {
-                "title": "Add a product",
+            "category": {
+                "product": "Product",
+                "recipe": "Recipes",
                 "image": "Image",
-                "name": "Name of Product",
+                "identity": "Identity",
                 "price": "Price",
-                "price_currency": "Price Currency",
-                "unit": "Unit",
-                "max": "Max per orders",
-                "purchasable": "Purchasable",
-                "hidden": "Hidden",
-                "disabled": "Disable"
+                "properties": "Properties",
+                "display": "Display"
             },
-            "edit": {
-                "title": "Edit a product",
+            "field": {
                 "image": "Image",
                 "name": "Name of Product",
                 "price": "Price",
@@ -38,6 +34,15 @@
                 "displayOrder": "Display order",
                 "sma": "SMA Code",
                 "inventree": "Inventree Code",
+                "maxPerCommand": "Max quantity per Command",
+                "sma": "Sales code (SMA)",
+                "creationDate": "Creation Date"
+            },
+            "add": {
+                "title": "Add a product"
+            },
+            "edit": {
+                "title": "Edit a product",
                 "recipe": {
                     "recipe": "Recipes",
                     "title": "Recipes of product",
@@ -46,28 +51,42 @@
             },
             "delete": {
                 "title": "Delete a product"
-            },
-            "maxPerCommand": "Max quantity per Command",
-            "sma": "Sales code (SMA)",
-            "creationDate": "Creation Date"
+            }
         },
         "recipe": {
+            "category": {
+                "identity": "Identity",
+                "ingredients": "Ingredients"
+            },
+            "field": {
+                "name": "Name of the Recipe",
+                "ouput": "Output's Product",
+                "ingredient": {
+                    "product": "Product",
+                    "quantity": "Quantity",
+                    "disabled": "Disable"
+                }
+            },
             "add": {
                 "title": "Add a Recipe",
-                "name": "Name of the Recipe",
-                "product": "Resulting Product",
-                "ingredient_product": "Ingredient",
-                "ingredient_quantity": "Quantity",
-                "ingredient_disabled": "Disable"
+                "ingredient": "Add an Ingredient"
             }
         },
         "warehouse": {
             "toolbarTitle": "Warehouse",
             "empty": "No Warehouse",
+            "category": {
+                "identity": "Identity",
+                "properties": "Properties"
+            },
+            "field": {
+                "name": "Name",
+                "parent": "Warehouse's parent",
+                "createdAt": "Creation Date",
+                "disabled": "Disabled"
+            },
             "add": {
-                "title": "Add a Warehouse",
-                "name": "Name of the Warehouse",
-                "parent": "Warehouse's parent"
+                "title": "Add a Warehouse"
             },
             "edit": {
                 "title": "Edit a Warehouse",
@@ -84,10 +103,21 @@
         },
         "user": {
             "toolbarTitle": "Users",
+            "category": {
+                "identity": "Identity",
+                "rights": "Rights"
+            },
+            "field": {
+                "name": "Name",
+                "email": "Email",
+                "username": "Username",
+                "isAdmin": "Is Admin",
+                "isBanned": "Is Banned",
+                "createdAt": "Created At",
+                "lastAccess": "Last Access"
+            },
             "edit": {
-                "title": "Edit a User",
-                "isAdmin": "User is an Admin ?",
-                "isBanned": "User is Banned ?"
+                "title": "Edit a User"
             }
         },
         "delivery": {
@@ -117,24 +147,29 @@
             }
         },
         "location": {
-            "toolbarTitle": "Location",
-            "add": {
-                "title": "Add new Location",
-                "name": "Location's name",
-                "category": "Category"
+            "category": {
+                "identity": "Identity",
+                "properties": "Properties"
             },
-            "edit": {
-                "title": "Edit Location",
+            "field": {
                 "name": "Location's name",
                 "hidden": "Hidden",
                 "disabled": "Disable",
                 "category": "Category"
+            },
+            "toolbarTitle": "Location",
+            "add": {
+                "title": "Add new Location"
+            },
+            "edit": {
+                "title": "Edit Location"
             },
             "delete": {
                 "title": "Delete Location"
             },
             "enum": {
                 "category": {
+                    "none": "None",
                     "dispenser": "Dispenser",
                     "room": "Room"
                 }
