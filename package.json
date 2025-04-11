@@ -42,7 +42,7 @@
         "chromedriver": "^126.0.2",
         "eslint": "^8.57.0",
         "eslint-plugin-vue": "^9.23.0",
-        "geckodriver": "^4.4.1",
+        "geckodriver": "^5.0.0",
         "jsdom": "^24.1.0",
         "nightwatch": "^3.6.3",
         "npm-run-all2": "^6.2.0",
